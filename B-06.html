@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>El Mariachi - Detalle Producto</title>
+  <style>
+    body {
+      background-color: #111;
+      color: white;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #1a1a1a;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid #333;
+    }
+
+    header h1 {
+      font-size: 20px;
+    }
+
+    main {
+      padding: 20px;
+    }
+
+    .producto {
+      background-color: #1c1c1c;
+      border: 1px solid #333;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+
+    .img-placeholder {
+      background-color: #333;
+      width: 80px;
+      height: 80px;
+      border-radius: 4px;
+      margin-right: 20px;
+    }
+
+    .info h3 {
+      margin: 0;
+      margin-bottom: 6px;
+    }
+
+    .info p {
+      margin: 2px 0;
+      color: #ccc;
+    }
+
+    .stock {
+      margin-top: 8px;
+      background-color: #222;
+      border: none;
+      color: #ccc;
+      padding: 5px 10px;
+      border-radius: 4px;
+    }
+
+    .producto button {
+      background-color: #007bff;
+      border: none;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-left: auto;
+    }
+
+    .producto button:disabled {
+      background-color: #444;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>El Mariachi</h1>
+    <input type="text" value="https://www.ElMariachi.cl/producto/nachos-queso" disabled style="width:430px; background-color:#222; color:#ccc; border:none; padding:6px;">
+  </header>
+
+  <main>
+    <div class="producto">
+      <div class="img-placeholder"></div>
+      <div class="info">
+        <h3>Nachos con queso</h3>
+        <p>Descripción: nachos, queso cheddar, jalapeños</p>
+        <p>Alérgenos: lácteos | Picante: medio</p>
+        <input class="stock" type="text" value="Stock: 0 (No disponible)" readonly>
+      </div>
+      <button disabled>Agregar</button>
+    </div>
+
+    <div class="producto">
+      <div class="img-placeholder"></div>
+      <div class="info">
+        <h3>Nachos con queso</h3>
+        <p>Descripción: nachos, queso cheddar, jalapeños</p>
+        <p>Alérgenos: lácteos | Picante: medio</p>
+        <input class="stock" type="text" value="Stock: 25 (Disponible)" readonly>
+      </div>
+      <button>Agregar</button>
+    </div>
+  </main>
+
+</body>
+</html>

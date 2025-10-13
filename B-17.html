@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Entrega | El Mariachi</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { background-color: #fdfcf8; }
+    .browser-bar { background-color: #e9ecef; border-radius: 6px; padding: 6px; }
+    .card { border-radius: 10px; box-shadow: 0 0 5px rgba(0,0,0,0.1); }
+    .api-box { background-color: #f8f9fa; border: 1px solid #dee2e6; font-family: monospace; font-size: 0.9em; }
+  </style>
+</head>
+<body class="container py-4">
+  <div class="browser-bar mb-3">
+    https://www.ElMariachi.cl/checkout/entregar
+  </div>
+
+  <div class="card p-4 mb-4">
+    <h6>Av. México 1234, Santiago</h6>
+    <div class="border p-3 bg-light my-3">
+      [Mapa con radio 3km]
+    </div>
+
+    <p><strong>Resultado:</strong> Fuera de zona de reparto</p>
+    <p><strong>Sugerencia:</strong> Retiro en local</p>
+
+    <button class="btn btn-outline-primary">Cambiar a retiro</button>
+  </div>
+
+  <div class="api-box p-3">
+    <b>API/Entrega</b><br>
+    GET /delivery/coverage?lat,lng<br>
+    POST /orders/{id}/pickup
+  </div>
+</body>
+</html>

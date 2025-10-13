@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Subir imagen de producto | El Mariachi</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      background-color: #111;
+      color: #fff;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+    }
+    .browser-bar {
+      background: #222;
+      color: #ccc;
+      border: 1px solid #333;
+      border-radius: 6px;
+      padding: 6px 10px;
+      margin: 20px;
+      font-size: 14px;
+    }
+    .card {
+      background: #1c1c1c;
+      border: 1px solid #333;
+      border-radius: 8px;
+    }
+    .form-control, .btn {
+      border-radius: 6px;
+    }
+    .validation-box {
+      border: 1px solid #444;
+      border-radius: 6px;
+      padding: 12px;
+      background: #1a1a1a;
+      color: #ccc;
+    }
+    .validated-box {
+      border: 1px solid #444;
+      border-radius: 6px;
+      padding: 10px;
+      background: #1a1a1a;
+      color: #ccc;
+    }
+    .form-check-input:checked {
+      background-color: #28a745;
+      border-color: #28a745;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="browser-bar">https://www.ElMariachi.cl/admin/productos/imagenes</div>
+
+  <div class="container mt-4">
+    <div class="card p-4 shadow">
+      <h5 class="mb-3">Subir imagen de producto</h5>
+
+      <div class="d-flex align-items-center mb-3">
+        <input type="file" class="form-control me-2" id="inputArchivo">
+        <button class="btn btn-primary" id="btnSubir">Subir</button>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="validation-box mb-3">
+            <strong>Preview 800x800</strong>
+            <div id="previewContainer" class="mt-2 text-center text-muted small">No hay imagen cargada</div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="validation-box">
+            <strong>Validaciones:</strong>
+            <ul class="small mt-2">
+              <li>Tipo: jpg/png</li>
+              <li>Tamaño: ≤ 2 MB</li>
+              <li>Dim mín: 600×800</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="validated-box mt-3">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" value="" id="checkValidada" checked>
+          <label class="form-check-label" for="checkValidada">
+            Imagen subida y validada
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="text-center mt-4 mb-3 text-secondary small">
+    © 2025 El Mariachi
+  </footer>
+
+  <script>
+    const inputArchivo = document.getElementById('inputArchivo');
+    const previewContainer = document.getElementById('previewContainer');
+    const btnSubir = document.getElementById('btnSubir');
+    const checkValidada = document.getElementById('checkValidada');
+
+    btnSubir.addEventListener('click', () => {
+      const file = inputArchivo.files[0];
+      if (!file) {
+        alert('Selecciona una imagen antes de subir.');
+        return;
+      }
+
+      const allowedTypes = ['image/jpeg', 'image/png'];
+      if (!allowedTypes.includes(file.type)) {
+        alert('Solo se permiten archivos JPG o PNG.');
+        return;
+      }
+
+      if (file.size > 2 * 1024 * 1024) {
+        alert('El archivo excede los 2 MB.');
+        return;
+      }
+
+      const img = new Image();
+      img.onload = () => {
+        if (img.width < 600 || img.height < 800) {
+          alert('Las dimensiones son menores a 600x800.');
+          return;
+        }
+        previewContainer.innerHTML = '';
+        img.style.maxWidth = '100%';
+        img.style.borderRadius = '6px';
+        previewContainer.appendChild(img);
+        checkValidada.checked = true;
+      };
+      img.src = URL.createObjectURL(file);
+    });
+  </script>
+
+</body>
+</html>

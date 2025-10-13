@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wireframe • Registro de Usuario (estático)</title>
+<style>
+  :root{
+    --bg:#0e0e0e; --panel:#141414; --card:#181818; --stroke:#222;
+    --text:#e9e9e9; --muted:#bfbfbf; --btn:#ff9f43;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font:14px/1.35 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+  .wrap{max-width:1100px;margin:24px auto;padding:12px}
+
+  /* navegador fake */
+  .chrome{background:#0b0b0b;border:1px solid var(--stroke);border-radius:8px;padding:10px 12px;display:flex;align-items:center;gap:10px}
+  .chrome .dot{width:10px;height:10px;border-radius:50%;background:#333}
+  .chrome .addr{flex:1;background:#0f0f0f;border:1px solid var(--stroke);border-radius:6px;padding:8px 10px;color:#9bd2ff}
+  .chrome .addr code{font-family:ui-monospace,Menlo,Consolas,monospace}
+
+  .canvas{position:relative;margin-top:14px;background:var(--panel);border:1px solid var(--stroke);border-radius:10px;min-height:560px;overflow:hidden}
+
+  /* tarjetas */
+  .card{position:absolute;width:360px;background:var(--card);border:1px solid var(--stroke);border-radius:10px;box-shadow:0 10px 24px rgba(0,0,0,.35)}
+  .card header{padding:10px 12px;border-bottom:1px solid var(--stroke);color:#d8d8d8;font-weight:600}
+  .card .body{padding:12px}
+
+  /* panel de registro (izquierda) */
+  #form{left:24px;top:92px;width:360px}
+  .group{margin-bottom:12px}
+  label{display:block;margin:0 0 6px;color:#cfcfcf;font-size:13px}
+  input[type="email"],input[type="password"]{
+    width:100%;padding:10px;border-radius:6px;background:#0f0f0f;border:1px solid var(--stroke);color:var(--text)
+  }
+  .btn{display:inline-block;border:none;background:var(--btn);color:#1a1a1a;font-weight:700;
+       padding:9px 14px;border-radius:8px}
+
+  /* mensajes (derecha) */
+  #mEmail{left:560px;top:126px}
+  #mPass{left:560px;top:360px}
+  .ok{display:inline-block;margin-top:10px;background:#e9e9e9;color:#111;border:none;padding:8px 18px;border-radius:6px}
+
+  /* caja de API (abajo-izq) */
+  #api{left:40px;bottom:24px;width:280px}
+  #api table{width:100%;border-collapse:collapse;font-family:ui-monospace,monospace}
+  #api td{padding:6px 10px;border-top:1px solid var(--stroke);color:#c8f3ff}
+  #api .title{background:#0f0f0f;color:#fff;border-top-left-radius:8px;border-top-right-radius:8px;border-bottom:1px solid var(--stroke);padding:8px 10px}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="chrome">
+      <div class="dot" style="background:#f25f58"></div>
+      <div class="dot" style="background:#fbbe3c"></div>
+      <div class="dot" style="background:#58cb42"></div>
+      <div class="addr"><code>https://www.ElMariachi.cl/registro</code></div>
+    </div>
+
+    <div class="canvas">
+      <!-- Registro -->
+      <section class="card" id="form">
+        <header>Registro de Usuario</header>
+        <div class="body">
+          <div class="group">
+            <label for="email">Nombre de Usuario:</label>
+            <input id="email" type="email" placeholder="ana@example.com">
+          </div>
+          <div class="group">
+            <label for="pass">Contraseña:</label>
+            <input id="pass" type="password" placeholder="********">
+          </div>
+          <button class="btn">Registrarse</button>
+        </div>
+      </section>
+
+      <!-- Mensaje: email en uso -->
+      <section class="card" id="mEmail" aria-hidden="true">
+        <header>Registro</header>
+        <div class="body" style="text-align:center">
+          <div style="margin:4px 0 8px;">El email ya está en uso.</div>
+          <button class="ok">OK</button>
+        </div>
+      </section>
+
+      <!-- Mensaje: contraseña no cumple -->
+      <section class="card" id="mPass" aria-hidden="true">
+        <header>Registro</header>
+        <div class="body" style="text-align:center">
+          <div>La contraseña no cumple los<br>requisitos.</div>
+          <button class="ok">OK</button>
+        </div>
+      </section>
+
+      <!-- API -->
+      <section class="card" id="api">
+        <div class="title">API/Usuario</div>
+        <table>
+          <tr><td>+ email:String</td></tr>
+          <tr><td>+ pass:String</td></tr>
+          <tr><td>Registrar(email, pass): Response</td></tr>
+        </table>
+      </section>
+    </div>
+  </div>
+</body>
+</html>
+

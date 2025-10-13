@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pull Request #142 - feat: carrito y filtros</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f6f8fa;
+    }
+    .card {
+      border-radius: 8px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+    .badge {
+      font-size: 0.85rem;
+    }
+    .pipeline-step {
+      display: inline-block;
+      padding: 8px 16px;
+      background-color: #f6f8fa;
+      border-radius: 6px;
+      border: 1px solid #d0d7de;
+      margin-right: 6px;
+      text-align: center;
+      min-width: 90px;
+    }
+    .status-green { color: #22863a; }
+    .status-yellow { color: #b08800; }
+    .status-orange { color: #d29922; }
+    .arrow {
+      font-weight: bold;
+      margin: 0 4px;
+      color: #6e7781;
+    }
+  </style>
+</head>
+<body class="p-4">
+
+  <div class="container">
+    <div class="card p-3 mb-3">
+      <div class="d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Pull Request #142 — <strong>feat: carrito y filtros</strong></h5>
+      </div>
+      <p class="mb-1 text-muted">Autor: <strong>benjamin</strong> | Rama: <code>feature/cart</code></p>
+
+      <div class="mb-2">
+        <span class="badge bg-light text-dark border">Checks: Regression Suite</span>
+        <span class="badge bg-success">build</span>
+        <span class="badge bg-success">unit tests</span>
+        <span class="badge bg-warning text-dark">regression</span>
+      </div>
+
+      <div class="mt-3">
+        <button class="btn btn-primary btn-sm">Request review</button>
+        <button class="btn btn-success btn-sm">Merge</button>
+      </div>
+    </div>
+
+    <div class="card p-3 mb-3">
+      <h6>CI Pipeline (on pull_request)</h6>
+      <div class="mt-2 mb-2">
+        <span class="pipeline-step">build<br><span class="status-green">✔</span></span>
+        <span class="arrow">→</span>
+        <span class="pipeline-step">unit<br><span class="status-green">✔</span></span>
+        <span class="arrow">→</span>
+        <span class="pipeline-step">regression<br><span class="status-yellow">•</span></span>
+        <span class="arrow">→</span>
+        <span class="pipeline-step">report<br><span class="status-yellow">•</span></span>
+      </div>
+
+      <div class="alert alert-warning mt-3">
+        <strong>Regression summary:</strong> Failed: 3 | Passed: 47 |
+        <a href="#" class="alert-link">Report: artifacts/regression.html</a>
+      </div>
+    </div>
+
+    <div class="card p-3">
+      <h6>CI Config (ejemplo)</h6>
+      <pre class="bg-light p-2 border rounded">
+on: pull_request
+jobs:
+  build, test, regression
+rules:
+  block merge if regression failed
+      </pre>
+    </div>
+  </div>
+
+</body>
+</html>

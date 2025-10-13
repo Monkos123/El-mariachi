@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitHub Actions - CI Pipeline</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f6f8fa;
+    }
+    .card {
+      border-radius: 8px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+    .pipeline-step {
+      display: inline-block;
+      padding: 8px 16px;
+      background-color: #f6f8fa;
+      border-radius: 6px;
+      border: 1px solid #d0d7de;
+      margin-right: 6px;
+      text-align: center;
+      min-width: 120px;
+    }
+    .arrow {
+      font-weight: bold;
+      margin: 0 6px;
+      color: #6e7781;
+    }
+  </style>
+</head>
+<body class="p-4">
+
+  <div class="container">
+
+    <div class="card p-3 mb-3">
+      <h5>Triggers</h5>
+      <span class="badge bg-light text-dark border">push: main (auto)</span>
+      <span class="badge bg-light text-dark border">release/* (manual)</span>
+    </div>
+
+    <div class="card p-3 mb-3">
+      <h6>CI Pipeline</h6>
+      <div class="mt-2 mb-2">
+        <span class="pipeline-step">build<br><small>compilar app</small><br>✔</span>
+        <span class="arrow">→</span>
+        <span class="pipeline-step">linters<br><small>estilo/estáticos</small><br>✔</span>
+        <span class="arrow">→</span>
+        <span class="pipeline-step">tests<br><small>unit + e2e</small><br>✔</span>
+        <span class="arrow">→</span>
+        <span class="pipeline-step">package<br><small>empaquetado</small><br>✔</span>
+        <span class="arrow">→</span>
+        <span class="pipeline-step">deploy-staging<br><small>a entorno de prueba</small><br>✔</span>
+      </div>
+    </div>
+
+    <div class="card p-3 mb-3">
+      <h6>Entorno de pruebas (staging)</h6>
+      <p class="mb-1">Versión: <code>1.5.3+build42</code></p>
+      <p>Estado: <span class="badge bg-success">desplegado</span></p>
+    </div>
+
+    <div class="card p-3">
+      <h6>CI Config (YAML - ejemplo)</h6>
+      <pre class="bg-light p-2 border rounded">
+on:
+  push:
+    branches: [main]  # auto
+  workflow_dispatch:  # manual (release)
+jobs:
+  build:
+    runs-on: ubuntu-latest
+      </pre>
+    </div>
+
+  </div>
+
+</body>
+</html>
