@@ -104,5 +104,20 @@
     </div>
   </div>
 </body>
+  <script>
+  const API_URL = "http://localhost:4000/api/elmariachi/graphql";
+
+  async function graphqlRequest(query) {
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query })
+    });
+    const data = await response.json();
+    console.log("Respuesta GraphQL:", data);
+    return data;
+  }
+</script>
 </html>
+
 
