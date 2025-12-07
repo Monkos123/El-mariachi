@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Registro de Usuario • El Mariachi</title>
+  <style>
+    :root{
+      --primary:#d32f2f;
+      --secondary:#ffc107;
+      --accent:#ff6f00;
+      --dark:#1a1a1a;
+      --light:#f5f5f5;
+      --text-dark:#212121;
+      --text-light:#757575;
+      --border:#e0e0e0;
+      --success:#4caf50;
+      --hover:#b71c1c
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body{
+      background:linear-gradient(135deg,var(--light),#efefef);
+      color:var(--text-dark);
+      font-family:'Segoe UI',Roboto,'Helvetica Neue',sans-serif;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:16px
+    }
+    .container{
+      max-width:420px;
+      width:100%
+    }
+    .card{
+      background:#fff;
+      border-radius:16px;
+      box-shadow:0 8px 32px rgba(0,0,0,0.1);
+      padding:40px;
+      border:1px solid var(--border)
+    }
+    .logo{
+      text-align:center;
+      font-size:48px;
+      margin-bottom:24px
+    }
+    .title{
+      text-align:center;
+      color:var(--text-dark);
+      font-weight:700;
+      font-size:24px;
+      margin-bottom:8px;
+      letter-spacing:-0.5px
+    }
+    .subtitle{
+      text-align:center;
+      color:var(--text-light);
+      font-size:14px;
+      margin-bottom:24px
+    }
+    .form-group{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      margin-bottom:16px
+    }
+    label{
+      color:var(--text-dark);
+      font-weight:600;
+      font-size:13px;
+      text-transform:uppercase;
+      letter-spacing:0.5px
+    }
+    input[type="email"],input[type="password"]{
+      padding:12px 16px;
+      border-radius:8px;
+      border:2px solid var(--border);
+      background:#fff;
+      color:var(--text-dark);
+      font-size:14px;
+      transition:all 0.3s;
+      font-family:inherit
+    }
+    input[type="email"]:focus,input[type="password"]:focus{
+      outline:none;
+      border-color:var(--primary);
+      box-shadow:0 0 0 3px rgba(211,47,47,0.1)
+    }
+    .btn{
+      width:100%;
+      padding:14px;
+      border:none;
+      border-radius:8px;
+      font-weight:700;
+      font-size:14px;
+      text-transform:uppercase;
+      letter-spacing:0.5px;
+      cursor:pointer;
+      transition:all 0.3s;
+      margin-bottom:8px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px
+    }
+    .btn-primary{
+      background:var(--primary);
+      color:#fff
+    }
+    .btn-primary:hover{
+      background:var(--hover);
+      transform:translateY(-2px);
+      box-shadow:0 8px 20px rgba(211,47,47,0.3)
+    }
+    .btn-secondary{
+      background:#fff;
+      color:var(--text-dark);
+      border:2px solid var(--border)
+    }
+    .btn-secondary:hover{
+      border-color:var(--primary);
+      color:var(--primary);
+      transform:translateY(-2px)
+    }
+    .btn:disabled{
+      opacity:0.6;
+      cursor:not-allowed;
+      transform:none
+    }
+    .link-help{
+      text-align:center;
+      font-size:13px;
+      margin-top:16px
+    }
+    .link-help a{
+      color:var(--primary);
+      text-decoration:none;
+      font-weight:600
+    }
+    .link-help a:hover{
+      text-decoration:underline
+    }
+    .modal{
+      position:fixed;
+      top:0;
+      left:0;
+      right:0;
+      bottom:0;
+      background:rgba(0,0,0,0.5);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:1000;
+      padding:16px
+    }
+    .modal.active{
+      display:flex
+    }
+    .modal-content{
+      background:#fff;
+      border-radius:16px;
+      padding:32px;
+      max-width:400px;
+      width:100%;
+      text-align:center;
+      box-shadow:0 20px 60px rgba(0,0,0,0.3)
+    }
+    .modal-icon{
+      font-size:48px;
+      margin-bottom:16px
+    }
+    .modal-title{
+      color:var(--text-dark);
+      font-weight:700;
+      font-size:18px;
+      margin-bottom:8px
+    }
+    .modal-text{
+      color:var(--text-light);
+      font-size:14px;
+      margin-bottom:24px;
+      line-height:1.6
+    }
+    .modal-btn{
+      width:100%;
+      padding:12px;
+      background:var(--primary);
+      color:#fff;
+      border:none;
+      border-radius:8px;
+      font-weight:700;
+      font-size:13px;
+      cursor:pointer;
+      transition:all 0.3s
+    }
+    .modal-btn:hover{
+      background:var(--hover);
+      transform:translateY(-2px)
+    }
+    .password-hint{
+      background:rgba(211,47,47,0.05);
+      border-left:4px solid var(--primary);
+      padding:12px;
+      border-radius:6px;
+      font-size:12px;
+      color:var(--text-light);
+      margin-bottom:16px
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <div class="logo">🌮</div>
+      <h1 class="title">El Mariachi</h1>
+      <p class="subtitle">Crea tu cuenta ahora</p>
+
+      <div class="password-hint">
+        ✓ Contraseña: 8+ caracteres, 1 letra minúscula, 1 número
+      </div>
+
+      <form id="registerForm" onsubmit="registrar(event)">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input id="email" type="email" placeholder="tu@email.com" required>
+        </div>
+
+        <div class="form-group">
+          <label for="pass">Contraseña</label>
+          <input id="pass" type="password" placeholder="••••••••" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Registrarse</button>
+        <button type="button" class="btn btn-secondary" onclick="abrirLogin()">Tengo cuenta</button>
+        <button type="button" class="btn btn-secondary" onclick="verCatalogo()">Ver Catálogo</button>
+      </form>
+
+      <div class="link-help">
+        <a href="B-03RecuperacionContraseña.html">¿Olvidaste tu contraseña?</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Error Email -->
+  <div id="modalEmail" class="modal">
+    <div class="modal-content">
+      <div class="modal-icon">⚠️</div>
+      <h2 class="modal-title">Email en Uso</h2>
+      <p class="modal-text">Este email ya está registrado. Intenta con otro o inicia sesión.</p>
+      <button class="modal-btn" onclick="cerrarModal('modalEmail')">Entendido</button>
+    </div>
+  </div>
+
+  <!-- Modal: Error Contraseña -->
+  <div id="modalPass" class="modal">
+    <div class="modal-content">
+      <div class="modal-icon">🔐</div>
+      <h2 class="modal-title">Contraseña Débil</h2>
+      <p class="modal-text">Debe tener 8+ caracteres, incluir minúscula y número.</p>
+      <button class="modal-btn" onclick="cerrarModal('modalPass')">Intentar de Nuevo</button>
+    </div>
+  </div>
+
+  <!-- Modal: Éxito -->
+  <div id="modalExito" class="modal">
+    <div class="modal-content">
+      <div class="modal-icon">✅</div>
+      <h2 class="modal-title">¡Registro Exitoso!</h2>
+      <p class="modal-text">Tu cuenta ha sido creada. Ahora puedes iniciar sesión.</p>
+      <button class="modal-btn" onclick="abrirLogin()">Iniciar Sesión</button>
+    </div>
+  </div>
+
+<script>
+  function cerrarModal(id){
+    document.getElementById(id).classList.remove('active');
+  }
+
+  function abrirLogin(){
+    window.location.href = 'B-02InicioSesion.html';
+  }
+
+  function verCatalogo(){
+    window.location.href = 'B-09ConstruccionPedido.html';
+  }
+
+  function guardarUsuarioLocal(email, pass){
+    try {
+      const key = 'elmariachi_users';
+      const users = JSON.parse(localStorage.getItem(key) || '[]');
+      if(!users.find(u => u.email === email)){
+        users.push({email, pass});
+        localStorage.setItem(key, JSON.stringify(users));
+      }
+    } catch(err){
+      console.warn('No se pudo guardar usuario localmente:', err);
+    }
+  }
+
+  function registrar(e){
+    e.preventDefault();
+    const email = document.getElementById('email').value.trim();
+    const pass = document.getElementById('pass').value;
+
+    if(!email || !pass){
+      alert('Completa todos los campos');
+      return;
+    }
+
+    // Validar política contraseña
+    const regex = /^(?=.*[a-z])(?=.*\d).{8,}$/;
+    if(!regex.test(pass)){
+      document.getElementById('modalPass').classList.add('active');
+      return;
+    }
+
+    // Verificar si email ya existe
+    const users = JSON.parse(localStorage.getItem('elmariachi_users') || '[]');
+    if(users.find(u => u.email === email)){
+      document.getElementById('modalEmail').classList.add('active');
+      return;
+    }
+
+    // Guardar usuario
+    guardarUsuarioLocal(email, pass);
+    document.getElementById('modalExito').classList.add('active');
+  }
+
+  // Permitir submit con Enter
+  document.getElementById('registerForm')?.addEventListener('keypress', (e)=>{
+    if(e.key === 'Enter') registrar(e);
+  });
+</script>
+</body>
+</html>
