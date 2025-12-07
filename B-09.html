@@ -3,212 +3,547 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>El Mariachi - Catálogo</title>
+  <title>Catálogo • El Mariachi</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    :root{
+      --primary:#d32f2f;
+      --secondary:#ffc107;
+      --accent:#ff6f00;
+      --dark:#1a1a1a;
+      --light:#f5f5f5;
+      --text-dark:#212121;
+      --text-light:#757575;
+      --border:#e0e0e0;
+      --success:#4caf50;
+      --hover:#b71c1c
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body{
+      background:var(--light);
+      color:var(--text-dark);
+      font-family:'Segoe UI',Roboto,'Helvetica Neue',sans-serif;
+      line-height:1.6
+    }
+    header{
+      background:linear-gradient(135deg,var(--primary),var(--hover));
+      box-shadow:0 2px 8px rgba(0,0,0,0.1);
+      padding:16px 0;
+      position:sticky;
+      top:0;
+      z-index:100
+    }
+    .navbar-brand{
+      color:#fff!important;
+      font-weight:700;
+      font-size:24px;
+      letter-spacing:-0.5px
+    }
+    .nav-actions{
+      display:flex;
+      gap:12px;
+      align-items:center
+    }
+    .nav-btn{
+      padding:8px 16px;
+      border:2px solid transparent;
+      background:rgba(255,255,255,0.1);
+      color:#fff;
+      border-radius:8px;
+      font-weight:600;
+      font-size:12px;
+      text-decoration:none;
+      cursor:pointer;
+      transition:all 0.3s;
+      text-transform:uppercase;
+      letter-spacing:0.5px
+    }
+    .nav-btn:hover{
+      background:rgba(255,255,255,0.2);
+      color:#fff
+    }
+    .nav-badge{
+      background:var(--secondary);
+      color:var(--dark);
+      padding:4px 8px;
+      border-radius:4px;
+      font-weight:700;
+      font-size:11px
+    }
+    .container{
+      max-width:1400px;
+      padding:40px 24px
+    }
+    h1{
+      color:var(--text-dark);
+      font-weight:700;
+      font-size:32px;
+      margin-bottom:32px;
+      letter-spacing:-0.5px
+    }
+    .controls{
+      display:flex;
+      gap:16px;
+      margin-bottom:32px;
+      align-items:center;
+      flex-wrap:wrap
+    }
+    .search-box{
+      flex:1;
+      min-width:250px
+    }
+    .search-box input{
+      width:100%;
+      padding:10px 16px;
+      border:2px solid var(--border);
+      border-radius:8px;
+      font-size:13px;
+      transition:all 0.3s
+    }
+    .search-box input:focus{
+      outline:none;
+      border-color:var(--primary);
+      box-shadow:0 0 0 3px rgba(211,47,47,0.1)
+    }
+    .view-btn{
+      padding:10px 16px;
+      border:2px solid var(--border);
+      background:#fff;
+      color:var(--text-dark);
+      border-radius:8px;
+      font-weight:600;
+      font-size:12px;
+      cursor:pointer;
+      transition:all 0.3s
+    }
+    .view-btn:hover{
+      border-color:var(--primary);
+      color:var(--primary)
+    }
+    .products-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+      gap:24px;
+      margin-bottom:40px
+    }
+    .product-card{
+      background:#fff;
+      border-radius:12px;
+      border:1px solid var(--border);
+      overflow:hidden;
+      transition:all 0.3s;
+      display:flex;
+      flex-direction:column
+    }
+    .product-card:hover{
+      transform:translateY(-8px);
+      box-shadow:0 12px 24px rgba(0,0,0,0.12);
+      border-color:var(--primary)
+    }
+    .product-image{
+      width:100%;
+      height:180px;
+      background:linear-gradient(135deg,#fff,#f1f1f1);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:72px
+    }
+    .product-content{
+      padding:16px;
+      flex:1;
+      display:flex;
+      flex-direction:column
+    }
+    .product-category{
+      color:var(--text-light);
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:0.5px;
+      margin-bottom:4px
+    }
+    .product-name{
+      color:var(--text-dark);
+      font-weight:700;
+      font-size:14px;
+      margin-bottom:8px;
+      line-height:1.3
+    }
+    .product-desc{
+      color:var(--text-light);
+      font-size:12px;
+      margin-bottom:12px;
+      flex:1
+    }
+    .product-footer{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding-top:12px;
+      border-top:1px solid var(--border)
+    }
+    .product-price{
+      color:var(--primary);
+      font-weight:800;
+      font-size:16px
+    }
+    .product-btn{
+      padding:8px 12px;
+      background:var(--primary);
+      color:#fff;
+      border:none;
+      border-radius:6px;
+      font-weight:600;
+      font-size:11px;
+      cursor:pointer;
+      transition:all 0.3s;
+      text-transform:uppercase;
+      letter-spacing:0.5px
+    }
+    .product-btn:hover{
+      background:var(--hover);
+      transform:translateY(-2px)
+    }
+    .empty-state{
+      text-align:center;
+      padding:60px 20px;
+      color:var(--text-light)
+    }
+    .empty-icon{
+      font-size:64px;
+      margin-bottom:16px
+    }
+    .modal-backdrop{
+      background:rgba(0,0,0,0.5)
+    }
+    .modal-content{
+      border-radius:12px;
+      border:none
+    }
+    .modal-header{
+      background:linear-gradient(135deg,var(--primary),var(--hover));
+      color:#fff;
+      border:none
+    }
+    .modal-title{
+      font-weight:700;
+      font-size:16px
+    }
+    .btn-close{
+      filter:brightness(0) invert(1)
+    }
+    .auth-form{
+      padding:24px
+    }
+    .form-label{
+      font-weight:600;
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:0.5px;
+      margin-bottom:8px
+    }
+    .form-control{
+      border:2px solid var(--border);
+      border-radius:8px;
+      padding:12px;
+      font-size:13px;
+    }
+    .form-control:focus{
+      outline:none;
+      border-color:var(--primary);
+      box-shadow:0 0 0 3px rgba(211,47,47,0.1)
+    }
+    .btn-primary{
+      background:var(--primary);
+      border:none;
+      border-radius:8px;
+      padding:12px 20px;
+      color:#fff;
+      font-weight:700;
+      text-transform:uppercase;
+      letter-spacing:0.5px
+    }
+    .btn-primary:hover{
+      background:var(--hover)
+    }
+    .alert{
+      border-radius:8px;
+      border:none
+    }
+    @media(max-width:768px){
+      .products-grid{
+        grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+        gap:16px
+      }
+      .controls{
+        flex-direction:column;
+        align-items:stretch
+      }
+      .search-box{
+        min-width:100%
+      }
+      h1{ font-size:24px }
+    }
+  </style>
 </head>
 <body>
-  <nav class="navbar navbar-light bg-light mb-3">
-    <div class="container">
-      <a class="navbar-brand" href="#">El Mariachi</a>
-      <form class="d-flex w-50" role="search">
-        <input id="searchInput" class="form-control me-2" type="search" placeholder="Buscar: Al pastor" aria-label="Buscar">
-        <button class="btn btn-outline-secondary" type="button">🔍</button>
-      </form>
-      <a href="carrito.html" class="btn btn-outline-primary">Carrito (0)</a>
+  <header>
+    <div class="container d-flex justify-content-between align-items-center">
+      <a class="navbar-brand" href="B-09ConstruccionPedido.html">🌮 El Mariachi</a>
+      <div class="nav-actions">
+        <a id="navCart" class="nav-btn" href="B-10CarritoCalculo.html">
+          🛒 Carrito
+          <span class="nav-badge" id="cartBadge" style="display:none">0</span>
+        </a>
+        <a id="navOrders" class="nav-btn" href="B-12HistorialPedidos.html" style="display:none">
+          📋 Mis Pedidos
+        </a>
+        <div id="userNav" style="display:none" class="d-flex gap-2 align-items-center">
+          <span class="nav-btn" style="background:transparent;cursor:default" id="userDisplay"></span>
+          <button class="nav-btn" onclick="logoutUser()">Salir</button>
+        </div>
+        <button id="authBtn" class="nav-btn" data-bs-toggle="modal" data-bs-target="#authModal">
+          Iniciar Sesión
+        </button>
+      </div>
     </div>
-  </nav>
+  </header>
 
-  <div class="container">
-    <div class="row">
-      <!-- Sidebar categories -->
-      <aside class="col-md-3 mb-4">
-        <div class="list-group">
-          <a href="#" class="list-group-item list-group-item-action active">Tacos</a>
-          <a href="#" class="list-group-item list-group-item-action">Burritos</a>
-          <a href="#" class="list-group-item list-group-item-action">Nachos</a>
-          <a href="#" class="list-group-item list-group-item-action">Combos</a>
+  <main class="container">
+    <h1>Catálogo de Productos</h1>
+
+    <div class="controls">
+      <div class="search-box">
+        <input id="searchInput" type="text" placeholder="Buscar productos...">
+      </div>
+      <a class="view-btn" href="B-04VisualizacionCatalogo.html">📋 Vista Tabla</a>
+      <a class="view-btn" href="B-05BusquedayFiltros.html">🔍 Filtros Avanzados</a>
+    </div>
+
+    <div class="products-grid" id="productsGrid"></div>
+  </main>
+
+  <!-- Modal de Autenticación -->
+  <div class="modal fade" id="authModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Iniciar Sesión</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
-      </aside>
+        <div class="modal-body">
+          <ul class="nav nav-tabs mb-4" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#login" type="button" role="tab">Ingresar</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="register-tab" data-bs-toggle="tab" data-bs-target="#register" type="button" role="tab">Registrarse</button>
+            </li>
+          </ul>
 
-      <!-- Main content -->
-      <main class="col-md-6">
-        <div class="mb-3">
-          <input class="form-control" placeholder="Filtros: Picante: medio-alto  Vegetariano  Precio: $-$$" readonly>
-        </div>
-
-        <h5 class="mb-3">Tacos disponibles</h5>
-        <div id="products" class="row g-3">
-          <!-- product cards (example) -->
-          <div class="col-sm-6 col-lg-4">
-            <div class="card h-100">
-              <div class="card-body d-flex flex-column">
-                <h6 class="card-title">Taco al pastor</h6>
-                <p class="card-text mb-2">Precio: $4.500</p>
-                <div class="mt-auto d-grid">
-                  <button data-id="1" class="btn btn-primary add-to-cart">Agregar</button>
+          <div class="tab-content">
+            <!-- Login -->
+            <div class="tab-pane fade show active" id="login" role="tabpanel">
+              <form id="loginForm">
+                <div class="mb-3">
+                  <label class="form-label">Email</label>
+                  <input id="loginEmail" class="form-control" type="email" required>
                 </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-sm-6 col-lg-4">
-            <div class="card h-100">
-              <div class="card-body d-flex flex-column">
-                <h6 class="card-title">Taco veggie</h6>
-                <p class="card-text mb-2">Precio: $4.900</p>
-                <div class="mt-auto d-grid">
-                  <button data-id="2" class="btn btn-primary add-to-cart">Agregar</button>
+                <div class="mb-3">
+                  <label class="form-label">Contraseña</label>
+                  <input id="loginPassword" class="form-control" type="password" required>
                 </div>
-              </div>
+                <button type="submit" class="btn btn-primary w-100">Ingresar</button>
+              </form>
             </div>
-          </div>
 
-          <div class="col-sm-6 col-lg-4">
-            <div class="card h-100">
-              <div class="card-body d-flex flex-column">
-                <h6 class="card-title">Taco asada</h6>
-                <p class="card-text mb-2">Precio: $4.700</p>
-                <div class="mt-auto d-grid">
-                  <button data-id="3" class="btn btn-primary add-to-cart">Agregar</button>
+            <!-- Register -->
+            <div class="tab-pane fade" id="register" role="tabpanel">
+              <form id="registerForm">
+                <div class="mb-3">
+                  <label class="form-label">Nombre Completo</label>
+                  <input id="regName" class="form-control" required>
                 </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- more sample items -->
-          <div class="col-sm-6 col-lg-4">
-            <div class="card h-100">
-              <div class="card-body d-flex flex-column">
-                <h6 class="card-title">Taco chipote</h6>
-                <p class="card-text mb-2">Precio: $4.200</p>
-                <div class="mt-auto d-grid">
-                  <button data-id="4" class="btn btn-primary add-to-cart">Agregar</button>
+                <div class="mb-3">
+                  <label class="form-label">RUT</label>
+                  <input id="regRut" class="form-control" placeholder="12.345.678-9" required>
                 </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-sm-6 col-lg-4">
-            <div class="card h-100">
-              <div class="card-body d-flex flex-column">
-                <h6 class="card-title">Taco carnitas</h6>
-                <p class="card-text mb-2">Precio: $4.300</p>
-                <div class="mt-auto d-grid">
-                  <button data-id="5" class="btn btn-primary add-to-cart">Agregar</button>
+                <div class="mb-3">
+                  <label class="form-label">Email</label>
+                  <input id="regEmail" class="form-control" type="email" required>
                 </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-sm-6 col-lg-4">
-            <div class="card h-100 border-secondary">
-              <div class="card-body d-flex flex-column">
-                <h6 class="card-title">No disponible</h6>
-                <p class="card-text mb-2">Temporalmente sin stock</p>
-                <div class="mt-auto d-grid">
-                  <button class="btn btn-secondary" disabled>No disponible</button>
+                <div class="mb-3">
+                  <label class="form-label">Contraseña</label>
+                  <input id="regPassword" class="form-control" type="password" required>
                 </div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </main>
-
-      <!-- Cart sidebar -->
-      <aside class="col-md-3">
-        <div class="card">
-          <div class="card-header d-flex justify-content-between align-items-center">
-            <strong>Carrito</strong>
-            <a href="carrito.html" class="btn btn-sm btn-outline-primary">Ver</a>
-          </div>
-          <div class="card-body">
-            <div id="cartItems" class="mb-3">
-              <p class="text-muted">El carrito está vacío</p>
-            </div>
-            <div class="d-grid">
-              <button id="checkoutBtn" class="btn btn-success" disabled>Confirmar</button>
-            </div>
-            <div class="mt-3 text-end">
-              <small>Subtotal: <span id="sidebarSubtotal">$0</span></small>
+                <button type="submit" class="btn btn-primary w-100">Registrarse</button>
+              </form>
             </div>
           </div>
         </div>
-      </aside>
+      </div>
     </div>
   </div>
 
-  <script>
-    // Simple in-memory cart for demo
-    const products = {
-      1: {id:1, name:"Taco al pastor", price:4500},
-      2: {id:2, name:"Taco veggie", price:4900},
-      3: {id:3, name:"Taco asada", price:4700},
-      4: {id:4, name:"Taco chipote", price:4200},
-      5: {id:5, name:"Taco carnitas", price:4300},
-    };
-    const cart = {};
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  const API_URL = "http://localhost:4000/graphql";
+  let productsList = [];
+  let currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
 
-    function updateSidebar(){
-      const cartItems = document.getElementById('cartItems');
-      cartItems.innerHTML = '';
-      let subtotal = 0;
-      const keys = Object.keys(cart);
-      if(keys.length === 0){
-        cartItems.innerHTML = '<p class="text-muted">El carrito está vacío</p>';
-        document.getElementById('checkoutBtn').disabled = true;
-      } else {
-        keys.forEach(id=>{
-          const it = cart[id];
-          subtotal += it.qty * it.price;
-          const row = document.createElement('div');
-          row.className = 'd-flex align-items-center mb-2';
-          row.innerHTML = `<div class="flex-grow-1">
-                            <div class="fw-semibold">${it.name}</div>
-                            <small>$${(it.price).toLocaleString()}</small>
-                          </div>
-                          <div class="d-flex align-items-center">
-                            <button class="btn btn-sm btn-outline-secondary me-1" data-action="dec" data-id="${id}">−</button>
-                            <span class="mx-1">${it.qty}</span>
-                            <button class="btn btn-sm btn-outline-secondary ms-1" data-action="inc" data-id="${id}">+</button>
-                          </div>`;
-          cartItems.appendChild(row);
-        });
-        document.getElementById('checkoutBtn').disabled = false;
+  // Verificar sesión al cargar
+  function checkAuth(){
+    if(currentUser){
+      document.getElementById('authBtn').style.display = 'none';
+      document.getElementById('userNav').style.display = 'flex';
+      document.getElementById('navOrders').style.display = 'inline-block';
+      document.getElementById('userDisplay').textContent = `👤 ${currentUser.name || currentUser.email}`;
+    } else {
+      document.getElementById('authBtn').style.display = 'block';
+      document.getElementById('userNav').style.display = 'none';
+      document.getElementById('navOrders').style.display = 'none';
+    }
+    updateCartBadge();
+  }
+
+  function updateCartBadge(){
+    const cart = JSON.parse(sessionStorage.getItem('cart') || '{}');
+    const itemCount = Object.keys(cart).filter(k => !k.startsWith('_')).length;
+    const badge = document.getElementById('cartBadge');
+    if(itemCount > 0){
+      badge.textContent = itemCount;
+      badge.style.display = 'inline-block';
+    } else {
+      badge.style.display = 'none';
+    }
+  }
+
+  function logoutUser(){
+    localStorage.removeItem('currentUser');
+    currentUser = null;
+    checkAuth();
+    alert('Sesión cerrada');
+  }
+
+  // Login
+  document.getElementById('loginForm').addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+
+    // Simulación: en producción usar GraphQL mutation
+    const user = {
+      id: 'user-' + Date.now(),
+      name: email.split('@')[0],
+      email: email,
+      rut: '12.345.678-9'
+    };
+    localStorage.setItem('currentUser', JSON.stringify(user));
+    currentUser = user;
+    checkAuth();
+    bootstrap.Modal.getInstance(document.getElementById('authModal')).hide();
+    document.getElementById('loginForm').reset();
+  });
+
+  // Register
+  document.getElementById('registerForm').addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const user = {
+      id: 'user-' + Date.now(),
+      name: document.getElementById('regName').value,
+      email: document.getElementById('regEmail').value,
+      rut: document.getElementById('regRut').value
+    };
+    localStorage.setItem('currentUser', JSON.stringify(user));
+    currentUser = user;
+    checkAuth();
+    bootstrap.Modal.getInstance(document.getElementById('authModal')).hide();
+    document.getElementById('registerForm').reset();
+  });
+
+  // Cargar productos
+  async function cargarProductos(){
+    const query = `
+      query {
+        productos {
+          id_producto
+          nombre
+          precio
+          disponible
+          categoria
+          descripcion
+        }
       }
-      document.querySelector('.navbar .btn-outline-primary').textContent = `Carrito (${keys.length})`;
-      document.getElementById('sidebarSubtotal').textContent = `$${subtotal.toLocaleString()}`;
+    `;
+    try {
+      const res = await fetch(API_URL, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({query}) });
+      const json = await res.json();
+      productsList = (json.data?.productos || []).map(p => ({
+        id: String(p.id_producto),
+        nombre: p.nombre,
+        precio: Number(p.precio) || 0,
+        disponible: !!p.disponible,
+        categoria: p.categoria || 'Sin categoría',
+        descripcion: p.descripcion || ''
+      }));
+      renderProducts();
+    } catch(err){
+      console.error(err);
+    }
+  }
+
+  function renderProducts(){
+    const search = document.getElementById('searchInput').value.trim().toLowerCase();
+    const filtered = productsList.filter(p => 
+      !(p.nombre||'').toLowerCase().includes('trabajando para usted') &&
+      (!(search) || (p.nombre||'').toLowerCase().includes(search) || (p.descripcion||'').toLowerCase().includes(search))
+    );
+
+    if(filtered.length === 0){
+      document.getElementById('productsGrid').innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">🔍</div><h4>Sin resultados</h4><p>No encontramos productos que coincidan</p></div>';
+      return;
     }
 
-    document.addEventListener('click', (e)=>{
-      if(e.target.matches('.add-to-cart')){
-        const id = e.target.getAttribute('data-id');
-        const p = products[id];
-        if(!cart[id]) cart[id] = {...p, qty:1};
-        else cart[id].qty++;
-        updateSidebar();
-      }
-      if(e.target.matches('[data-action="inc"]')){
-        const id = e.target.getAttribute('data-id');
-        cart[id].qty++;
-        updateSidebar();
-      }
-      if(e.target.matches('[data-action="dec"]')){
-        const id = e.target.getAttribute('data-id');
-        cart[id].qty--;
-        if(cart[id].qty <= 0) delete cart[id];
-        updateSidebar();
-      }
-      if(e.target.id === 'checkoutBtn'){
-        // pass cart via sessionStorage for demo and redirect
-        sessionStorage.setItem('cart', JSON.stringify(cart));
-        location.href = 'carrito.html';
-      }
-    });
+    document.getElementById('productsGrid').innerHTML = filtered.map(p => `
+      <div class="product-card">
+        <div class="product-image">🌮</div>
+        <div class="product-content">
+          <div class="product-category">${p.categoria}</div>
+          <div class="product-name">${p.nombre}</div>
+          <div class="product-desc">${(p.descripcion || '').substring(0, 60)}...</div>
+          <div class="product-footer">
+            <div class="product-price">$${p.precio.toLocaleString()}</div>
+            <button class="product-btn" onclick="addToCart('${p.id}', '${p.nombre}', ${p.precio})" ${!p.disponible ? 'disabled' : ''}>
+              ${p.disponible ? '+ Agregar' : 'Agotado'}
+            </button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
 
-    // search not implemented (UI only)
-    updateSidebar();
-  </script>
+  function addToCart(id, name, price){
+    if(!currentUser){
+      alert('Debes iniciar sesión para comprar');
+      bootstrap.Modal.getOrCreateInstance(document.getElementById('authModal')).show();
+      return;
+    }
+
+    const cart = JSON.parse(sessionStorage.getItem('cart') || '{}');
+    if(cart[id]){
+      cart[id].qty += 1;
+    } else {
+      cart[id] = { name, price, qty: 1 };
+    }
+    sessionStorage.setItem('cart', JSON.stringify(cart));
+    updateCartBadge();
+    alert(`${name} agregado al carrito`);
+  }
+
+  document.getElementById('searchInput').addEventListener('input', renderProducts);
+  cargarProductos();
+  checkAuth();
+</script>
 
 </body>
 </html>
