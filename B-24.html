@@ -3,135 +3,108 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>El Mariachi - Usuarios</title>
+  <title>Admin • Validaciones | El Mariachi</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    body {
-      background-color: #121212;
-      color: #e0e0e0;
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 20px;
-    }
-
-    header {
-      background-color: #1e1e1e;
-      padding: 10px 20px;
-      border-radius: 8px;
-      margin-bottom: 20px;
-    }
-
-    header h1 {
-      margin: 0;
-      color: #fff;
-    }
-
-    .url {
-      background-color: #333;
-      padding: 8px;
-      border-radius: 6px;
-      font-family: monospace;
-      color: #00bcd4;
-    }
-
-    h2 {
-      color: #fff;
-      margin-top: 20px;
-      font-size: 28px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background-color: #1e1e1e;
-      border-radius: 8px;
-      overflow: hidden;
-      margin-bottom: 15px;
-    }
-
-    th, td {
-      padding: 12px;
-      text-align: left;
-      border: 1px solid #333;
-    }
-
-    th {
-      background-color: #2c2c2c;
-      color: #00bcd4;
-    }
-
-    tr:nth-child(even) {
-      background-color: #2a2a2a;
-    }
-
-    tr:nth-child(odd) {
-      background-color: #1f1f1f;
-    }
-
-    .mensaje {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 14px;
-      margin-top: 10px;
-    }
-
-    .mensaje::before {
-      content: "✔";
-      color: #00bcd4;
-      font-weight: bold;
-    }
-
-    .boton {
-      background-color: #2196f3;
-      border: none;
-      color: white;
-      padding: 10px 16px;
-      border-radius: 8px;
-      font-size: 14px;
-      cursor: pointer;
-      float: right;
-      margin-top: 5px;
-    }
-
-    .boton:hover {
-      background-color: #42a5f5;
-    }
+    :root{--primary:#d32f2f;--hover:#b71c1c;--light:#f5f5f5;--text:#212121;--muted:#757575;--border:#e0e0e0;--success:#4caf50}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:var(--light);color:var(--text);font-family:Segoe UI,Roboto,Arial;padding-bottom:40px}
+    .navbar{background:linear-gradient(135deg,var(--primary),var(--hover))}
+    .navbar-brand{color:#fff;font-weight:800}
+    .container{max-width:1000px}
+    h1{color:var(--text);font-weight:700;font-size:28px;margin-bottom:24px}
+    .menu-links{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap}
+    .menu-btn{padding:10px 16px;border:2px solid var(--border);background:#fff;border-radius:8px;font-weight:600;font-size:13px;cursor:pointer;transition:all 0.3s;color:var(--text);text-decoration:none;display:inline-block}
+    .menu-btn:hover{border-color:var(--primary);background:rgba(211,47,47,0.05)}
+    .menu-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+    .card{border-radius:12px;border:1px solid var(--border);box-shadow:0 1px 3px rgba(0,0,0,0.08)}
+    table{margin-top:16px}
+    th{border-bottom:2px solid var(--border);font-weight:700;color:var(--text)}
+    td{border-bottom:1px solid var(--border);vertical-align:middle}
+    .badge-ok{background:rgba(76,175,80,0.12);color:var(--success);padding:6px 10px;border-radius:6px;font-weight:700;font-size:11px;text-transform:uppercase}
+    .badge-pending{background:rgba(255,193,7,0.12);color:#fbc02d;padding:6px 10px;border-radius:6px;font-weight:700;font-size:11px;text-transform:uppercase}
+    .msg-success{background:rgba(76,175,80,0.12);border:1px solid rgba(76,175,80,0.3);border-radius:8px;padding:12px 16px;color:var(--success);font-weight:600;margin-top:20px;display:flex;align-items:center;gap:8px}
+    .msg-success::before{content:'✓';font-weight:800;font-size:16px}
+    @media(max-width:768px){.menu-links{flex-direction:column}}
   </style>
 </head>
 <body>
+  <nav class="navbar navbar-expand-lg py-3">
+    <div class="container d-flex align-items-center justify-content-between">
+      <a class="navbar-brand" href="B-19PanelAdmin.html">🌮 El Mariachi • Admin</a>
+      <a class="btn btn-outline-light btn-sm" href="B-09ConstruccionPedido.html">← Salir Admin</a>
+    </div>
+  </nav>
 
-  <header>
-    <h1>El Mariachi</h1>
-    <div class="url">https://www.ElMariachi.cl/dashboard</div>
-  </header>
+  <div class="container my-5">
+    <h1>Panel de Validaciones</h1>
 
-  <h2>Usuarios</h2>
+    <div class="menu-links">
+      <a href="B-19PanelAdmin.html" class="menu-btn">📦 Productos</a>
+      <a href="B-20TogglesdeDisponibilidad.html" class="menu-btn">✓ Disponibilidad</a>
+      <a href="B-21CargadeImagenes.html" class="menu-btn">📸 Imágenes</a>
+      <a href="B-22Dashboard.html" class="menu-btn">📊 Dashboard</a>
+      <a href="B-23GestionVisual.html" class="menu-btn">👥 Usuarios</a>
+      <a href="B-24IndicadoresdeValidacion.html" class="menu-btn active">✔ Validaciones</a>
+    </div>
 
-  <table>
-    <thead>
-      <tr>
-        <th>Nombres</th>
-        <th>Email</th>
-        <th>Verificación</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>Ana</td>
-        <td>ana@example.com</td>
-        <td>Verificada</td>
-      </tr>
-      <tr>
-        <td>Pedro</td>
-        <td>pedro@example.com</td>
-        <td>no verificada</td>
-      </tr>
-    </tbody>
-  </table>
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title mb-3">Validaciones de Usuario</h5>
 
-  <button class="boton">Reenviar verificación</button>
+        <div class="table-responsive">
+          <table class="table align-middle">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Verificación</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Ana García</strong></td>
+                <td>ana@example.com</td>
+                <td><span class="badge-ok">✓ Verificada</span></td>
+                <td><button class="btn btn-sm btn-outline-dark" disabled>Verificar</button></td>
+              </tr>
+              <tr>
+                <td><strong>Pedro López</strong></td>
+                <td>pedro@example.com</td>
+                <td><span class="badge-pending">⏳ Pendiente</span></td>
+                <td><button class="btn btn-sm btn-primary">Reenviar Email</button></td>
+              </tr>
+              <tr>
+                <td><strong>María Rodríguez</strong></td>
+                <td>maria@example.com</td>
+                <td><span class="badge-ok">✓ Verificada</span></td>
+                <td><button class="btn btn-sm btn-outline-dark" disabled>Verificar</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
-  <div class="mensaje">Correo de verificación reenviado</div>
+        <div class="msg-success">Correo de verificación reenviado a pedro@example.com</div>
+      </div>
+    </div>
 
+    <div class="card mt-4">
+      <div class="card-body">
+        <strong>ℹ Proceso de Validación</strong>
+        <div style="color:var(--muted);font-size:13px;margin-top:10px">
+          1. El usuario registra su email<br>
+          2. Se envía enlace de verificación al email<br>
+          3. Usuario confirma haciendo clic en enlace<br>
+          4. Estado cambia a "Verificado" en sistema
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
+
+
