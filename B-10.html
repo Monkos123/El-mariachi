@@ -3,187 +3,493 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>El Mariachi - Carrito</title>
+  <title>Carrito de Compras • El Mariachi</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    :root{
+      --primary:#d32f2f;
+      --secondary:#ffc107;
+      --accent:#ff6f00;
+      --dark:#1a1a1a;
+      --light:#f5f5f5;
+      --text-dark:#212121;
+      --text-light:#757575;
+      --border:#e0e0e0;
+      --success:#4caf50;
+      --hover:#b71c1c
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body{
+      background:var(--light);
+      color:var(--text-dark);
+      font-family:'Segoe UI',Roboto,'Helvetica Neue',sans-serif;
+      line-height:1.6
+    }
+    header{
+      background:linear-gradient(135deg,var(--primary),var(--hover));
+      box-shadow:0 2px 8px rgba(0,0,0,0.1);
+      padding:16px 0;
+      position:sticky;
+      top:0;
+      z-index:100
+    }
+    .navbar-brand{
+      color:#fff!important;
+      font-weight:700;
+      font-size:24px;
+      letter-spacing:-0.5px
+    }
+    .back-btn{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      color:#fff;
+      text-decoration:none;
+      font-weight:600;
+      padding:8px 12px;
+      border-radius:8px;
+      transition:all 0.3s;
+      background:rgba(255,255,255,0.1)
+    }
+    .back-btn:hover{
+      background:rgba(255,255,255,0.2);
+      transform:translateX(-4px);
+      color:#fff
+    }
+    .container{
+      max-width:1200px;
+      padding:40px 24px
+    }
+    h1{
+      color:var(--text-dark);
+      font-weight:700;
+      font-size:32px;
+      margin-bottom:32px;
+      letter-spacing:-0.5px
+    }
+    .cart-grid{
+      display:grid;
+      grid-template-columns:1fr 380px;
+      gap:32px;
+      align-items:start
+    }
+    .cart-items{
+      background:#fff;
+      border-radius:12px;
+      border:1px solid var(--border);
+      padding:24px;
+      box-shadow:0 1px 3px rgba(0,0,0,0.08)
+    }
+    .item-row{
+      display:grid;
+      grid-template-columns:60px 1fr auto;
+      gap:16px;
+      align-items:center;
+      padding:16px;
+      border-bottom:1px solid var(--border);
+      transition:all 0.3s
+    }
+    .item-row:hover{
+      background:var(--light)
+    }
+    .item-image{
+      width:60px;
+      height:60px;
+      background:linear-gradient(135deg,#fff,#f1f1f1);
+      border-radius:8px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:32px
+    }
+    .item-details{
+      display:flex;
+      flex-direction:column;
+      gap:4px
+    }
+    .item-name{
+      color:var(--text-dark);
+      font-weight:700;
+      font-size:13px
+    }
+    .item-price{
+      color:var(--text-light);
+      font-size:12px
+    }
+    .item-controls{
+      display:flex;
+      gap:8px;
+      align-items:center
+    }
+    .qty-input{
+      width:50px;
+      padding:6px;
+      border:1px solid var(--border);
+      border-radius:6px;
+      text-align:center;
+      font-size:12px;
+      font-weight:600
+    }
+    .remove-btn{
+      padding:6px 10px;
+      background:#fff;
+      color:var(--text-light);
+      border:1px solid var(--border);
+      border-radius:6px;
+      font-size:12px;
+      cursor:pointer;
+      transition:all 0.3s
+    }
+    .remove-btn:hover{
+      border-color:var(--primary);
+      color:var(--primary)
+    }
+    .item-total{
+      text-align:right;
+      color:var(--primary);
+      font-weight:700;
+      font-size:13px;
+      min-width:80px
+    }
+    .empty-cart{
+      text-align:center;
+      padding:60px 20px;
+      color:var(--text-light)
+    }
+    .empty-icon{
+      font-size:64px;
+      margin-bottom:16px
+    }
+    .summary-card{
+      background:#fff;
+      border-radius:12px;
+      border:1px solid var(--border);
+      padding:24px;
+      box-shadow:0 1px 3px rgba(0,0,0,0.08);
+      position:sticky;
+      top:100px
+    }
+    .summary-title{
+      color:var(--primary);
+      font-weight:700;
+      font-size:13px;
+      text-transform:uppercase;
+      letter-spacing:1px;
+      margin-bottom:16px;
+      display:block
+    }
+    .summary-row{
+      display:flex;
+      justify-content:space-between;
+      padding:12px 0;
+      font-size:13px;
+      border-bottom:1px solid var(--border)
+    }
+    .summary-row:last-child{
+      border-bottom:none;
+      padding:16px 0 0;
+      border-top:2px solid var(--primary);
+      font-weight:800;
+      font-size:14px;
+      color:var(--primary)
+    }
+    .summary-label{
+      color:var(--text-light);
+      font-weight:500
+    }
+    .summary-value{
+      color:var(--text-dark);
+      font-weight:600;
+      text-align:right
+    }
+    .shipping-options{
+      margin:20px 0;
+      padding:16px 0;
+      border-top:1px solid var(--border);
+      border-bottom:1px solid var(--border)
+    }
+    .shipping-title{
+      color:var(--text-dark);
+      font-weight:700;
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:0.5px;
+      margin-bottom:12px;
+      display:block
+    }
+    .shipping-option{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 0;
+      cursor:pointer
+    }
+    .shipping-option input[type="radio"]{
+      cursor:pointer;
+      width:18px;
+      height:18px;
+      accent-color:var(--primary)
+    }
+    .shipping-option label{
+      flex:1;
+      cursor:pointer;
+      margin:0;
+      font-size:12px;
+      color:var(--text-dark)
+    }
+    .shipping-price{
+      color:var(--primary);
+      font-weight:700;
+      font-size:12px
+    }
+    .coupon-section{
+      margin:16px 0;
+      display:flex;
+      gap:8px
+    }
+    .coupon-input{
+      flex:1;
+      padding:8px 12px;
+      border:2px solid var(--border);
+      border-radius:6px;
+      font-size:12px;
+    }
+    .coupon-btn{
+      padding:8px 12px;
+      background:var(--secondary);
+      color:var(--dark);
+      border:none;
+      border-radius:6px;
+      font-weight:700;
+      font-size:11px;
+      cursor:pointer;
+      transition:all 0.3s;
+      text-transform:uppercase;
+      letter-spacing:0.5px
+    }
+    .coupon-btn:hover{
+      transform:translateY(-2px);
+      box-shadow:0 4px 12px rgba(255,193,7,0.3)
+    }
+    .checkout-btn{
+      width:100%;
+      padding:14px;
+      background:var(--primary);
+      color:#fff;
+      border:none;
+      border-radius:8px;
+      font-weight:700;
+      font-size:13px;
+      text-transform:uppercase;
+      letter-spacing:0.5px;
+      cursor:pointer;
+      transition:all 0.3s;
+      margin-top:20px
+    }
+    .checkout-btn:hover{
+      background:var(--hover);
+      transform:translateY(-2px);
+      box-shadow:0 8px 20px rgba(211,47,47,0.3)
+    }
+    .checkout-btn:disabled{
+      background:var(--text-light);
+      cursor:not-allowed;
+      transform:none
+    }
+    @media(max-width:768px){
+      .cart-grid{
+        grid-template-columns:1fr;
+        gap:24px
+      }
+      .summary-card{
+        position:static;
+        top:auto
+      }
+      .item-row{
+        grid-template-columns:50px 1fr
+      }
+      .item-controls{
+        grid-column:1/-1;
+        margin-top:8px
+      }
+      h1{ font-size:24px }
+    }
+  </style>
 </head>
 <body>
-  <nav class="navbar navbar-light bg-light mb-3">
-    <div class="container">
-      <a class="navbar-brand" href="catalogo.html">El Mariachi</a>
-      <div>
-        <a class="btn btn-outline-secondary" href="catalogo.html">Volver al catálogo</a>
-      </div>
+  <header>
+    <div class="container d-flex justify-content-between align-items-center">
+      <a class="navbar-brand" href="B-09ConstruccionPedido.html">🌮 El Mariachi</a>
+      <a href="B-09ConstruccionPedido.html" class="back-btn">← Catálogo</a>
     </div>
-  </nav>
+  </header>
 
-  <div class="container">
-    <div class="row">
-      <!-- Cart list -->
-      <main class="col-md-8">
-        <h5>Tu carrito</h5>
-        <div id="cartList" class="list-group mb-3">
-          <p class="text-muted">No hay productos en el carrito.</p>
+  <main class="container">
+    <h1>Carrito de Compras</h1>
+
+    <div class="cart-grid">
+      <section class="cart-items">
+        <div id="cartContent"></div>
+      </section>
+
+      <aside class="summary-card">
+        <span class="summary-title">Resumen</span>
+
+        <div class="shipping-options" id="shippingOptions"></div>
+
+        <div class="coupon-section">
+          <input id="couponInput" class="coupon-input" placeholder="Código descuento">
+          <button class="coupon-btn" onclick="applyCoupon()">Aplicar</button>
         </div>
 
-        <div class="mb-3">
-          <label for="coupon" class="form-label">Cupón</label>
-          <div class="input-group">
-            <input id="coupon" class="form-control" placeholder="PROMO10">
-            <button id="applyCoupon" class="btn btn-outline-primary">Aplicar</button>
-          </div>
-          <div id="couponMsg" class="form-text text-danger d-none">Cupón inválido</div>
+        <div class="summary-row">
+          <span class="summary-label">Subtotal</span>
+          <span class="summary-value" id="subtotal">$0</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">Envío</span>
+          <span class="summary-value" id="shippingCost">$0</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">Descuento</span>
+          <span class="summary-value" id="discountAmount" style="color:var(--success)">$0</span>
+        </div>
+        <div class="summary-row">
+          <span>Total</span>
+          <span id="totalAmount">$0</span>
         </div>
 
-        <div class="mb-3">
-          <label for="address" class="form-label">Dirección (para cálculo de envío)</label>
-          <input id="address" class="form-control" placeholder="Calle, ciudad">
-          <div id="shipNote" class="form-text">Envío calculado según distancia.</div>
-          <button id="calcShip" class="btn btn-outline-secondary btn-sm mt-2">Calcular envío</button>
-        </div>
-
-        <div class="d-flex justify-content-between mt-4">
-          <a href="catalogo.html" class="btn btn-light">Seguir comprando</a>
-          <button id="confirmOrder" class="btn btn-success" disabled>Confirmar</button>
-        </div>
-      </main>
-
-      <!-- Summary -->
-      <aside class="col-md-4">
-        <div class="card p-3">
-          <h6>Resumen</h6>
-          <div class="d-flex justify-content-between">
-            <small>Subtotal</small>
-            <strong id="subtotal">$0</strong>
-          </div>
-          <div class="d-flex justify-content-between mt-2">
-            <small>Envío</small>
-            <strong id="shipping">$0</strong>
-          </div>
-          <div class="d-flex justify-content-between mt-2">
-            <small>Descuento</small>
-            <strong id="discount">-$0</strong>
-          </div>
-          <hr>
-          <div class="d-flex justify-content-between">
-            <h5>TOTAL</h5>
-            <h5 id="total">$0</h5>
-          </div>
-        </div>
+        <button id="checkoutBtn" class="checkout-btn" onclick="proceedCheckout()">Ir a Pagar</button>
       </aside>
     </div>
-  </div>
+  </main>
 
-  <script>
-    // read cart from sessionStorage (populated by catalog page mock)
-    let cart = JSON.parse(sessionStorage.getItem('cart') || '{}');
-    const products = {
-      1: {id:1, name:"Taco al pastor", price:4500},
-      2: {id:2, name:"Taco veggie", price:4900},
-      3: {id:3, name:"Taco asada", price:4700},
-      4: {id:4, name:"Taco chipote", price:4200},
-      5: {id:5, name:"Taco carnitas", price:4300},
-    };
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  let cart = JSON.parse(sessionStorage.getItem('cart') || '{}');
+  const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
 
-    let coupon = null;
-    let shipping = 0;
-
-    function renderCart(){
-      const list = document.getElementById('cartList');
-      list.innerHTML = '';
-      const keys = Object.keys(cart);
-      if(keys.length === 0){
-        list.innerHTML = '<p class="text-muted">No hay productos en el carrito.</p>';
-        document.getElementById('confirmOrder').disabled = true;
-      } else {
-        keys.forEach(id=>{
-          const it = cart[id];
-          const item = document.createElement('div');
-          item.className = 'list-group-item d-flex align-items-center';
-          item.innerHTML = `
-            <div class="flex-grow-1">
-              <div class="fw-semibold">${it.name}</div>
-              <div class="text-muted small">Precio: $${it.price.toLocaleString()}</div>
-            </div>
-            <div class="d-flex align-items-center">
-              <button class="btn btn-sm btn-outline-secondary me-1" data-action="dec" data-id="${id}">−</button>
-              <span class="mx-2">${it.qty}</span>
-              <button class="btn btn-sm btn-outline-secondary ms-1" data-action="inc" data-id="${id}">+</button>
-            </div>`;
-          list.appendChild(item);
-        });
-        document.getElementById('confirmOrder').disabled = false;
-      }
-      updateTotals();
+  function renderCart(){
+    const items = Object.entries(cart).filter(([k]) => !k.startsWith('_'));
+    
+    if(items.length === 0){
+      document.getElementById('cartContent').innerHTML = `
+        <div class="empty-cart">
+          <div class="empty-icon">🛒</div>
+          <h4>Carrito vacío</h4>
+          <p>Agrega productos para comenzar</p>
+          <a href="B-09ConstruccionPedido.html" style="display:inline-block;margin-top:16px;background:var(--primary);color:#fff;padding:10px 20px;border-radius:8px;text-decoration:none;font-weight:600">Ver Catálogo</a>
+        </div>
+      `;
+      document.getElementById('checkoutBtn').disabled = true;
+      return;
     }
 
-    function updateTotals(){
-      let subtotal = 0;
-      Object.values(cart).forEach(i=> subtotal += i.qty * i.price);
-      let discount = 0;
-      if(coupon === 'PROMO10') discount = Math.round(subtotal * 0.10);
-      const total = subtotal + shipping - discount;
-      document.getElementById('subtotal').textContent = `$${subtotal.toLocaleString()}`;
-      document.getElementById('shipping').textContent = `$${shipping.toLocaleString()}`;
-      document.getElementById('discount').textContent = `-$${discount.toLocaleString()}`;
-      document.getElementById('total').textContent = `$${(total>0?total:0).toLocaleString()}`;
-    }
+    document.getElementById('cartContent').innerHTML = items.map(([id, item]) => `
+      <div class="item-row">
+        <div class="item-image">🌮</div>
+        <div class="item-details">
+          <div class="item-name">${item.name}</div>
+          <div class="item-price">$${item.price.toLocaleString()}</div>
+        </div>
+        <div class="item-controls">
+          <input type="number" class="qty-input" value="${item.qty}" min="1" onchange="updateQty('${id}', this.value)">
+          <button class="remove-btn" onclick="removeItem('${id}')">×</button>
+        </div>
+        <div class="item-total">$${(item.qty * item.price).toLocaleString()}</div>
+      </div>
+    `).join('');
 
-    document.addEventListener('click', (e)=>{
-      if(e.target.matches('[data-action="inc"]')){
-        const id = e.target.dataset.id;
-        cart[id].qty++;
-        sessionStorage.setItem('cart', JSON.stringify(cart));
-        renderCart();
-      }
-      if(e.target.matches('[data-action="dec"]')){
-        const id = e.target.dataset.id;
-        cart[id].qty--;
-        if(cart[id].qty <= 0) delete cart[id];
-        sessionStorage.setItem('cart', JSON.stringify(cart));
-        renderCart();
-      }
-    });
+    updateSummary();
+  }
 
-    document.getElementById('applyCoupon').addEventListener('click', ()=>{
-      const v = document.getElementById('coupon').value.trim().toUpperCase();
-      if(v === 'PROMO10'){
-        coupon = 'PROMO10';
-        document.getElementById('couponMsg').classList.add('d-none');
-      } else {
-        coupon = null;
-        document.getElementById('couponMsg').classList.remove('d-none');
-      }
-      updateTotals();
-    });
-
-    document.getElementById('calcShip').addEventListener('click', ()=>{
-      const addr = document.getElementById('address').value.trim();
-      // demo rule: empty -> local pickup (0), if contains "fuera" -> $1500, else $1000
-      if(!addr) shipping = 0;
-      else if(addr.toLowerCase().includes('fuera')) shipping = 1500;
-      else shipping = 1000;
-      updateTotals();
-    });
-
-    document.getElementById('confirmOrder').addEventListener('click', ()=>{
-      // pass order to checkout page (mock)
-      sessionStorage.setItem('order', JSON.stringify({
-        cart, subtotal: document.getElementById('subtotal').textContent,
-        total: document.getElementById('total').textContent
-      }));
-      location.href = 'checkout.html';
-    });
-
-    // initial populate example (if no cart, demo add)
-    if(!Object.keys(cart).length){
-      // optional: prefill with two items for demo
-      cart = {
-        1: {...products[1], qty:2},
-        2: {...products[2], qty:1}
-      };
-      sessionStorage.setItem('cart', JSON.stringify(cart));
-    }
+  function updateQty(id, qty){
+    qty = Math.max(1, parseInt(qty) || 1);
+    cart[id].qty = qty;
+    sessionStorage.setItem('cart', JSON.stringify(cart));
     renderCart();
-  </script>
+  }
+
+  function removeItem(id){
+    delete cart[id];
+    sessionStorage.setItem('cart', JSON.stringify(cart));
+    renderCart();
+  }
+
+  function updateSummary(){
+    const items = Object.entries(cart).filter(([k]) => !k.startsWith('_'));
+    let subtotal = items.reduce((s, [, item]) => s + (item.qty * item.price), 0);
+    
+    const shippingVal = cart._shipping || 0;
+    const discountVal = cart._discount || 0;
+    const total = subtotal + shippingVal - discountVal;
+
+    document.getElementById('subtotal').textContent = `$${subtotal.toLocaleString()}`;
+    document.getElementById('shippingCost').textContent = `$${shippingVal.toLocaleString()}`;
+    document.getElementById('discountAmount').textContent = `$${discountVal.toLocaleString()}`;
+    document.getElementById('totalAmount').textContent = `$${total.toLocaleString()}`;
+  }
+
+  function renderShippingOptions(){
+    const shippingHtml = `
+      <span class="shipping-title">Método de Entrega</span>
+      <div class="shipping-option">
+        <input type="radio" id="shipping-pickup" name="shipping" value="0" onchange="setShipping(0)" ${cart._shipping === 0 ? 'checked' : ''}>
+        <label for="shipping-pickup">Retiro en Local</label>
+        <span class="shipping-price">Gratis</span>
+      </div>
+      <div class="shipping-option">
+        <input type="radio" id="shipping-delivery" name="shipping" value="5000" onchange="setShipping(5000)" ${cart._shipping === 5000 ? 'checked' : ''}>
+        <label for="shipping-delivery">Envío a Domicilio</label>
+        <span class="shipping-price">$5.000</span>
+      </div>
+    `;
+    document.getElementById('shippingOptions').innerHTML = shippingHtml;
+  }
+
+  function setShipping(value){
+    cart._shipping = value;
+    sessionStorage.setItem('cart', JSON.stringify(cart));
+    updateSummary();
+  }
+
+  function applyCoupon(){
+    const code = document.getElementById('couponInput').value.trim().toUpperCase();
+    // Códigos de ejemplo
+    const coupons = { 'DESC10': 5000, 'DESC20': 10000 };
+    if(coupons[code]){
+      cart._discount = coupons[code];
+      sessionStorage.setItem('cart', JSON.stringify(cart));
+      updateSummary();
+      alert(`Descuento aplicado: $${coupons[code].toLocaleString()}`);
+      document.getElementById('couponInput').value = '';
+    } else if(code){
+      alert('Código inválido');
+    }
+  }
+
+  function proceedCheckout(){
+    if(!currentUser){
+      alert('Debes iniciar sesión para continuar');
+      location.href = 'B-09ConstruccionPedido.html';
+      return;
+    }
+
+    const userAddress = JSON.parse(localStorage.getItem('userAddress') || 'null');
+    if(!userAddress){
+      alert('Debes completar tu dirección de entrega');
+      location.href = 'B-16FormularioDireccion.html';
+      return;
+    }
+
+    // Pasar al checkout
+    location.href = 'B-13IntegracionPasarela.html';
+  }
+
+  renderShippingOptions();
+  renderCart();
+</script>
+
 </body>
 </html>
+
