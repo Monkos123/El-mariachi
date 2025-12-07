@@ -3,79 +3,338 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>El Mariachi - Checkout</title>
+  <title>Resultado de Pago • El Mariachi</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    :root{
+      --primary:#d32f2f;
+      --secondary:#ffc107;
+      --accent:#ff6f00;
+      --dark:#1a1a1a;
+      --light:#f5f5f5;
+      --text-dark:#212121;
+      --text-light:#757575;
+      --border:#e0e0e0;
+      --success:#4caf50;
+      --hover:#b71c1c
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body{
+      background:var(--light);
+      color:var(--text-dark);
+      font-family:'Segoe UI',Roboto,'Helvetica Neue',sans-serif;
+      line-height:1.6
+    }
+    header{
+      background:linear-gradient(135deg,var(--primary),var(--hover));
+      box-shadow:0 2px 8px rgba(0,0,0,0.1);
+      padding:16px 0;
+      position:sticky;
+      top:0;
+      z-index:100
+    }
+    .navbar-brand{
+      color:#fff!important;
+      font-weight:700;
+      font-size:24px;
+      letter-spacing:-0.5px
+    }
+    .container{
+      max-width:900px;
+      padding:40px 24px
+    }
+    .result-card{
+      background:#fff;
+      border-radius:16px;
+      border:1px solid var(--border);
+      padding:60px 40px;
+      text-align:center;
+      box-shadow:0 8px 24px rgba(0,0,0,0.1)
+    }
+    .result-icon{
+      font-size:80px;
+      margin-bottom:24px;
+      animation:bounce 0.6s ease-in-out
+    }
+    @keyframes bounce {
+      0%, 100% { transform:scale(0.8); opacity:0 }
+      50% { transform:scale(1.1); }
+    }
+    .result-title{
+      color:var(--success);
+      font-weight:700;
+      font-size:32px;
+      margin-bottom:12px;
+      letter-spacing:-0.5px
+    }
+    .result-title.error{
+      color:#dc3545
+    }
+    .result-subtitle{
+      color:var(--text-light);
+      font-size:16px;
+      margin-bottom:32px;
+      line-height:1.6
+    }
+    .order-details{
+      background:rgba(211,47,47,0.05);
+      border:2px solid var(--primary);
+      border-radius:12px;
+      padding:32px;
+      margin:32px 0;
+      text-align:left
+    }
+    .detail-row{
+      display:flex;
+      justify-content:space-between;
+      padding:16px 0;
+      border-bottom:1px solid rgba(211,47,47,0.2);
+      font-size:14px
+    }
+    .detail-row:last-child{
+      border-bottom:none
+    }
+    .detail-label{
+      color:var(--text-light);
+      font-weight:600
+    }
+    .detail-value{
+      color:var(--text-dark);
+      font-weight:700
+    }
+    .detail-value.primary{
+      color:var(--primary)
+    }
+    .order-items{
+      background:#fff;
+      border:1px solid var(--border);
+      border-radius:8px;
+      padding:20px;
+      margin:24px 0;
+      max-height:300px;
+      overflow-y:auto
+    }
+    .item-row{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:12px 0;
+      border-bottom:1px solid var(--border);
+      font-size:13px
+    }
+    .item-row:last-child{
+      border-bottom:none
+    }
+    .item-name{
+      font-weight:600;
+      color:var(--text-dark)
+    }
+    .item-price{
+      color:var(--primary);
+      font-weight:700
+    }
+    .action-buttons{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      margin-top:32px
+    }
+    .btn{
+      padding:16px 24px;
+      border:none;
+      border-radius:8px;
+      font-weight:700;
+      font-size:14px;
+      text-transform:uppercase;
+      letter-spacing:0.5px;
+      cursor:pointer;
+      transition:all 0.3s;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px
+    }
+    .btn-primary{
+      background:var(--primary);
+      color:#fff
+    }
+    .btn-primary:hover{
+      background:var(--hover);
+      transform:translateY(-2px);
+      box-shadow:0 8px 20px rgba(211,47,47,0.3)
+    }
+    .btn-secondary{
+      background:#fff;
+      color:var(--text-dark);
+      border:2px solid var(--border)
+    }
+    .btn-secondary:hover{
+      border-color:var(--primary);
+      color:var(--primary)
+    }
+    .error-card{
+      background:rgba(220,53,69,0.05);
+      border:2px solid #dc3545;
+    }
+    .error-title{
+      color:#dc3545
+    }
+    .retry-btn{
+      background:#dc3545;
+      color:#fff
+    }
+    .retry-btn:hover{
+      background:#c82333;
+      transform:translateY(-2px)
+    }
+    @media(max-width:768px){
+      .result-card{
+        padding:40px 20px
+      }
+      .order-details{
+        padding:20px
+      }
+      .action-buttons{
+        grid-template-columns:1fr
+      }
+      .result-title{
+        font-size:24px
+      }
+    }
+  </style>
 </head>
 <body>
-  <nav class="navbar navbar-light bg-light mb-3">
+  <header>
     <div class="container">
-      <a class="navbar-brand" href="catalogo.html">El Mariachi</a>
-      <div>
-        <a class="btn btn-outline-secondary" href="carrito.html">Volver al carrito</a>
-      </div>
+      <a class="navbar-brand" href="B-09ConstruccionPedido.html">🌮 El Mariachi</a>
     </div>
-  </nav>
+  </header>
 
-  <div class="container">
-    <h5>Resultado de pago</h5>
+  <main class="container">
+    <div id="resultContainer"></div>
+  </main>
 
-    <!-- Approved -->
-    <div class="card mb-3">
-      <div class="card-body">
-        <div class="d-flex justify-content-between align-items-start">
-          <div>
-            <h6 class="card-title">Resultado de pago: <span class="text-success">APROBADO</span></h6>
-            <p class="mb-1"><small>Estado pedido: Pagado</small></p>
-            <p class="mb-0"><small>ID Pedido: <strong>A-001234</strong></small></p>
-          </div>
-          <div>
-            <a href="#" class="btn btn-outline-primary btn-sm">Ver detalle</a>
-          </div>
-        </div>
-      </div>
-    </div>
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const status = (params.get('status') || 'approved').toLowerCase();
+  const cart = JSON.parse(sessionStorage.getItem('cart') || '{}');
 
-    <!-- Rejected -->
-    <div class="card mb-3">
-      <div class="card-body">
-        <div class="d-flex justify-content-between align-items-start">
-          <div>
-            <h6 class="card-title">Resultado de pago: <span class="text-danger">RECHAZADO</span></h6>
-            <p class="mb-1"><small>Estado pedido: No confirmado</small></p>
-          </div>
-          <div class="d-flex flex-column">
-            <button id="retry" class="btn btn-outline-primary btn-sm mb-2">Reintentar pago</button>
-            <a href="carrito.html" class="btn btn-light btn-sm">Volver al carrito</a>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card p-3">
-      <h6>Resumen del pedido (demo)</h6>
-      <div id="orderSummary"></div>
-    </div>
-  </div>
-
-  <script>
-    // show example order stored from cart page
-    const order = JSON.parse(sessionStorage.getItem('order') || '{}');
-    const target = document.getElementById('orderSummary');
-    if(order && order.cart){
-      let html = '<ul class="list-unstyled mb-0">';
-      Object.values(order.cart).forEach(i=>{
-        html += `<li>${i.qty} × ${i.name} — $${(i.price*i.qty).toLocaleString()}</li>`;
-      });
-      html += `</ul><div class="mt-2"><strong>Total: </strong> ${order.total || ''}</div>`;
-      target.innerHTML = html;
-    } else {
-      target.innerHTML = '<p class="text-muted">No hay datos de pedido (maqueta).</p>';
-    }
-
-    document.getElementById('retry').addEventListener('click', ()=>{
-      alert('Simulación: reintentando pago...');
-      // in a real app: redirect to payment provider
+  function calcTotal(){
+    let subtotal = 0;
+    Object.entries(cart).forEach(([k,v]) => {
+      if(!k.startsWith('_')) subtotal += (v.price||0) * (v.qty||0);
     });
-  </script>
+    const shipping = cart._shipping || 0;
+    let discount = 0;
+    if(cart._coupon === 'DESC10') discount = Math.round(subtotal * 0.10);
+    return { subtotal, shipping, discount, total: subtotal + shipping - discount };
+  }
+
+  function renderResult(){
+    const container = document.getElementById('resultContainer');
+    const orderNum = `A-${Math.floor(100000+Math.random()*899999)}`;
+    const totals = calcTotal();
+    const keys = Object.keys(cart).filter(k => !k.startsWith('_'));
+
+    if(status === 'approved'){
+      const order = { id: orderNum, cart, ...totals, createdAt: Date.now() };
+      sessionStorage.setItem('order', JSON.stringify(order));
+
+      let itemsHtml = '';
+      keys.forEach(id => {
+        const item = cart[id];
+        itemsHtml += `
+          <div class="item-row">
+            <span><span class="item-name">${item.name}</span> × ${item.qty}</span>
+            <span class="item-price">$${(item.qty * item.price).toLocaleString()}</span>
+          </div>
+        `;
+      });
+
+      container.innerHTML = `
+        <div class="result-card">
+          <div class="result-icon">✅</div>
+          <h1 class="result-title">¡Pago Aprobado!</h1>
+          <p class="result-subtitle">Tu pedido ha sido confirmado y está siendo preparado. Pronto recibirás actualizaciones.</p>
+
+          <div class="order-details">
+            <div class="detail-row">
+              <span class="detail-label">Número de Pedido</span>
+              <span class="detail-value primary">#${orderNum}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Fecha</span>
+              <span class="detail-value">${new Date().toLocaleDateString('es-CL')}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Estado</span>
+              <span class="detail-value" style="color:var(--success)">⏳ En Preparación</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Subtotal</span>
+              <span class="detail-value">$${totals.subtotal.toLocaleString()}</span>
+            </div>
+            ${totals.shipping > 0 ? `
+            <div class="detail-row">
+              <span class="detail-label">Envío</span>
+              <span class="detail-value">$${totals.shipping.toLocaleString()}</span>
+            </div>
+            ` : ''}
+            ${totals.discount > 0 ? `
+            <div class="detail-row">
+              <span class="detail-label">Descuento</span>
+              <span class="detail-value" style="color:var(--success)">-$${totals.discount.toLocaleString()}</span>
+            </div>
+            ` : ''}
+            <div class="detail-row" style="border:none;padding-top:20px;padding-bottom:0">
+              <span class="detail-label" style="font-size:16px;color:var(--text-dark)">Total Pagado</span>
+              <span class="detail-value primary" style="font-size:20px">$${totals.total.toLocaleString()}</span>
+            </div>
+          </div>
+
+          <div class="order-items">
+            <div style="font-weight:700;color:var(--primary);margin-bottom:12px;font-size:13px;text-transform:uppercase">Artículos Comprados</div>
+            ${itemsHtml}
+          </div>
+
+          <p style="color:var(--text-light);font-size:13px;margin:20px 0">
+            📧 Se ha enviado un email de confirmación a tu dirección registrada con todos los detalles de tu compra.
+          </p>
+
+          <div class="action-buttons">
+            <a href="B-14ConfirmacionCompraCajeroVirtual.html" class="btn btn-primary">Continuar</a>
+            <a href="B-09ConstruccionPedido.html" class="btn btn-secondary">Seguir Comprando</a>
+          </div>
+        </div>
+      `;
+    } else {
+      container.innerHTML = `
+        <div class="result-card error-card">
+          <div class="result-icon">❌</div>
+          <h1 class="result-title error">Pago Rechazado</h1>
+          <p class="result-subtitle">Hubo un problema al procesar tu pago. Por favor intenta de nuevo o usa otro método.</p>
+
+          <div style="background:#fff;border:1px solid var(--border);border-radius:8px;padding:20px;margin:24px 0;text-align:left;font-size:13px;color:var(--text-light">
+            <strong style="color:var(--text-dark);display:block;margin-bottom:8px">Posibles causas:</strong>
+            • Fondos insuficientes<br>
+            • Tarjeta expirada o bloqueada<br>
+            • Datos incorrectos<br>
+            • Límite de transacción excedido
+          </div>
+
+          <div class="action-buttons">
+            <a href="B-13IntegracionPasarela.html" class="btn retry-btn">Reintentar Pago</a>
+            <a href="B-10CarritoCalculo.html" class="btn btn-secondary">Volver al Carrito</a>
+          </div>
+        </div>
+      `;
+    }
+  }
+
+  renderResult();
+</script>
+
 </body>
 </html>
+
