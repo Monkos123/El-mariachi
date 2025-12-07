@@ -3,139 +3,130 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Admin - Disponibilidad | El Mariachi</title>
-
-  <!-- Bootstrap 5 -->
+  <title>Admin • Disponibilidad | El Mariachi</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
   <style>
-    body { background-color: #f8f9fa; }
-    .browser-bar {
-      background: #e9ecef;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      padding: 6px 10px;
-      margin: 18px;
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      color: #495057;
-    }
-    .card { border-radius: 10px; }
-    .status-available { color: #198754; font-weight: 600; } /* green */
-    .status-unavailable { color: #dc3545; font-weight: 600; } /* red */
-    .admin-panel { min-height: 180px; }
-    .catalog-item { padding: 12px 16px; border-bottom: 1px solid #e9ecef; display:flex; align-items:center; justify-content:space-between; }
-    .catalog-item:last-child { border-bottom: none; }
-    .add-btn { min-width: 90px; }
+    :root{--primary:#d32f2f;--hover:#b71c1c;--light:#f5f5f5;--text:#212121;--muted:#757575;--border:#e0e0e0;--success:#4caf50}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:var(--light);color:var(--text);font-family:Segoe UI,Roboto,Arial;padding-bottom:40px}
+    .navbar{background:linear-gradient(135deg,var(--primary),var(--hover))}
+    .navbar-brand{color:#fff;font-weight:800}
+    .container{max-width:1200px}
+    h1{color:var(--text);font-weight:700;font-size:28px;margin-bottom:24px}
+    .menu-links{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap}
+    .menu-btn{padding:10px 16px;border:2px solid var(--border);background:#fff;border-radius:8px;font-weight:600;font-size:13px;cursor:pointer;transition:all 0.3s;color:var(--text);text-decoration:none;display:inline-block}
+    .menu-btn:hover{border-color:var(--primary);background:rgba(211,47,47,0.05)}
+    .menu-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+    .card{border-radius:12px;border:1px solid var(--border);box-shadow:0 1px 3px rgba(0,0,0,0.08)}
+    .item-row{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+    .item-row:last-child{border-bottom:none}
+    .item-info{display:flex;flex-direction:column;gap:4px}
+    .item-name{font-weight:700;color:var(--text);font-size:14px}
+    .item-status{color:var(--muted);font-size:12px}
+    .toggle-switch{position:relative;display:inline-block;width:50px;height:28px}
+    .toggle-switch input{opacity:0;width:0;height:0}
+    .toggle-slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background-color:#ccc;transition:0.3s;border-radius:28px}
+    .toggle-slider:before{position:absolute;content:'';height:22px;width:22px;left:3px;bottom:3px;background-color:#fff;transition:0.3s;border-radius:50%}
+    input:checked+.toggle-slider{background-color:var(--success)}
+    input:checked+.toggle-slider:before{transform:translateX(22px)}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:20px}
+    @media(max-width:768px){.grid{grid-template-columns:1fr}.menu-links{flex-direction:column}}
   </style>
 </head>
 <body>
+  <nav class="navbar navbar-expand-lg py-3">
+    <div class="container d-flex align-items-center justify-content-between">
+      <a class="navbar-brand" href="B-19PanelAdmin.html">🌮 El Mariachi • Admin</a>
+      <a class="btn btn-outline-light btn-sm" href="B-09ConstruccionPedido.html">← Salir Admin</a>
+    </div>
+  </nav>
 
-  <!-- simulated browser/url bar -->
-  <div class="browser-bar">https://www.ElMariachi.cl/admin/disponibilidad</div>
+  <div class="container my-5">
+    <h1>Gestión de Disponibilidad</h1>
 
-  <!-- main content -->
-  <div class="container">
-    <div class="row">
+    <div class="menu-links">
+      <a href="B-19PanelAdmin.html" class="menu-btn">📦 Productos</a>
+      <a href="B-20TogglesdeDisponibilidad.html" class="menu-btn active">✓ Disponibilidad</a>
+      <a href="B-21CargadeImagenes.html" class="menu-btn">📸 Imágenes</a>
+      <a href="B-22Dashboard.html" class="menu-btn">📊 Dashboard</a>
+      <a href="B-23GestionVisual.html" class="menu-btn">👥 Usuarios</a>
+      <a href="B-24IndicadoresdeValidacion.html" class="menu-btn">✔ Validaciones</a>
+    </div>
 
-      <!-- Left: Catalogo cliente -->
-      <div class="col-lg-8 mb-4">
-        <div class="card shadow-sm">
-          <div class="card-body">
-            <h5 class="card-title">Catálogo (cliente)</h5>
-            <div id="catalogList" class="mt-3">
-              <!-- items injected by JS, initial markup below as fallback -->
-              <div class="catalog-item" data-id="101">
-                <div>
-                  <div class="fw-semibold">Nachos con queso</div>
-                  <div class="small status-unavailable">No disponible</div>
-                </div>
-                <div>
-                  <button class="btn btn-outline-secondary add-btn" disabled style="display:none">Agregar</button>
-                </div>
-              </div>
-
-              <div class="catalog-item" data-id="102">
-                <div>
-                  <div class="fw-semibold">Taco al pastor</div>
-                  <div class="small status-available">Disponible</div>
-                </div>
-                <div>
-                  <button class="btn btn-sm btn-primary add-btn">Agregar</button>
-                </div>
-              </div>
-            </div>
-            <!-- big empty area like wireframe -->
-            <div style="min-height:120px"></div>
-          </div>
+    <div class="grid">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Vista Cliente (Catálogo)</h5>
+          <div id="catalogList"></div>
         </div>
       </div>
 
-      <!-- Right: Admin panel -->
-      <div class="col-lg-4 mb-4">
-        <div class="card shadow-sm admin-panel">
-          <div class="card-body">
-            <h6 class="card-title">Admin: Disponibilidad</h6>
-
-            <!-- admin list toggles -->
-            <div id="adminList" class="mt-3">
-              <!-- JS will render toggles; fallback markup: -->
-              <div class="d-flex align-items-center justify-content-between mb-3" data-id="101">
-                <div>
-                  <div class="fw-semibold">Nachos con queso</div>
-                </div>
-                <div class="form-check form-switch">
-                  <input class="form-check-input toggle-availability" type="checkbox" id="avail-101" data-id="101" />
-                  <label class="form-check-label small ms-2" for="avail-101">OFF</label>
-                </div>
-              </div>
-
-              <div class="d-flex align-items-center justify-content-between mb-3" data-id="102">
-                <div>
-                  <div class="fw-semibold">Taco al pastor</div>
-                </div>
-                <div class="form-check form-switch">
-                  <input class="form-check-input toggle-availability" type="checkbox" id="avail-102" data-id="102" />
-                  <label class="form-check-label small ms-2" for="avail-102">ON</label>
-                </div>
-              </div>
-            </div>
-
-          </div>
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Control Admin</h5>
+          <div id="adminList"></div>
         </div>
       </div>
     </div>
 
-    <!-- API / notes box -->
-    <div class="row">
-      <div class="col-12">
-        <div class="card bg-white border mt-2">
-          <div class="card-body">
-            <strong>API/Disponibilidad</strong>
-            <pre style="background:#f7f7f7; padding:8px; border-radius:6px; margin-top:8px;">
-PATCH /admin/products/{id}/availability    # { available: true | false }
-Events: notificar catálogo (pub/sub)
-Rules: ocultar 'Agregar' si no disponible
-            </pre>
-          </div>
+    <div class="card mt-4">
+      <div class="card-body">
+        <strong>ℹ API • Disponibilidad</strong>
+        <div style="color:var(--muted);font-size:13px;margin-top:10px">
+          PATCH /admin/products/{id}/availability { "available": true | false }<br>
+          Los cambios se sincronizán en localStorage como 'availabilityOverrides'
         </div>
       </div>
     </div>
   </div>
 
-  <!-- footer -->
-  <footer class="text-center py-3 mt-4">
-    <small class="text-muted">© 2025 El Mariachi</small>
-  </footer>
+<script>
+  const API_URL = "http://localhost:4000/graphql";
+  let products = [];
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  async function fetchProducts(){
+    const q = `query { productos { id_producto nombre precio disponible categoria } }`;
+    try {
+      const res = await fetch(API_URL, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({query:q}) });
+      const json = await res.json();
+      products = (json.data?.productos || []).map(p => ({id:String(p.id_producto),nombre:p.nombre,precio:Number(p.precio)||0,disponible:!!p.disponible,categoria:p.categoria||'Sin cat'}));
+      renderBoth();
+    } catch(err){
+      console.error(err);
+      document.getElementById('catalogList').innerHTML = '<div style="color:var(--muted);padding:16px">Error cargando productos</div>';
+    }
+  }
 
-  <script>
-    // initial product data (id, name, available)
-    const products = {
-      101: { id:101, name: 'Nachos con queso', available: false },
-      102: { id:102, name: 'Taco al pastor', available: true }
-    };
+  function renderBoth(){
+    const overrides = JSON.parse(localStorage.getItem('availabilityOverrides')||'{}');
+    const catalog = document.getElementById('catalogList');
+    const admin = document.getElementById('adminList');
+    
+    catalog.innerHTML = products.map(p => {
+      const avail = overrides[p.id] ?? p.disponible;
+      return `<div class="item-row"><div class="item-info"><div class="item-name">${p.nombre}</div><div class="item-status">${avail ? '✓ Disponible' : '✗ No disponible'}</div></div><button class="btn btn-sm ${avail ? 'btn-primary' : 'btn-secondary'}" ${!avail ? 'disabled' : ''}>Agregar</button></div>`;
+    }).join('');
 
-    const catalogList = document.getElementById('catalogList
+    admin.innerHTML = products.map(p => {
+      const avail = overrides[p.id] ?? p.disponible;
+      return `<div class="item-row"><div class="item-info"><div class="item-name">${p.nombre}</div><div class="item-status">$${p.precio.toLocaleString()}</div></div><label class="toggle-switch"><input type="checkbox" data-id="${p.id}" ${avail ? 'checked' : ''} /><span class="toggle-slider"></span></label></div>`;
+    }).join('');
+
+    admin.querySelectorAll('input[type="checkbox"]').forEach(inp => {
+      inp.addEventListener('change', (e) => {
+        const id = e.target.dataset.id;
+        const ov = JSON.parse(localStorage.getItem('availabilityOverrides')||'{}');
+        ov[id] = e.target.checked;
+        localStorage.setItem('availabilityOverrides', JSON.stringify(ov));
+        renderBoth();
+      });
+    });
+  }
+
+  fetchProducts();
+</script>
+</body>
+</html>
+
 
 
