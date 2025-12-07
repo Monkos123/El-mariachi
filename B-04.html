@@ -2,159 +2,335 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>El Mariachi - Catálogo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vista Alternativa • El Mariachi</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    body {
-      background-color: #111;
-      color: white;
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
+    :root{
+      --primary:#d32f2f;
+      --secondary:#ffc107;
+      --accent:#ff6f00;
+      --dark:#1a1a1a;
+      --light:#f5f5f5;
+      --text-dark:#212121;
+      --text-light:#757575;
+      --border:#e0e0e0;
+      --success:#4caf50;
+      --hover:#b71c1c
     }
-
-    header {
-      background-color: #1a1a1a;
-      padding: 10px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 2px solid #333;
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body{
+      background:var(--light);
+      color:var(--text-dark);
+      font-family:'Segoe UI',Roboto,'Helvetica Neue',sans-serif;
+      line-height:1.6
     }
-
-    header h1 {
-      font-size: 20px;
-      color: #fff;
+    header{
+      background:linear-gradient(135deg,var(--primary),var(--hover));
+      box-shadow:0 2px 8px rgba(0,0,0,0.1);
+      padding:16px 0;
+      position:sticky;
+      top:0;
+      z-index:100
     }
-
-    nav {
-      display: flex;
-      flex-direction: column;
-      background-color: #1e1e1e;
-      width: 150px;
-      padding: 10px;
-      border-right: 2px solid #333;
-      height: calc(100vh - 60px);
+    .navbar-brand{
+      color:#fff!important;
+      font-weight:700;
+      font-size:24px;
+      letter-spacing:-0.5px
     }
-
-    nav button {
-      background-color: #2a2a2a;
-      border: none;
-      color: #ccc;
-      padding: 12px;
-      margin-bottom: 10px;
-      cursor: pointer;
-      border-radius: 8px;
-      text-align: left;
-      font-weight: bold;
+    .back-btn{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      color:#fff;
+      text-decoration:none;
+      font-weight:600;
+      padding:8px 12px;
+      border-radius:8px;
+      transition:all 0.3s;
+      background:rgba(255,255,255,0.1)
     }
-
-    nav button.active {
-      background-color: #007bff;
-      color: white;
+    .back-btn:hover{
+      background:rgba(255,255,255,0.2);
+      transform:translateX(-4px);
+      color:#fff
     }
-
-    main {
-      padding: 20px;
-      flex: 1;
+    .container{
+      max-width:1400px;
+      padding:40px 24px
     }
-
-    .container {
-      display: flex;
+    h1{
+      color:var(--text-dark);
+      font-weight:700;
+      font-size:32px;
+      margin-bottom:32px;
+      letter-spacing:-0.5px
     }
-
-    .filtros {
-      margin-bottom: 20px;
+    .view-controls{
+      display:flex;
+      gap:12px;
+      margin-bottom:24px;
+      align-items:center
     }
-
-    .filtros input {
-      width: 400px;
-      padding: 8px;
-      border-radius: 6px;
-      border: none;
-      outline: none;
+    .view-toggle{
+      display:flex;
+      gap:8px;
+      background:#fff;
+      border:1px solid var(--border);
+      border-radius:8px;
+      padding:4px;
     }
-
-    .productos {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 20px;
+    .toggle-btn{
+      width:36px;
+      height:36px;
+      border:none;
+      background:transparent;
+      color:var(--text-light);
+      cursor:pointer;
+      border-radius:6px;
+      font-size:18px;
+      transition:all 0.3s
     }
-
-    .producto {
-      background-color: #1c1c1c;
-      border: 1px solid #333;
-      border-radius: 8px;
-      padding: 15px;
-      text-align: center;
+    .toggle-btn.active{
+      background:var(--primary);
+      color:#fff
     }
-
-    .producto h3 {
-      color: #fff;
-      margin-bottom: 10px;
+    .products-table{
+      width:100%;
+      border-collapse:collapse;
+      background:#fff;
+      border-radius:12px;
+      overflow:hidden;
+      box-shadow:0 1px 3px rgba(0,0,0,0.08);
+      border:1px solid var(--border)
     }
-
-    .producto button {
-      background-color: #007bff;
-      border: none;
-      color: white;
-      padding: 8px 12px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: bold;
+    .products-table thead{
+      background:rgba(211,47,47,0.05);
+      border-bottom:2px solid var(--border)
     }
-
-    .producto button:disabled {
-      background-color: #444;
-      cursor: not-allowed;
+    .products-table th{
+      padding:16px;
+      text-align:left;
+      font-weight:700;
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:0.5px;
+      color:var(--primary)
     }
-
-    footer {
-      background-color: #1a1a1a;
-      padding: 10px;
-      text-align: center;
-      border-top: 2px solid #333;
-      font-size: 12px;
-      color: #888;
+    .products-table td{
+      padding:16px;
+      border-bottom:1px solid var(--border);
+      font-size:13px
     }
-
-    .api-info {
-      background-color: #0e0e0e;
-      border: 1px solid #333;
-      padding: 10px;
-      font-size: 13px;
-      margin-top: 20px;
+    .products-table tbody tr:hover{
+      background:rgba(211,47,47,0.02)
+    }
+    .products-table tbody tr:last-child td{
+      border-bottom:none
+    }
+    .product-name{
+      font-weight:600;
+      color:var(--text-dark)
+    }
+    .product-category{
+      color:var(--text-light);
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:0.5px;
+      margin-top:4px
+    }
+    .price{
+      color:var(--primary);
+      font-weight:700;
+      font-size:14px
+    }
+    .status-available{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:6px 12px;
+      background:rgba(76,175,80,0.15);
+      color:var(--success);
+      border-radius:20px;
+      font-size:11px;
+      font-weight:700;
+      border:1px solid rgba(76,175,80,0.3)
+    }
+    .status-unavailable{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:6px 12px;
+      background:rgba(220,53,69,0.15);
+      color:#dc3545;
+      border-radius:20px;
+      font-size:11px;
+      font-weight:700;
+      border:1px solid rgba(220,53,69,0.3)
+    }
+    .action-btn{
+      padding:8px 12px;
+      background:var(--primary);
+      color:#fff;
+      border:none;
+      border-radius:6px;
+      font-weight:600;
+      font-size:11px;
+      cursor:pointer;
+      transition:all 0.3s
+    }
+    .action-btn:hover{
+      background:var(--hover);
+      transform:translateY(-2px)
+    }
+    .search-box{
+      flex:1;
+      max-width:400px
+    }
+    .search-box input{
+      width:100%;
+      padding:10px 16px;
+      border:2px solid var(--border);
+      border-radius:8px;
+      font-size:13px;
+      transition:all 0.3s
+    }
+    .search-box input:focus{
+      outline:none;
+      border-color:var(--primary);
+      box-shadow:0 0 0 3px rgba(211,47,47,0.1)
+    }
+    .empty-state{
+      text-align:center;
+      padding:60px 20px
+    }
+    .empty-icon{
+      font-size:64px;
+      margin-bottom:16px
+    }
+    .empty-title{
+      color:var(--text-dark);
+      font-weight:700;
+      font-size:18px;
+      margin-bottom:8px
+    }
+    .empty-text{
+      color:var(--text-light);
+      font-size:14px
+    }
+    @media(max-width:768px){
+      .view-controls{
+        flex-direction:column;
+        align-items:flex-start
+      }
+      .search-box{
+        max-width:100%
+      }
+      .products-table{
+        font-size:12px
+      }
+      .products-table th,
+      .products-table td{
+        padding:12px
+      }
     }
   </style>
 </head>
 <body>
-
   <header>
-    <h1>El Mariachi</h1>
-    <input type="text" placeholder="https://www.ElMariachi.cl/catalogo" disabled style="width: 400px; background-color:#222; color:#ccc; border:none; padding:6px;">
+    <div class="container d-flex justify-content-between align-items-center">
+      <a class="navbar-brand" href="B-09ConstruccionPedido.html">🌮 El Mariachi</a>
+      <a href="B-09ConstruccionPedido.html" class="back-btn">← Vista Normal</a>
+    </div>
   </header>
 
-  <div class="container">
-    <nav>
-      <button class="active">Tacos</button>
-      <button>Burritos</button>
-      <button>Nachos</button>
-      <button>Combos</button>
-    </nav>
+  <main class="container">
+    <h1>Catálogo Detallado</h1>
 
-    <main>
-      <div class="filtros">
-        <label>Filtros:</label><br>
-        <input type="text" placeholder="Picante: medio-alto  Vegetariano  Precio: $-$$">
+    <div class="view-controls">
+      <div class="search-box">
+        <input id="searchInput" type="text" placeholder="Buscar productos...">
       </div>
+    </div>
 
-      <h2>Tacos disponibles</h2>
-      <div class="productos">
-        <div class="producto">
-          <h3>Taco al pastor</h3>
-          <button>Agregar</button>
-        </div>
-        <div class="producto">
-          <h3>Taco veggie</h3>
-          <button>Agregar</button>
-        </div>
-        <div clas
+    <div id="tableContainer"></div>
+  </main>
+
+<script>
+  const API_URL = "http://localhost:4000/graphql";
+  let productsList = [];
+
+  async function cargarProductos(){
+    const query = `
+      query {
+        productos {
+          id_producto
+          nombre
+          precio
+          disponible
+          categoria
+          descripcion
+        }
+      }
+    `;
+    try {
+      const res = await fetch(API_URL, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({query}) });
+      const json = await res.json();
+      productsList = (json.data?.productos || []).map(p => ({
+        id: String(p.id_producto),
+        nombre: p.nombre,
+        precio: Number(p.precio) || 0,
+        disponible: !!p.disponible,
+        categoria: p.categoria || 'Sin categoría',
+        descripcion: p.descripcion || ''
+      }));
+      renderTable();
+    } catch(err){
+      console.error(err);
+      document.getElementById('tableContainer').innerHTML = '<div class="empty-state"><div class="empty-icon">⚠️</div><h3 class="empty-title">Error al cargar</h3><p class="empty-text">No pudimos cargar los productos. Intenta de nuevo.</p></div>';
+    }
+  }
+
+  function renderTable(){
+    const search = document.getElementById('searchInput').value.trim().toLowerCase();
+    const filtered = productsList.filter(p => !(p.nombre||'').toLowerCase().includes('trabajando para usted') && (!(search) || (p.nombre||'').toLowerCase().includes(search) || (p.descripcion||'').toLowerCase().includes(search)));
+
+    if(filtered.length === 0){
+      document.getElementById('tableContainer').innerHTML = '<div class="empty-state"><div class="empty-icon">🔍</div><h3 class="empty-title">Sin resultados</h3><p class="empty-text">No encontramos productos que coincidan con tu búsqueda.</p></div>';
+      return;
+    }
+
+    const rows = filtered.map(p => `
+      <tr>
+        <td><div class="product-name">${p.nombre}</div><div class="product-category">${p.categoria}</div></td>
+        <td><p style="margin:0;color:var(--text-light);font-size:12px">${(p.descripcion||'').substring(0,50)}...</p></td>
+        <td class="price">$${p.precio.toLocaleString()}</td>
+        <td>${p.disponible ? '<div class="status-available">✓ Disponible</div>' : '<div class="status-unavailable">✗ Agotado</div>'}</td>
+        <td><button class="action-btn" onclick="location.href='B-06DetallesProducto.html?id=${p.id}'">Ver</button></td>
+      </tr>
+    `).join('');
+
+    document.getElementById('tableContainer').innerHTML = `
+      <table class="products-table">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Descripción</th>
+            <th>Precio</th>
+            <th>Disponibilidad</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    `;
+  }
+
+  document.getElementById('searchInput').addEventListener('input', renderTable);
+  cargarProductos();
+</script>
+
+</body>
+</html>
+
