@@ -1,118 +1,387 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>El Mariachi - Detalle Producto</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    body {
-      background-color: #111;
-      color: white;
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
+    :root{
+      --primary:#d32f2f;
+      --secondary:#ffc107;
+      --accent:#ff6f00;
+      --dark:#1a1a1a;
+      --light:#f5f5f5;
+      --text-dark:#212121;
+      --text-light:#757575;
+      --border:#e0e0e0;
+      --success:#4caf50;
+      --hover:#b71c1c
     }
-
-    header {
-      background-color: #1a1a1a;
-      padding: 10px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 2px solid #333;
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body{
+      background:var(--light);
+      color:var(--text-dark);
+      font-family:'Segoe UI',Roboto,'Helvetica Neue',sans-serif;
+      line-height:1.6
     }
-
-    header h1 {
-      font-size: 20px;
+    header{
+      background:linear-gradient(135deg,var(--primary),var(--hover));
+      box-shadow:0 2px 8px rgba(0,0,0,0.1);
+      padding:16px 0;
+      position:sticky;
+      top:0;
+      z-index:100
     }
-
-    main {
-      padding: 20px;
+    .navbar-brand{
+      color:#fff!important;
+      font-weight:700;
+      font-size:24px;
+      letter-spacing:-0.5px
     }
-
-    .producto {
-      background-color: #1c1c1c;
-      border: 1px solid #333;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      padding: 15px;
-      margin-bottom: 15px;
+    .back-btn{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      color:#fff;
+      text-decoration:none;
+      font-weight:600;
+      padding:8px 12px;
+      border-radius:8px;
+      transition:all 0.3s;
+      background:rgba(255,255,255,0.1)
     }
-
-    .img-placeholder {
-      background-color: #333;
-      width: 80px;
-      height: 80px;
-      border-radius: 4px;
-      margin-right: 20px;
+    .back-btn:hover{
+      background:rgba(255,255,255,0.2);
+      transform:translateX(-4px);
+      color:#fff
     }
-
-    .info h3 {
-      margin: 0;
-      margin-bottom: 6px;
+    .container{
+      max-width:1200px;
+      padding:40px 24px
     }
-
-    .info p {
-      margin: 2px 0;
-      color: #ccc;
+    .product-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:48px;
+      align-items:start
     }
-
-    .stock {
-      margin-top: 8px;
-      background-color: #222;
-      border: none;
-      color: #ccc;
-      padding: 5px 10px;
-      border-radius: 4px;
+    .img-section{
+      display:flex;
+      justify-content:center;
+      align-items:center
     }
-
-    .producto button {
-      background-color: #007bff;
-      border: none;
-      color: white;
-      padding: 8px 12px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: bold;
-      margin-left: auto;
+    .img-placeholder{
+      width:100%;
+      max-width:400px;
+      aspect-ratio:1;
+      border-radius:16px;
+      background:linear-gradient(135deg,#ffe0b2,#ffcc80);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:120px;
+      box-shadow:0 8px 24px rgba(0,0,0,0.15)
     }
-
-    .producto button:disabled {
-      background-color: #444;
-      cursor: not-allowed;
+    .details-section{
+      display:flex;
+      flex-direction:column;
+      gap:24px
+    }
+    .categoria-badge{
+      background:var(--secondary);
+      color:var(--text-dark);
+      padding:8px 16px;
+      border-radius:20px;
+      font-weight:700;
+      display:inline-block;
+      width:fit-content;
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:0.5px
+    }
+    h1{
+      color:var(--text-dark);
+      font-weight:700;
+      font-size:32px;
+      line-height:1.2;
+      letter-spacing:-0.5px;
+      margin:0
+    }
+    .descripcion{
+      color:var(--text-light);
+      font-size:15px;
+      line-height:1.7;
+      margin:0;
+      padding:20px;
+      background:#fff;
+      border-radius:12px;
+      border-left:4px solid var(--primary)
+    }
+    .precio-section{
+      display:flex;
+      align-items:baseline;
+      gap:12px;
+      padding:20px;
+      background:rgba(211,47,47,0.05);
+      border-radius:12px
+    }
+    .precio-label{
+      color:var(--text-light);
+      font-size:14px;
+      font-weight:600;
+      text-transform:uppercase;
+      letter-spacing:0.5px
+    }
+    .precio-value{
+      color:var(--primary);
+      font-weight:800;
+      font-size:36px;
+      letter-spacing:-1px
+    }
+    .status{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      padding:12px 16px;
+      background:#fff;
+      border-radius:8px;
+      border:2px solid var(--success);
+      color:var(--success);
+      font-weight:600;
+      font-size:14px
+    }
+    .status.disabled{
+      border-color:#ccc;
+      color:#999;
+      background:#f9f9f9
+    }
+    .action-buttons{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px
+    }
+    .btn-add{
+      background:var(--primary);
+      color:#fff;
+      border:none;
+      border-radius:8px;
+      padding:16px 24px;
+      font-weight:700;
+      font-size:15px;
+      cursor:pointer;
+      transition:all 0.3s;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      text-transform:uppercase;
+      letter-spacing:0.5px
+    }
+    .btn-add:hover{
+      background:var(--hover);
+      transform:translateY(-2px);
+      box-shadow:0 8px 20px rgba(211,47,47,0.3)
+    }
+    .btn-add:disabled{
+      background:#ccc;
+      cursor:not-allowed;
+      opacity:0.6;
+      transform:none
+    }
+    .btn-back{
+      background:#fff;
+      color:var(--text-dark);
+      border:2px solid var(--border);
+      border-radius:8px;
+      padding:16px 24px;
+      font-weight:700;
+      font-size:15px;
+      cursor:pointer;
+      transition:all 0.3s;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      text-transform:uppercase;
+      letter-spacing:0.5px
+    }
+    .btn-back:hover{
+      border-color:var(--primary);
+      color:var(--primary);
+      transform:translateY(-2px)
+    }
+    .info-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:16px
+    }
+    .info-box{
+      padding:16px;
+      background:#fff;
+      border-radius:8px;
+      border:1px solid var(--border)
+    }
+    .info-label{
+      color:var(--text-light);
+      font-size:12px;
+      font-weight:600;
+      text-transform:uppercase;
+      letter-spacing:0.5px;
+      margin-bottom:6px
+    }
+    .info-value{
+      color:var(--text-dark);
+      font-weight:700;
+      font-size:16px
+    }
+    .loading{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      min-height:500px;
+      flex-direction:column;
+      gap:16px;
+      color:var(--text-light)
+    }
+    .spinner{
+      width:40px;
+      height:40px;
+      border:3px solid var(--border);
+      border-top-color:var(--primary);
+      border-radius:50%;
+      animation:spin 0.8s linear infinite
+    }
+    @keyframes spin {
+      to { transform:rotate(360deg); }
+    }
+    @media(max-width:768px){
+      .product-grid{
+        grid-template-columns:1fr;
+        gap:32px
+      }
+      .action-buttons{
+        grid-template-columns:1fr
+      }
+      h1{
+        font-size:24px
+      }
+      .precio-value{
+        font-size:28px
+      }
     }
   </style>
 </head>
 <body>
-
   <header>
-    <h1>El Mariachi</h1>
-    <input type="text" value="https://www.ElMariachi.cl/producto/nachos-queso" disabled style="width:430px; background-color:#222; color:#ccc; border:none; padding:6px;">
+    <div class="container d-flex justify-content-between align-items-center">
+      <a class="navbar-brand" href="B-09ConstruccionPedido.html">🌮 El Mariachi</a>
+      <a href="B-09ConstruccionPedido.html" class="back-btn">← Volver al Catálogo</a>
+    </div>
   </header>
 
-  <main>
-    <div class="producto">
-      <div class="img-placeholder"></div>
-      <div class="info">
-        <h3>Nachos con queso</h3>
-        <p>Descripción: nachos, queso cheddar, jalapeños</p>
-        <p>Alérgenos: lácteos | Picante: medio</p>
-        <input class="stock" type="text" value="Stock: 0 (No disponible)" readonly>
-      </div>
-      <button disabled>Agregar</button>
-    </div>
-
-    <div class="producto">
-      <div class="img-placeholder"></div>
-      <div class="info">
-        <h3>Nachos con queso</h3>
-        <p>Descripción: nachos, queso cheddar, jalapeños</p>
-        <p>Alérgenos: lácteos | Picante: medio</p>
-        <input class="stock" type="text" value="Stock: 25 (Disponible)" readonly>
-      </div>
-      <button>Agregar</button>
+  <main class="container">
+    <div id="contenedor" class="loading">
+      <div class="spinner"></div>
+      <div>Cargando producto...</div>
     </div>
   </main>
 
+<script>
+  const API_URL = "http://localhost:4000/graphql";
+  const params = new URLSearchParams(window.location.search);
+  const productoId = params.get('id');
+  const cart = JSON.parse(sessionStorage.getItem('cart') || '{}');
+  const availabilityOverrides = JSON.parse(localStorage.getItem('availabilityOverrides') || '{}');
+
+  async function cargarProducto(){
+    if(!productoId){ 
+      document.getElementById('contenedor').innerHTML = '<div style="text-align:center;padding:40px"><h3>Producto no encontrado</h3><p>El producto que buscas no existe.</p><a href="B-09ConstruccionPedido.html" class="btn btn-primary">Volver al catálogo</a></div>'; 
+      return; 
+    }
+    const query = `
+      query {
+        productos {
+          id_producto
+          nombre
+          precio
+          disponible
+          categoria
+          descripcion
+        }
+      }
+    `;
+    try {
+      const res = await fetch(API_URL, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({query}) });
+      const json = await res.json();
+      const producto = (json.data?.productos || []).find(p => String(p.id_producto) === String(productoId));
+      if(!producto) { 
+        document.getElementById('contenedor').innerHTML = '<div style="text-align:center;padding:40px"><h3>Producto no encontrado</h3><p>El producto que buscas no existe.</p><a href="B-09ConstruccionPedido.html" class="btn btn-primary">Volver al catálogo</a></div>'; 
+        return; 
+      }
+      renderProducto(producto);
+    } catch(err){
+      console.error(err);
+      document.getElementById('contenedor').innerHTML = '<div style="text-align:center;padding:40px"><h3>Error de conexión</h3><p>No pudimos cargar el producto. Intenta nuevamente.</p><a href="B-09ConstruccionPedido.html" class="btn btn-primary">Volver</a></div>';
+    }
+  }
+
+  function isAvailable(p){
+    const ov = availabilityOverrides[String(p.id_producto)];
+    if(typeof ov === 'boolean') return ov;
+    return !!p.disponible;
+  }
+
+  function renderProducto(p){
+    const available = isAvailable(p);
+    document.getElementById('contenedor').innerHTML = `
+      <div class="product-grid">
+        <div class="img-section">
+          <div class="img-placeholder">🌮</div>
+        </div>
+        <div class="details-section">
+          <div class="categoria-badge">${p.categoria || 'Sin categoría'}</div>
+          <h1>${p.nombre}</h1>
+          <div class="descripcion">${p.descripcion || 'Descripción no disponible.'}</div>
+          <div class="precio-section">
+            <span class="precio-label">Precio</span>
+            <span class="precio-value">$${Number(p.precio).toLocaleString()}</span>
+          </div>
+          <div class="status ${available ? '' : 'disabled'}">
+            <span>${available ? '✓ Disponible' : '✗ Agotado'}</span>
+          </div>
+          <div class="info-grid">
+            <div class="info-box">
+              <div class="info-label">Categoría</div>
+              <div class="info-value">${p.categoria || 'N/A'}</div>
+            </div>
+            <div class="info-box">
+              <div class="info-label">Disponibilidad</div>
+              <div class="info-value">${available ? 'En Stock' : 'Agotado'}</div>
+            </div>
+          </div>
+          <div class="action-buttons">
+            <button id="addBtn" class="btn-add" ${available ? '' : 'disabled'}>
+              ${available ? '🛒 Agregar al Carrito' : 'Sin Stock'}
+            </button>
+            <a href="B-09ConstruccionPedido.html" class="btn-back">← Volver</a>
+          </div>
+        </div>
+      </div>
+    `;
+    document.getElementById('addBtn')?.addEventListener('click', ()=> agregarCarrito(String(p.id_producto), p.nombre, Number(p.precio)));
+  }
+
+  function agregarCarrito(id, nombre, precio){
+    if(!cart[id]) cart[id] = { id, name: nombre, price: precio, qty: 1 };
+    else cart[id].qty++;
+    sessionStorage.setItem('cart', JSON.stringify(cart));
+    alert(`${nombre} agregado al carrito`);
+    location.href = 'B-09ConstruccionPedido.html';
+  }
+
+  cargarProducto();
+</script>
 </body>
 </html>
+
