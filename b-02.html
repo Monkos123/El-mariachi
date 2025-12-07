@@ -1,107 +1,299 @@
 <!doctype html>
 <html lang="es">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Wireframe • B-02: Inicio de sesión (estático)</title>
-<style>
-  :root{
-    --bg:#0e0e0e; --panel:#141414; --card:#181818; --stroke:#222;
-    --text:#e9e9e9; --muted:#bfbfbf; --btn:#3db0ff;
-  }
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--text);font:14px/1.35 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
-  .wrap{max-width:1100px;margin:24px auto;padding:12px}
-
-  /* navegador fake */
-  .chrome{background:#0b0b0b;border:1px solid var(--stroke);border-radius:8px;padding:10px 12px;display:flex;align-items:center;gap:10px}
-  .dot{width:10px;height:10px;border-radius:50%;background:#333}
-  .addr{flex:1;background:#0f0f0f;border:1px solid var(--stroke);border-radius:6px;padding:8px 10px;color:#9bd2ff}
-  .addr code{font-family:ui-monospace,Menlo,Consolas,monospace}
-
-  .canvas{position:relative;margin-top:14px;background:var(--panel);border:1px solid var(--stroke);border-radius:10px;min-height:560px;overflow:hidden}
-
-  /* tarjetas */
-  .card{position:absolute;width:360px;background:var(--card);border:1px solid var(--stroke);border-radius:10px;box-shadow:0 10px 24px rgba(0,0,0,.35)}
-  .card header{padding:10px 12px;border-bottom:1px solid var(--stroke);color:#d8d8d8;font-weight:600}
-  .card .body{padding:12px}
-
-  /* panel login (izquierda) */
-  #form{left:24px;top:92px;width:360px}
-  .group{margin-bottom:12px}
-  label{display:block;margin:0 0 6px;color:#cfcfcf;font-size:13px}
-  input[type="email"],input[type="password"]{
-    width:100%;padding:10px;border-radius:6px;background:#0f0f0f;border:1px solid var(--stroke);color:var(--text)
-  }
-  .btn{display:inline-block;border:none;background:var(--btn);color:#0b0b0b;font-weight:700;
-       padding:9px 14px;border-radius:8px}
-
-  /* mensajes (derecha) */
-  #mInvalid{left:560px;top:140px}
-  #mBlocked{left:560px;top:360px}
-  .ok{display:inline-block;margin-top:10px;background:#e9e9e9;color:#111;border:none;padding:8px 18px;border-radius:6px}
-
-  /* caja API (abajo-izq) */
-  #api{left:40px;bottom:24px;width:280px}
-  #api table{width:100%;border-collapse:collapse;font-family:ui-monospace,monospace}
-  #api td{padding:6px 10px;border-top:1px solid var(--stroke);color:#c8f3ff}
-  #api .title{background:#0f0f0f;color:#fff;border-top-left-radius:8px;border-top-right-radius:8px;border-bottom:1px solid var(--stroke);padding:8px 10px}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Inicio de Sesión • El Mariachi</title>
+  <style>
+    :root{
+      --primary:#d32f2f;
+      --secondary:#ffc107;
+      --accent:#ff6f00;
+      --dark:#1a1a1a;
+      --light:#f5f5f5;
+      --text-dark:#212121;
+      --text-light:#757575;
+      --border:#e0e0e0;
+      --success:#4caf50;
+      --hover:#b71c1c
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body{
+      background:linear-gradient(135deg,var(--light),#efefef);
+      color:var(--text-dark);
+      font-family:'Segoe UI',Roboto,'Helvetica Neue',sans-serif;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:16px
+    }
+    .container{
+      max-width:420px;
+      width:100%
+    }
+    .card{
+      background:#fff;
+      border-radius:16px;
+      box-shadow:0 8px 32px rgba(0,0,0,0.1);
+      padding:40px;
+      border:1px solid var(--border)
+    }
+    .logo{
+      text-align:center;
+      font-size:48px;
+      margin-bottom:24px
+    }
+    .title{
+      text-align:center;
+      color:var(--text-dark);
+      font-weight:700;
+      font-size:24px;
+      margin-bottom:8px;
+      letter-spacing:-0.5px
+    }
+    .subtitle{
+      text-align:center;
+      color:var(--text-light);
+      font-size:14px;
+      margin-bottom:24px
+    }
+    .form-group{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      margin-bottom:16px
+    }
+    label{
+      color:var(--text-dark);
+      font-weight:600;
+      font-size:13px;
+      text-transform:uppercase;
+      letter-spacing:0.5px
+    }
+    input[type="email"],input[type="password"]{
+      padding:12px 16px;
+      border-radius:8px;
+      border:2px solid var(--border);
+      background:#fff;
+      color:var(--text-dark);
+      font-size:14px;
+      transition:all 0.3s;
+      font-family:inherit
+    }
+    input[type="email"]:focus,input[type="password"]:focus{
+      outline:none;
+      border-color:var(--primary);
+      box-shadow:0 0 0 3px rgba(211,47,47,0.1)
+    }
+    .btn{
+      width:100%;
+      padding:14px;
+      border:none;
+      border-radius:8px;
+      font-weight:700;
+      font-size:14px;
+      text-transform:uppercase;
+      letter-spacing:0.5px;
+      cursor:pointer;
+      transition:all 0.3s;
+      margin-bottom:8px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px
+    }
+    .btn-primary{
+      background:var(--primary);
+      color:#fff
+    }
+    .btn-primary:hover{
+      background:var(--hover);
+      transform:translateY(-2px);
+      box-shadow:0 8px 20px rgba(211,47,47,0.3)
+    }
+    .btn-secondary{
+      background:#fff;
+      color:var(--text-dark);
+      border:2px solid var(--border)
+    }
+    .btn-secondary:hover{
+      border-color:var(--primary);
+      color:var(--primary);
+      transform:translateY(-2px)
+    }
+    .btn:disabled{
+      opacity:0.6;
+      cursor:not-allowed;
+      transform:none
+    }
+    .link-help{
+      text-align:center;
+      font-size:13px;
+      margin-top:16px;
+      display:flex;
+      flex-direction:column;
+      gap:8px
+    }
+    .link-help a{
+      color:var(--primary);
+      text-decoration:none;
+      font-weight:600
+    }
+    .link-help a:hover{
+      text-decoration:underline
+    }
+    .modal{
+      position:fixed;
+      top:0;
+      left:0;
+      right:0;
+      bottom:0;
+      background:rgba(0,0,0,0.5);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:1000;
+      padding:16px
+    }
+    .modal.active{
+      display:flex
+    }
+    .modal-content{
+      background:#fff;
+      border-radius:16px;
+      padding:32px;
+      max-width:400px;
+      width:100%;
+      text-align:center;
+      box-shadow:0 20px 60px rgba(0,0,0,0.3)
+    }
+    .modal-icon{
+      font-size:48px;
+      margin-bottom:16px
+    }
+    .modal-title{
+      color:var(--text-dark);
+      font-weight:700;
+      font-size:18px;
+      margin-bottom:8px
+    }
+    .modal-text{
+      color:var(--text-light);
+      font-size:14px;
+      margin-bottom:24px;
+      line-height:1.6
+    }
+    .modal-btn{
+      width:100%;
+      padding:12px;
+      background:var(--primary);
+      color:#fff;
+      border:none;
+      border-radius:8px;
+      font-weight:700;
+      font-size:13px;
+      cursor:pointer;
+      transition:all 0.3s
+    }
+    .modal-btn:hover{
+      background:var(--hover);
+      transform:translateY(-2px)
+    }
+  </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="chrome">
-      <div class="dot" style="background:#f25f58"></div>
-      <div class="dot" style="background:#fbbe3c"></div>
-      <div class="dot" style="background:#58cb42"></div>
-      <div class="addr"><code>https://www.ElMariachi.cl/login</code></div>
-    </div>
+  <div class="container">
+    <div class="card">
+      <div class="logo">🌮</div>
+      <h1 class="title">El Mariachi</h1>
+      <p class="subtitle">Inicia sesión en tu cuenta</p>
 
-    <div class="canvas">
-      <!-- Inicio de Sesión -->
-      <section class="card" id="form">
-        <header>Inicio de Sesión</header>
-        <div class="body">
-          <div class="group">
-            <label for="email">Email:</label>
-            <input id="email" type="email" placeholder="ana@example.com">
-          </div>
-          <div class="group">
-            <label for="pass">Password:</label>
-            <input id="pass" type="password" placeholder="********">
-          </div>
-          <button class="btn">Entrar</button>
+      <form id="loginForm" onsubmit="login(event)">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input id="email" type="email" placeholder="tu@email.com" required>
         </div>
-      </section>
 
-      <!-- Mensaje: credenciales inválidas -->
-      <section class="card" id="mInvalid" aria-hidden="true">
-        <header>Inicio Sesión</header>
-        <div class="body" style="text-align:center">
-          <div>Credenciales inválidas</div>
-          <button class="ok">OK</button>
+        <div class="form-group">
+          <label for="pass">Contraseña</label>
+          <input id="pass" type="password" placeholder="••••••••" required>
         </div>
-      </section>
 
-      <!-- Mensaje: cuenta bloqueada -->
-      <section class="card" id="mBlocked" aria-hidden="true">
-        <header>Inicio Sesión</header>
-        <div class="body" style="text-align:center">
-          <div>Cuenta bloqueada</div>
-          <button class="ok">OK</button>
-        </div>
-      </section>
+        <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+        <button type="button" class="btn btn-secondary" onclick="irRegistro()">Crear Cuenta</button>
+        <button type="button" class="btn btn-secondary" onclick="verCatalogo()">Ver Catálogo</button>
+      </form>
 
-      <!-- API -->
-      <section class="card" id="api">
-        <div class="title">API/Usuarios</div>
-        <table>
-          <tr><td>+ email: String</td></tr>
-          <tr><td>+ pass: String</td></tr>
-          <tr><td>Login(email, pass): Response</td></tr>
-        </table>
-      </section>
+      <div class="link-help">
+        <a href="B-03RecuperacionContraseña.html">¿Olvidaste tu contraseña?</a>
+      </div>
     </div>
   </div>
+
+  <!-- Modal: Error Credenciales -->
+  <div id="modalError" class="modal">
+    <div class="modal-content">
+      <div class="modal-icon">❌</div>
+      <h2 class="modal-title">Credenciales Inválidas</h2>
+      <p class="modal-text">Email o contraseña incorrectos. Intenta de nuevo.</p>
+      <button class="modal-btn" onclick="cerrarModal('modalError')">Intentar de Nuevo</button>
+    </div>
+  </div>
+
+  <!-- Modal: Éxito -->
+  <div id="modalExito" class="modal">
+    <div class="modal-content">
+      <div class="modal-icon">✅</div>
+      <h2 class="modal-title">¡Bienvenido!</h2>
+      <p class="modal-text">Sesión iniciada correctamente.</p>
+      <button class="modal-btn" onclick="irCatalogo()">Ir al Catálogo</button>
+    </div>
+  </div>
+
+<script>
+  function cerrarModal(id){
+    document.getElementById(id).classList.remove('active');
+  }
+
+  function irRegistro(){
+    window.location.href = 'B-01RegistroUsusario.html';
+  }
+
+  function verCatalogo(){
+    window.location.href = 'B-09ConstruccionPedido.html';
+  }
+
+  function irCatalogo(){
+    window.location.href = 'B-09ConstruccionPedido.html';
+  }
+
+  function login(e){
+    e.preventDefault();
+    const email = document.getElementById('email').value.trim();
+    const pass = document.getElementById('pass').value;
+
+    if(!email || !pass){
+      alert('Completa todos los campos');
+      return;
+    }
+
+    const users = JSON.parse(localStorage.getItem('elmariachi_users') || '[]');
+    const found = users.find(u => u.email === email && u.pass === pass);
+
+    if(!found){
+      document.getElementById('modalError').classList.add('active');
+      return;
+    }
+
+    // Login exitoso
+    localStorage.setItem('currentUser', JSON.stringify({email, loginTime: Date.now()}));
+    document.getElementById('modalExito').classList.add('active');
+  }
+
+  document.getElementById('loginForm')?.addEventListener('keypress', (e)=>{
+    if(e.key === 'Enter') login(e);
+  });
+</script>
 </body>
 </html>
