@@ -1,46 +1,478 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Pago | El Mariachi</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Pasarela de Pago • El Mariachi</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    :root{
+      --primary:#d32f2f;
+      --secondary:#ffc107;
+      --accent:#ff6f00;
+      --dark:#1a1a1a;
+      --light:#f5f5f5;
+      --text-dark:#212121;
+      --text-light:#757575;
+      --border:#e0e0e0;
+      --success:#4caf50;
+      --hover:#b71c1c
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body{
+      background:var(--light);
+      color:var(--text-dark);
+      font-family:'Segoe UI',Roboto,'Helvetica Neue',sans-serif;
+      line-height:1.6
+    }
+    header{
+      background:linear-gradient(135deg,var(--primary),var(--hover));
+      box-shadow:0 2px 8px rgba(0,0,0,0.1);
+      padding:16px 0;
+      position:sticky;
+      top:0;
+      z-index:100
+    }
+    .navbar-brand{
+      color:#fff!important;
+      font-weight:700;
+      font-size:24px;
+      letter-spacing:-0.5px
+    }
+    .back-btn{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      color:#fff;
+      text-decoration:none;
+      font-weight:600;
+      padding:8px 12px;
+      border-radius:8px;
+      transition:all 0.3s;
+      background:rgba(255,255,255,0.1)
+    }
+    .back-btn:hover{
+      background:rgba(255,255,255,0.2);
+      transform:translateX(-4px);
+      color:#fff
+    }
+    .container{
+      max-width:1000px;
+      padding:40px 24px
+    }
+    h1{
+      color:var(--text-dark);
+      font-weight:700;
+      font-size:32px;
+      margin-bottom:32px;
+      letter-spacing:-0.5px
+    }
+    .checkout-grid{
+      display:grid;
+      grid-template-columns:1fr 380px;
+      gap:32px;
+      align-items:start
+    }
+    .checkout-card{
+      background:#fff;
+      border-radius:12px;
+      border:1px solid var(--border);
+      padding:32px;
+      box-shadow:0 1px 3px rgba(0,0,0,0.08)
+    }
+    .section-title{
+      color:var(--primary);
+      font-weight:700;
+      font-size:13px;
+      text-transform:uppercase;
+      letter-spacing:1px;
+      margin-bottom:24px;
+      display:block
+    }
+    .form-group{
+      margin-bottom:20px
+    }
+    .form-label{
+      display:block;
+      color:var(--text-dark);
+      font-weight:600;
+      font-size:13px;
+      margin-bottom:8px;
+      text-transform:uppercase;
+      letter-spacing:0.5px
+    }
+    .form-control{
+      width:100%;
+      padding:12px 14px;
+      border:2px solid var(--border);
+      border-radius:8px;
+      font-size:14px;
+      color:var(--text-dark);
+      transition:all 0.3s;
+      font-family:inherit
+    }
+    .form-control:focus{
+      outline:none;
+      border-color:var(--primary);
+      box-shadow:0 0 0 3px rgba(211,47,47,0.1)
+    }
+    .form-row{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:16px
+    }
+    .info-box{
+      background:rgba(211,47,47,0.05);
+      border:2px solid var(--border);
+      border-radius:8px;
+      padding:16px;
+      margin:20px 0;
+      font-size:13px;
+      color:var(--text-light)
+    }
+    .info-box strong{
+      color:var(--text-dark)
+    }
+    .summary-card{
+      background:#fff;
+      border-radius:12px;
+      border:1px solid var(--border);
+      padding:24px;
+      box-shadow:0 1px 3px rgba(0,0,0,0.08);
+      position:sticky;
+      top:100px
+    }
+    .summary-title{
+      color:var(--primary);
+      font-weight:700;
+      font-size:13px;
+      text-transform:uppercase;
+      letter-spacing:1px;
+      margin-bottom:16px;
+      display:block
+    }
+    .summary-row{
+      display:flex;
+      justify-content:space-between;
+      padding:12px 0;
+      font-size:13px;
+      border-bottom:1px solid var(--border)
+    }
+    .summary-row:last-child{
+      border-bottom:none;
+      padding:16px 0 0;
+      border-top:2px solid var(--primary);
+      font-weight:800;
+      font-size:14px;
+      color:var(--primary)
+    }
+    .summary-label{
+      color:var(--text-light);
+      font-weight:500
+    }
+    .summary-value{
+      color:var(--text-dark);
+      font-weight:600;
+      text-align:right
+    }
+    .payment-methods{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      margin:20px 0
+    }
+    .payment-option{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding:16px;
+      border:2px solid var(--border);
+      border-radius:8px;
+      cursor:pointer;
+      transition:all 0.3s
+    }
+    .payment-option:hover{
+      border-color:var(--primary);
+      background:rgba(211,47,47,0.02)
+    }
+    .payment-option input[type="radio"]{
+      cursor:pointer;
+      width:18px;
+      height:18px;
+      accent-color:var(--primary)
+    }
+    .payment-info{
+      flex:1
+    }
+    .payment-name{
+      color:var(--text-dark);
+      font-weight:700;
+      font-size:13px
+    }
+    .payment-desc{
+      color:var(--text-light);
+      font-size:12px;
+      margin-top:4px
+    }
+    .payment-icon{
+      font-size:24px
+    }
+    .pay-btn{
+      width:100%;
+      padding:14px;
+      background:var(--primary);
+      color:#fff;
+      border:none;
+      border-radius:8px;
+      font-weight:700;
+      font-size:13px;
+      text-transform:uppercase;
+      letter-spacing:0.5px;
+      cursor:pointer;
+      transition:all 0.3s;
+      margin-top:20px
+    }
+    .pay-btn:hover{
+      background:var(--hover);
+      transform:translateY(-2px);
+      box-shadow:0 8px 20px rgba(211,47,47,0.3)
+    }
+    @media(max-width:768px){
+      .checkout-grid{
+        grid-template-columns:1fr;
+        gap:24px
+      }
+      .summary-card{
+        position:static;
+        top:auto
+      }
+      .form-row{ grid-template-columns:1fr }
+      h1{ font-size:24px }
+    }
+  </style>
 </head>
 <body>
-
-  <!-- Barra del navegador simulada -->
-  <div class="browser-bar">
-    <div class="dots">
-      <span class="dot red"></span>
-      <span class="dot yellow"></span>
-      <span class="dot green"></span>
+  <header>
+    <div class="container d-flex justify-content-between align-items-center">
+      <a class="navbar-brand" href="B-09ConstruccionPedido.html">🌮 El Mariachi</a>
+      <a href="B-10CarritoCalculo.html" class="back-btn">← Carrito</a>
     </div>
-    <div class="url">https://ElMariachi.cl/pago</div>
-  </div>
+  </header>
 
-  <div class="container mt-4">
-    <h2 class="fw-bold mb-4">Pasarela de Pago</h2>
+  <main class="container">
+    <h1>Checkout</h1>
 
-    <div class="card p-4">
-      <p class="text-muted mb-1">Pedido #00036</p>
-      <h4 class="fw-bold">Total: $14.900</h4>
+    <div class="checkout-grid">
+      <section class="checkout-card">
+        <span class="section-title">Información de Entrega</span>
+        <div id="addressDisplay"></div>
+        <a href="B-16FormularioDireccion.html" class="btn btn-outline-dark btn-sm">Cambiar Dirección</a>
 
-      <hr>
+        <span class="section-title" style="margin-top:32px">Método de Pago</span>
 
-      <h6 class="fw-semibold mb-3">Selecciona tu método de pago</h6>
-      <div class="form-check mb-2">
-        <input class="form-check-input" type="radio" name="pago" id="webpay" checked>
-        <label class="form-check-label" for="webpay">Webpay / Tarjeta de Crédito o Débito</label>
-      </div>
-      <div class="form-check mb-4">
-        <input class="form-check-input" type="radio" name="pago" id="transferencia">
-        <label class="form-check-label" for="transferencia">Transferencia Bancaria</label>
-      </div>
+        <div class="payment-methods">
+          <label class="payment-option">
+            <input type="radio" name="payment" value="card" checked>
+            <div class="payment-icon">💳</div>
+            <div class="payment-info">
+              <div class="payment-name">Tarjeta de Crédito/Débito</div>
+              <div class="payment-desc">Visa, Mastercard, American Express</div>
+            </div>
+          </label>
 
-      <button class="btn btn-success w-100">Ir a pagar</button>
+          <label class="payment-option">
+            <input type="radio" name="payment" value="transfer">
+            <div class="payment-icon">🏦</div>
+            <div class="payment-info">
+              <div class="payment-name">Transferencia Bancaria</div>
+              <div class="payment-desc">Deposito directo a cuenta</div>
+            </div>
+          </label>
+
+          <label class="payment-option">
+            <input type="radio" name="payment" value="wallet">
+            <div class="payment-icon">📱</div>
+            <div class="payment-info">
+              <div class="payment-name">Billetera Digital</div>
+              <div class="payment-desc">Apple Pay, Google Pay</div>
+            </div>
+          </label>
+        </div>
+
+        <div id="paymentForm"></div>
+
+        <div class="info-box">
+          <strong>🔒 Seguridad:</strong> Tus datos de pago están protegidos con encriptación SSL. No guardamos información sensible.
+        </div>
+      </section>
+
+      <aside class="summary-card">
+        <span class="summary-title">Resumen Final</span>
+        <div id="summaryContent"></div>
+        <button id="payBtn" class="pay-btn" onclick="processPay()">Pagar Ahora</button>
+      </aside>
     </div>
-  </div>
+  </main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  const cart = JSON.parse(sessionStorage.getItem('cart') || '{}');
+  const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+  const userAddress = JSON.parse(localStorage.getItem('userAddress') || 'null');
+
+  // Validar acceso
+  if(!currentUser){
+    alert('Debes iniciar sesión');
+    location.href = 'B-09ConstruccionPedido.html';
+  } else if(!userAddress){
+    alert('Debes completar tu dirección de entrega');
+    location.href = 'B-16FormularioDireccion.html';
+  }
+
+  function renderAddress(){
+    document.getElementById('addressDisplay').innerHTML = `
+      <div style="background:var(--light);border-radius:8px;padding:16px;margin-bottom:16px">
+        <div style="color:var(--text-light);font-size:12px;font-weight:600;text-transform:uppercase;margin-bottom:8px">Entrega a:</div>
+        <div style="color:var(--text-dark);font-weight:700;font-size:14px">${userAddress.address}${userAddress.dept ? ', ' + userAddress.dept : ''}</div>
+        <div style="color:var(--text-light);font-size:13px;margin-top:4px">${userAddress.comuna} • ${userAddress.phone}</div>
+        <div style="color:var(--text-light);font-size:12px;margin-top:4px;font-style:italic">${userAddress.reference}</div>
+      </div>
+    `;
+  }
+
+  function renderSummary(){
+    const items = Object.entries(cart).filter(([k]) => !k.startsWith('_'));
+    let subtotal = items.reduce((s, [, item]) => s + (item.qty * item.price), 0);
+    const shipping = cart._shipping || 0;
+    const discount = cart._discount || 0;
+    const total = subtotal + shipping - discount;
+
+    let itemsHtml = items.map(([, item]) => `
+      <div style="font-size:12px;color:var(--text-light);margin-bottom:8px">
+        ${item.name} x${item.qty} = $${(item.qty * item.price).toLocaleString()}
+      </div>
+    `).join('');
+
+    document.getElementById('summaryContent').innerHTML = `
+      <div style="margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--border);font-size:12px">
+        ${itemsHtml}
+      </div>
+      <div class="summary-row">
+        <span class="summary-label">Subtotal</span>
+        <span class="summary-value">$${subtotal.toLocaleString()}</span>
+      </div>
+      ${shipping > 0 ? `
+      <div class="summary-row">
+        <span class="summary-label">Envío</span>
+        <span class="summary-value">$${shipping.toLocaleString()}</span>
+      </div>
+      ` : ''}
+      ${discount > 0 ? `
+      <div class="summary-row">
+        <span class="summary-label">Descuento</span>
+        <span class="summary-value" style="color:var(--success)">-$${discount.toLocaleString()}</span>
+      </div>
+      ` : ''}
+      <div class="summary-row">
+        <span>Total</span>
+        <span>$${total.toLocaleString()}</span>
+      </div>
+    `;
+  }
+
+  function renderPaymentForm(){
+    const method = document.querySelector('input[name="payment"]:checked').value;
+    let form = '';
+
+    if(method === 'card'){
+      form = `
+        <div class="form-group">
+          <label class="form-label">Titular de la Tarjeta</label>
+          <input class="form-control" id="cardName" placeholder="Nombre exacto en la tarjeta">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Número de Tarjeta</label>
+          <input class="form-control" id="cardNum" placeholder="1234 5678 9012 3456" maxlength="19">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Vencimiento</label>
+            <input class="form-control" id="cardExp" placeholder="MM/YY" maxlength="5">
+          </div>
+          <div class="form-group">
+            <label class="form-label">CVV</label>
+            <input class="form-control" id="cardCvv" placeholder="123" maxlength="3" type="password">
+          </div>
+        </div>
+      `;
+    } else if(method === 'transfer'){
+      form = `
+        <div class="info-box">
+          <strong>Datos de transferencia:</strong><br>
+          Banco: Banco Ejemplo<br>
+          Cuenta: 12345678901<br>
+          Tipo: Cuenta Corriente<br>
+          <br>
+          Una vez realizada la transferencia, tu pedido será confirmado.
+        </div>
+      `;
+    } else if(method === 'wallet'){
+      form = `<div class="info-box">Se abrirá tu billetera digital después de hacer clic en "Pagar Ahora"</div>`;
+    }
+
+    document.getElementById('paymentForm').innerHTML = form;
+  }
+
+  function processPay(){
+    const method = document.querySelector('input[name="payment"]:checked').value;
+
+    // Validar datos del pago
+    if(method === 'card'){
+      if(!document.getElementById('cardName')?.value || !document.getElementById('cardNum')?.value){
+        alert('Completa todos los campos de la tarjeta');
+        return;
+      }
+    }
+
+    // Generar pedido
+    const orderNum = 'A-' + String(Date.now()).slice(-6);
+    const items = Object.entries(cart).filter(([k]) => !k.startsWith('_')).map(([, item]) => item.name);
+    const quantities = Object.entries(cart).filter(([k]) => !k.startsWith('_')).map(([, item]) => item.qty);
+    
+    const order = {
+      id: orderNum,
+      cart: cart,
+      subtotal: Object.entries(cart).filter(([k]) => !k.startsWith('_')).reduce((s, [, item]) => s + (item.qty * item.price), 0),
+      shipping: cart._shipping || 0,
+      discount: cart._discount || 0,
+      total: 0,
+      paymentMethod: method,
+      createdAt: new Date().toISOString(),
+      status: 'pending',
+      items: items,
+      quantities: quantities,
+      date: new Date().toISOString().split('T')[0]
+    };
+    order.total = order.subtotal + order.shipping - order.discount;
+
+    // Guardar en historial del usuario
+    let userOrders = JSON.parse(localStorage.getItem('userOrders') || '[]');
+    userOrders.unshift(order); // agregar al inicio
+    localStorage.setItem('userOrders', JSON.stringify(userOrders));
+
+    sessionStorage.setItem('order', JSON.stringify(order));
+    alert('Pago procesado exitosamente');
+    location.href = 'B-11ConfirmaciondelPedido.html';
+  }
+
+  document.querySelectorAll('input[name="payment"]').forEach(radio => {
+    radio.addEventListener('change', renderPaymentForm);
+  });
+
+  renderAddress();
+  renderSummary();
+  renderPaymentForm();
+</script>
 
 </body>
 </html>
