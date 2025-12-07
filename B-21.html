@@ -3,140 +3,151 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Subir imagen de producto | El Mariachi</title>
-
-  <!-- Bootstrap -->
+  <title>Admin • Imágenes | El Mariachi</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
   <style>
-    body {
-      background-color: #111;
-      color: #fff;
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial;
-    }
-    .browser-bar {
-      background: #222;
-      color: #ccc;
-      border: 1px solid #333;
-      border-radius: 6px;
-      padding: 6px 10px;
-      margin: 20px;
-      font-size: 14px;
-    }
-    .card {
-      background: #1c1c1c;
-      border: 1px solid #333;
-      border-radius: 8px;
-    }
-    .form-control, .btn {
-      border-radius: 6px;
-    }
-    .validation-box {
-      border: 1px solid #444;
-      border-radius: 6px;
-      padding: 12px;
-      background: #1a1a1a;
-      color: #ccc;
-    }
-    .validated-box {
-      border: 1px solid #444;
-      border-radius: 6px;
-      padding: 10px;
-      background: #1a1a1a;
-      color: #ccc;
-    }
-    .form-check-input:checked {
-      background-color: #28a745;
-      border-color: #28a745;
-    }
+    :root{--primary:#d32f2f;--hover:#b71c1c;--light:#f5f5f5;--text:#212121;--muted:#757575;--border:#e0e0e0;--success:#4caf50}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:var(--light);color:var(--text);font-family:Segoe UI,Roboto,Arial;padding-bottom:40px}
+    .navbar{background:linear-gradient(135deg,var(--primary),var(--hover))}
+    .navbar-brand{color:#fff;font-weight:800}
+    .container{max-width:1000px}
+    h1{color:var(--text);font-weight:700;font-size:28px;margin-bottom:24px}
+    .menu-links{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap}
+    .menu-btn{padding:10px 16px;border:2px solid var(--border);background:#fff;border-radius:8px;font-weight:600;font-size:13px;cursor:pointer;transition:all 0.3s;color:var(--text);text-decoration:none;display:inline-block}
+    .menu-btn:hover{border-color:var(--primary);background:rgba(211,47,47,0.05)}
+    .menu-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+    .card{border-radius:12px;border:1px solid var(--border);box-shadow:0 1px 3px rgba(0,0,0,0.08)}
+    .upload-area{border:2px dashed var(--border);border-radius:8px;padding:24px;text-align:center;cursor:pointer;transition:all 0.3s}
+    .upload-area:hover{border-color:var(--primary);background:rgba(211,47,47,0.02)}
+    .upload-area.drag{border-color:var(--primary);background:rgba(211,47,47,0.08)}
+    .preview-box{min-height:300px;border-radius:8px;background:#f9f9f9;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;margin:20px 0}
+    .preview-box img{max-width:100%;max-height:100%;border-radius:6px}
+    .validation-list{padding:16px;background:rgba(211,47,47,0.02);border-radius:8px;border-left:4px solid var(--primary)}
+    .validation-item{display:flex;align-items:center;gap:8px;padding:6px 0;font-size:13px}
+    .validation-item.ok{color:var(--success)}
+    .validation-item.no{color:#c62828}
+    @media(max-width:768px){.menu-links{flex-direction:column}}
   </style>
 </head>
 <body>
+  <nav class="navbar navbar-expand-lg py-3">
+    <div class="container d-flex align-items-center justify-content-between">
+      <a class="navbar-brand" href="B-19PanelAdmin.html">🌮 El Mariachi • Admin</a>
+      <a class="btn btn-outline-light btn-sm" href="B-09ConstruccionPedido.html">← Salir Admin</a>
+    </div>
+  </nav>
 
-  <div class="browser-bar">https://www.ElMariachi.cl/admin/productos/imagenes</div>
+  <div class="container my-5">
+    <h1>Cargar Imágenes de Productos</h1>
 
-  <div class="container mt-4">
-    <div class="card p-4 shadow">
-      <h5 class="mb-3">Subir imagen de producto</h5>
+    <div class="menu-links">
+      <a href="B-19PanelAdmin.html" class="menu-btn">📦 Productos</a>
+      <a href="B-20TogglesdeDisponibilidad.html" class="menu-btn">✓ Disponibilidad</a>
+      <a href="B-21CargadeImagenes.html" class="menu-btn active">📸 Imágenes</a>
+      <a href="B-22Dashboard.html" class="menu-btn">📊 Dashboard</a>
+      <a href="B-23GestionVisual.html" class="menu-btn">👥 Usuarios</a>
+      <a href="B-24IndicadoresdeValidacion.html" class="menu-btn">✔ Validaciones</a>
+    </div>
 
-      <div class="d-flex align-items-center mb-3">
-        <input type="file" class="form-control me-2" id="inputArchivo">
-        <button class="btn btn-primary" id="btnSubir">Subir</button>
-      </div>
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title mb-3">Subir Imagen de Producto</h5>
 
-      <div class="row">
-        <div class="col-md-6">
-          <div class="validation-box mb-3">
-            <strong>Preview 800x800</strong>
-            <div id="previewContainer" class="mt-2 text-center text-muted small">No hay imagen cargada</div>
+        <div class="upload-area" id="uploadArea">
+          <div style="color:var(--muted);font-size:14px">
+            <div style="font-size:32px;margin-bottom:8px">📁</div>
+            <div style="font-weight:600;margin-bottom:4px">Arrastra tu imagen aquí o haz clic</div>
+            <div style="font-size:12px">JPG, PNG • Máx 2MB • Mín 600×800px</div>
+          </div>
+          <input type="file" id="fileInput" style="display:none" accept="image/jpeg,image/png">
+        </div>
+
+        <div class="preview-box" id="previewBox">
+          <div style="color:var(--muted);text-align:center">
+            <div style="font-size:48px;margin-bottom:8px">🖼</div>
+            <div>Sin imagen</div>
           </div>
         </div>
-        <div class="col-md-6">
-          <div class="validation-box">
-            <strong>Validaciones:</strong>
-            <ul class="small mt-2">
-              <li>Tipo: jpg/png</li>
-              <li>Tamaño: ≤ 2 MB</li>
-              <li>Dim mín: 600×800</li>
-            </ul>
-          </div>
-        </div>
-      </div>
 
-      <div class="validated-box mt-3">
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="" id="checkValidada" checked>
-          <label class="form-check-label" for="checkValidada">
-            Imagen subida y validada
-          </label>
+        <div class="validation-list" id="validationList">
+          <div style="font-weight:700;margin-bottom:12px;color:var(--text)">Validaciones:</div>
+          <div class="validation-item" id="check-type"><span style="color:#ccc">○</span> Tipo: JPG/PNG</div>
+          <div class="validation-item" id="check-size"><span style="color:#ccc">○</span> Tamaño: ≤2 MB</div>
+          <div class="validation-item" id="check-dims"><span style="color:#ccc">○</span> Dimensiones: ≥600×800</div>
+        </div>
+
+        <button id="uploadBtn" class="btn btn-primary mt-3" style="width:100%">💾 Guardar Imagen</button>
+      </div>
+    </div>
+
+    <div class="card mt-4">
+      <div class="card-body">
+        <strong>ℹ Requerimientos</strong>
+        <div style="color:var(--muted);font-size:13px;margin-top:10px">
+          • Formatos: JPEG, PNG<br>
+          • Tamaño máximo: 2 MB<br>
+          • Dimensiones mínimas: 600×800 píxeles<br>
+          • Las imágenes se guardan en servidor y vinculan al producto
         </div>
       </div>
     </div>
   </div>
 
-  <footer class="text-center mt-4 mb-3 text-secondary small">
-    © 2025 El Mariachi
-  </footer>
+<script>
+  const uploadArea = document.getElementById('uploadArea');
+  const fileInput = document.getElementById('fileInput');
+  const previewBox = document.getElementById('previewBox');
+  const uploadBtn = document.getElementById('uploadBtn');
+  let selectedFile = null;
 
-  <script>
-    const inputArchivo = document.getElementById('inputArchivo');
-    const previewContainer = document.getElementById('previewContainer');
-    const btnSubir = document.getElementById('btnSubir');
-    const checkValidada = document.getElementById('checkValidada');
+  uploadArea.addEventListener('click', () => fileInput.click());
+  uploadArea.addEventListener('dragover', (e) => { e.preventDefault(); uploadArea.classList.add('drag'); });
+  uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('drag'));
+  uploadArea.addEventListener('drop', (e) => { e.preventDefault(); uploadArea.classList.remove('drag'); handleFile(e.dataTransfer.files[0]); });
 
-    btnSubir.addEventListener('click', () => {
-      const file = inputArchivo.files[0];
-      if (!file) {
-        alert('Selecciona una imagen antes de subir.');
-        return;
-      }
+  fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
 
-      const allowedTypes = ['image/jpeg', 'image/png'];
-      if (!allowedTypes.includes(file.type)) {
-        alert('Solo se permiten archivos JPG o PNG.');
-        return;
-      }
+  function validateImage(file) {
+    const checks = { type: false, size: false, dims: false };
+    const typeOk = ['image/jpeg', 'image/png'].includes(file.type);
+    const sizeOk = file.size <= 2 * 1024 * 1024;
+    
+    const img = new Image();
+    img.onload = () => {
+      const dimsOk = img.width >= 600 && img.height >= 800;
+      updateChecks({ type: typeOk, size: sizeOk, dims: dimsOk });
+    };
+    img.src = URL.createObjectURL(file);
+  }
 
-      if (file.size > 2 * 1024 * 1024) {
-        alert('El archivo excede los 2 MB.');
-        return;
-      }
-
-      const img = new Image();
-      img.onload = () => {
-        if (img.width < 600 || img.height < 800) {
-          alert('Las dimensiones son menores a 600x800.');
-          return;
-        }
-        previewContainer.innerHTML = '';
-        img.style.maxWidth = '100%';
-        img.style.borderRadius = '6px';
-        previewContainer.appendChild(img);
-        checkValidada.checked = true;
-      };
-      img.src = URL.createObjectURL(file);
+  function updateChecks(checks) {
+    const items = { 'check-type': checks.type, 'check-size': checks.size, 'check-dims': checks.dims };
+    Object.entries(items).forEach(([id, ok]) => {
+      const el = document.getElementById(id);
+      el.className = ok ? 'validation-item ok' : 'validation-item no';
+      el.querySelector('span').textContent = ok ? '✓' : '✗';
     });
-  </script>
+    uploadBtn.disabled = !Object.values(checks).every(v => v);
+  }
 
+  function handleFile(file) {
+    if (!file) return;
+    selectedFile = file;
+    validateImage(file);
+    const img = new Image();
+    img.onload = () => {
+      previewBox.innerHTML = '';
+      previewBox.appendChild(img);
+    };
+    img.src = URL.createObjectURL(file);
+  }
+
+  uploadBtn.addEventListener('click', () => {
+    if (!selectedFile) { alert('Selecciona una imagen'); return; }
+    alert('Imagen subida correctamente');
+    previewBox.innerHTML = '<div style="color:var(--muted);text-align:center"><div style="font-size:48px;margin-bottom:8px">✓</div><div>Imagen guardada</div></div>';
+  });
+</script>
 </body>
 </html>
