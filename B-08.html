@@ -3,78 +3,175 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GitHub Actions - CI Pipeline</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <title>CI/CD • Pipeline Principal | El Mariachi</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    body {
-      background-color: #f6f8fa;
+    :root{
+      --primary:#d32f2f;
+      --hover:#b71c1c;
+      --dark:#1a1a1a;
+      --light:#f5f5f5;
+      --text:#212121;
+      --muted:#757575;
+      --border:#e0e0e0;
+      --success:#4caf50;
+      --warning:#ffc107
     }
-    .card {
-      border-radius: 8px;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-    }
-    .pipeline-step {
-      display: inline-block;
-      padding: 8px 16px;
-      background-color: #f6f8fa;
-      border-radius: 6px;
-      border: 1px solid #d0d7de;
-      margin-right: 6px;
-      text-align: center;
-      min-width: 120px;
-    }
-    .arrow {
-      font-weight: bold;
-      margin: 0 6px;
-      color: #6e7781;
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:Segoe UI,Roboto,Arial,sans-serif;background:var(--light);color:var(--text);padding-bottom:40px}
+    .navbar{background:linear-gradient(135deg,var(--primary),var(--hover))}
+    .navbar-brand{color:#fff;font-weight:800;font-size:20px}
+    .container{max-width:1000px;padding:40px 24px}
+    h1{color:var(--text);font-weight:700;font-size:28px;margin-bottom:24px}
+    .card{border-radius:12px;border:1px solid var(--border);box-shadow:0 1px 3px rgba(0,0,0,0.08);background:#fff}
+    .card-header{background:rgba(211,47,47,0.04);border-bottom:2px solid var(--border);border-radius:12px 12px 0 0;padding:16px}
+    .card-header h5{font-weight:700;color:var(--text);margin:0}
+    .trigger-badge{display:inline-block;padding:8px 12px;background:#fff;border:2px solid var(--border);border-radius:8px;font-size:12px;font-weight:600;margin:4px 4px 4px 0}
+    .trigger-auto{border-color:var(--success);color:var(--success)}
+    .trigger-manual{border-color:var(--warning);color:#b8860b}
+    .pipeline-container{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:20px 0;overflow-x:auto;padding:12px 0}
+    .pipeline-step{padding:14px 16px;background:#fff;border:2px solid var(--border);border-radius:8px;text-align:center;font-size:12px;font-weight:600;white-space:nowrap;min-width:110px;transition:all 0.3s}
+    .pipeline-step strong{display:block;margin-top:6px;font-size:14px;color:var(--success)}
+    .step-success{border-color:var(--success);background:rgba(76,175,80,0.05)}
+    .arrow{font-weight:800;color:var(--border);font-size:18px}
+    .status-badge{display:inline-block;padding:6px 10px;background:rgba(76,175,80,0.12);color:var(--success);border:1px solid rgba(76,175,80,0.2);border-radius:6px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px}
+    .version-info{background:rgba(211,47,47,0.04);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin:16px 0}
+    .version-label{color:var(--muted);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px}
+    .version-value{color:var(--text);font-weight:700;font-size:14px;font-family:'Courier New',monospace}
+    .code-block{background:#f9f9f9;border:1px solid var(--border);border-radius:8px;padding:16px;font-family:'Courier New',monospace;font-size:12px;overflow-x:auto;color:var(--text);line-height:1.6}
+    .small-muted{color:var(--muted);font-size:13px}
+    @media(max-width:768px){
+      .pipeline-container{gap:6px}
+      .pipeline-step{min-width:90px;padding:12px 10px;font-size:11px}
+      .arrow{font-size:14px}
     }
   </style>
 </head>
-<body class="p-4">
+<body>
+  <nav class="navbar navbar-expand-lg py-3">
+    <div class="container d-flex align-items-center justify-content-between">
+      <a class="navbar-brand" href="B-09ConstruccionPedido.html">🌮 El Mariachi</a>
+      <a class="btn btn-light btn-sm" href="B-09ConstruccionPedido.html">← Volver</a>
+    </div>
+  </nav>
 
   <div class="container">
+    <h1>🚀 CI/CD Pipeline • Despliegue Automático</h1>
 
-    <div class="card p-3 mb-3">
-      <h5>Triggers</h5>
-      <span class="badge bg-light text-dark border">push: main (auto)</span>
-      <span class="badge bg-light text-dark border">release/* (manual)</span>
-    </div>
-
-    <div class="card p-3 mb-3">
-      <h6>CI Pipeline</h6>
-      <div class="mt-2 mb-2">
-        <span class="pipeline-step">build<br><small>compilar app</small><br>✔</span>
-        <span class="arrow">→</span>
-        <span class="pipeline-step">linters<br><small>estilo/estáticos</small><br>✔</span>
-        <span class="arrow">→</span>
-        <span class="pipeline-step">tests<br><small>unit + e2e</small><br>✔</span>
-        <span class="arrow">→</span>
-        <span class="pipeline-step">package<br><small>empaquetado</small><br>✔</span>
-        <span class="arrow">→</span>
-        <span class="pipeline-step">deploy-staging<br><small>a entorno de prueba</small><br>✔</span>
+    <!-- Triggers -->
+    <div class="card mb-4">
+      <div class="card-header">
+        <h5>Eventos Disparadores (Triggers)</h5>
+      </div>
+      <div class="card-body">
+        <div>
+          <div class="trigger-badge trigger-auto">
+            <strong>📤 push</strong> → rama <code>main</code> (automático)
+          </div>
+          <div class="trigger-badge trigger-manual">
+            <strong>🎯 workflow_dispatch</strong> → release/* (manual)
+          </div>
+        </div>
+        <div class="small-muted mt-3">
+          • El pipeline se ejecuta automáticamente en cada push a <code>main</code><br>
+          • Los releases se disparan manualmente desde GitHub Actions
+        </div>
       </div>
     </div>
 
-    <div class="card p-3 mb-3">
-      <h6>Entorno de pruebas (staging)</h6>
-      <p class="mb-1">Versión: <code>1.5.3+build42</code></p>
-      <p>Estado: <span class="badge bg-success">desplegado</span></p>
+    <!-- Pipeline Flow -->
+    <div class="card mb-4">
+      <div class="card-header">
+        <h5>Flujo del Pipeline (CI/CD)</h5>
+      </div>
+      <div class="card-body">
+        <div class="pipeline-container">
+          <div class="pipeline-step step-success">
+            Build<br><small>Compilar app</small><br><strong>✓</strong>
+          </div>
+          <span class="arrow">→</span>
+          <div class="pipeline-step step-success">
+            Linters<br><small>Estilo/Estáticos</small><br><strong>✓</strong>
+          </div>
+          <span class="arrow">→</span>
+          <div class="pipeline-step step-success">
+            Tests<br><small>Unit + E2E</small><br><strong>✓</strong>
+          </div>
+          <span class="arrow">→</span>
+          <div class="pipeline-step step-success">
+            Package<br><small>Empaquetado</small><br><strong>✓</strong>
+          </div>
+          <span class="arrow">→</span>
+          <div class="pipeline-step step-success">
+            Deploy Staging<br><small>A pruebas</small><br><strong>✓</strong>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="card p-3">
-      <h6>CI Config (YAML - ejemplo)</h6>
-      <pre class="bg-light p-2 border rounded">
+    <!-- Staging Environment -->
+    <div class="card mb-4">
+      <div class="card-header">
+        <h5>🌍 Entorno de Pruebas (Staging)</h5>
+      </div>
+      <div class="card-body">
+        <div class="version-info">
+          <div class="version-label">Versión Desplegada</div>
+          <div class="version-value">1.5.3+build42</div>
+        </div>
+        <div class="version-info">
+          <div class="version-label">Estado</div>
+          <div style="margin-top:8px">
+            <span class="status-badge">✓ Desplegado</span>
+          </div>
+        </div>
+        <div class="version-info">
+          <div class="version-label">URL de Acceso</div>
+          <div class="version-value">https://staging.elmariachi.app</div>
+        </div>
+        <div class="small-muted mt-3">
+          Última actualización: hace 2 horas | Uptime: 99.8%
+        </div>
+      </div>
+    </div>
+
+    <!-- Configuration -->
+    <div class="card">
+      <div class="card-header">
+        <h5>Configuración del Workflow (GitHub Actions)</h5>
+      </div>
+      <div class="card-body">
+        <div class="code-block">name: CI/CD Pipeline
+
 on:
   push:
-    branches: [main]  # auto
-  workflow_dispatch:  # manual (release)
+    branches: [main]        # Auto
+  workflow_dispatch:        # Manual (release)
+
 jobs:
   build:
     runs-on: ubuntu-latest
-      </pre>
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build
+        run: npm run build
+      - name: Linters
+        run: npm run lint
+      - name: Tests
+        run: npm run test
+      - name: Package
+        run: npm run package
+      - name: Deploy to Staging
+        run: npm run deploy:staging
+      
+env:
+  NODE_VERSION: 18.x
+  REGISTRY: ghcr.io</div>
+      </div>
     </div>
-
   </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
