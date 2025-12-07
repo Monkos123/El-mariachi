@@ -1,36 +1,441 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Confirmación | El Mariachi</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Confirmación de Compra • El Mariachi</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    :root{
+      --primary:#d32f2f;
+      --secondary:#ffc107;
+      --accent:#ff6f00;
+      --dark:#1a1a1a;
+      --light:#f5f5f5;
+      --text-dark:#212121;
+      --text-light:#757575;
+      --border:#e0e0e0;
+      --success:#4caf50;
+      --hover:#b71c1c
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body{
+      background:var(--light);
+      color:var(--text-dark);
+      font-family:'Segoe UI',Roboto,'Helvetica Neue',sans-serif;
+      line-height:1.6
+    }
+    header{
+      background:linear-gradient(135deg,var(--primary),var(--hover));
+      box-shadow:0 2px 8px rgba(0,0,0,0.1);
+      padding:16px 0;
+      position:sticky;
+      top:0;
+      z-index:100
+    }
+    .navbar-brand{
+      color:#fff!important;
+      font-weight:700;
+      font-size:24px;
+      letter-spacing:-0.5px
+    }
+    .container{
+      max-width:1000px;
+      padding:40px 24px
+    }
+    .confirmation-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:32px;
+      align-items:start
+    }
+    .confirmation-card{
+      background:#fff;
+      border-radius:12px;
+      border:1px solid var(--border);
+      padding:32px;
+      box-shadow:0 1px 3px rgba(0,0,0,0.08)
+    }
+    .card-title{
+      color:var(--primary);
+      font-weight:700;
+      font-size:13px;
+      text-transform:uppercase;
+      letter-spacing:1px;
+      margin-bottom:24px;
+      display:block
+    }
+    h1{
+      color:var(--text-dark);
+      font-weight:700;
+      font-size:28px;
+      margin-bottom:8px;
+      letter-spacing:-0.5px
+    }
+    .subtitle{
+      color:var(--text-light);
+      font-size:14px;
+      margin-bottom:24px
+    }
+    .info-section{
+      margin-bottom:24px;
+      padding-bottom:24px;
+      border-bottom:1px solid var(--border)
+    }
+    .info-section:last-child{
+      border-bottom:none;
+      margin-bottom:0;
+      padding-bottom:0
+    }
+    .info-label{
+      color:var(--text-light);
+      font-size:12px;
+      font-weight:600;
+      text-transform:uppercase;
+      letter-spacing:0.5px;
+      margin-bottom:6px;
+      display:block
+    }
+    .info-value{
+      color:var(--text-dark);
+      font-weight:700;
+      font-size:14px;
+      line-height:1.5
+    }
+    .status-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 16px;
+      background:rgba(76,175,80,0.1);
+      border:2px solid var(--success);
+      border-radius:20px;
+      color:var(--success);
+      font-weight:700;
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:0.5px
+    }
+    .order-summary-section{
+      background:rgba(211,47,47,0.05);
+      border:2px solid var(--primary);
+      border-radius:8px;
+      padding:16px;
+      margin:20px 0
+    }
+    .summary-row{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:12px 0;
+      font-size:13px;
+      border-bottom:1px solid rgba(211,47,47,0.2)
+    }
+    .summary-row:last-child{
+      border-bottom:none
+    }
+    .summary-label{
+      color:var(--text-light);
+      font-weight:500
+    }
+    .summary-value{
+      color:var(--text-dark);
+      font-weight:700
+    }
+    .summary-total{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:16px 0;
+      margin-top:12px;
+      border-top:2px solid var(--primary);
+      font-weight:800;
+      color:var(--primary);
+      font-size:16px
+    }
+    .timeline{
+      margin:24px 0
+    }
+    .timeline-item{
+      display:flex;
+      gap:16px;
+      margin-bottom:20px;
+      padding-bottom:20px;
+      border-bottom:1px solid var(--border)
+    }
+    .timeline-item:last-child{
+      border-bottom:none;
+      margin-bottom:0;
+      padding-bottom:0
+    }
+    .timeline-icon{
+      width:32px;
+      height:32px;
+      border-radius:50%;
+      background:var(--primary);
+      color:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:700;
+      font-size:14px;
+      flex-shrink:0
+    }
+    .timeline-content h4{
+      color:var(--text-dark);
+      font-weight:700;
+      font-size:13px;
+      margin:0 0 4px;
+      text-transform:uppercase;
+      letter-spacing:0.5px
+    }
+    .timeline-content p{
+      color:var(--text-light);
+      font-size:12px;
+      margin:0
+    }
+    .action-buttons{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      margin-top:24px
+    }
+    .btn{
+      padding:14px 20px;
+      border:none;
+      border-radius:8px;
+      font-weight:700;
+      font-size:13px;
+      text-transform:uppercase;
+      letter-spacing:0.5px;
+      cursor:pointer;
+      transition:all 0.3s;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px
+    }
+    .btn-primary{
+      background:var(--primary);
+      color:#fff
+    }
+    .btn-primary:hover{
+      background:var(--hover);
+      transform:translateY(-2px);
+      box-shadow:0 8px 20px rgba(211,47,47,0.3)
+    }
+    .btn-secondary{
+      background:#fff;
+      color:var(--text-dark);
+      border:2px solid var(--border)
+    }
+    .btn-secondary:hover{
+      border-color:var(--primary);
+      color:var(--primary)
+    }
+    .contact-section{
+      background:rgba(255,193,7,0.1);
+      border:2px solid var(--secondary);
+      border-radius:8px;
+      padding:16px;
+      margin-top:20px;
+      text-align:center
+    }
+    .contact-section h4{
+      color:var(--text-dark);
+      font-weight:700;
+      font-size:13px;
+      margin:0 0 8px;
+      text-transform:uppercase;
+      letter-spacing:0.5px
+    }
+    .contact-section p{
+      color:var(--text-light);
+      font-size:12px;
+      margin:0;
+      line-height:1.5
+    }
+    @media(max-width:768px){
+      .confirmation-grid{
+        grid-template-columns:1fr;
+        gap:24px
+      }
+      .action-buttons{
+        grid-template-columns:1fr
+      }
+      h1{ font-size:22px }
+    }
+  </style>
 </head>
 <body>
-
-  <!-- Barra del navegador simulada -->
-  <div class="browser-bar">
-    <div class="dots">
-      <span class="dot red"></span>
-      <span class="dot yellow"></span>
-      <span class="dot green"></span>
+  <header>
+    <div class="container">
+      <a class="navbar-brand" href="B-09ConstruccionPedido.html">🌮 El Mariachi</a>
     </div>
-    <div class="url">https://ElMariachi.cl/confirmacion</div>
-  </div>
+  </header>
 
-  <div class="container mt-5 text-center">
-    <div class="card p-5 shadow-sm">
-      <h2 class="fw-bold text-success mb-3">¡Pago aprobado!</h2>
-      <p class="text-muted mb-4">Tu pedido #00036 fue recibido correctamente y está siendo preparado.</p>
-      <p><strong>Total:</strong> $14.900</p>
+  <main class="container">
+    <div class="confirmation-grid">
+      <section class="confirmation-card">
+        <span class="card-title">Confirmación de Pedido</span>
+        <h1>¡Gracias por tu Compra!</h1>
+        <p class="subtitle">Tu pedido ha sido registrado exitosamente en nuestro sistema.</p>
 
-      <hr class="my-4">
+        <div class="info-section">
+          <span class="info-label">Número de Pedido</span>
+          <div class="info-value" id="orderNum">#A-000000</div>
+        </div>
 
-      <a href="pedidos.html" class="btn btn-primary">Ver mis pedidos</a>
-      <a href="index.html" class="btn btn-outline-secondary">Volver al inicio</a>
+        <div class="info-section">
+          <span class="info-label">Estado del Pedido</span>
+          <div class="status-badge">✓ Confirmado</div>
+        </div>
+
+        <div class="info-section">
+          <span class="info-label">Fecha de Compra</span>
+          <div class="info-value" id="orderDate">01/01/2025</div>
+        </div>
+
+        <div class="info-section">
+          <span class="info-label">Correo de Confirmación</span>
+          <div class="info-value" id="customerEmail">usuario@email.com</div>
+        </div>
+
+        <div class="info-section">
+          <span class="info-label">Método de Entrega</span>
+          <div class="info-value" id="shippingMethod">Retiro en Local</div>
+        </div>
+
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-icon">✓</div>
+            <div class="timeline-content">
+              <h4>Pedido Confirmado</h4>
+              <p>Tu compra ha sido confirmada y procesada.</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-icon">⏳</div>
+            <div class="timeline-content">
+              <h4>En Preparación</h4>
+              <p>Estamos preparando tu pedido. Recibirás notificación cuando esté listo.</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-icon">📦</div>
+            <div class="timeline-content">
+              <h4>Envío/Retiro</h4>
+              <p>Tu pedido será entregado según el método seleccionado.</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-icon">🎉</div>
+            <div class="timeline-content">
+              <h4>Completado</h4>
+              <p>¡Disfruta tu compra!</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="confirmation-card">
+        <span class="card-title">Resumen de Compra</span>
+
+        <div id="orderSummary"></div>
+
+        <div class="contact-section">
+          <h4>📞 ¿Necesitas Ayuda?</h4>
+          <p>Contáctanos a través de nuestro sitio o revisa el email de confirmación para más detalles.</p>
+        </div>
+
+        <div class="action-buttons">
+          <a href="B-09ConstruccionPedido.html" class="btn btn-primary">Seguir Comprando</a>
+          <button id="printBtn" class="btn btn-secondary">Imprimir</button>
+        </div>
+      </section>
     </div>
-  </div>
+  </main>
+
+<script>
+  const order = JSON.parse(sessionStorage.getItem('order') || '{}');
+  const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+
+  function renderConfirmation(){
+    if(!order.id){
+      document.body.innerHTML = `
+        <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;text-align:center">
+          <div>
+            <h2 style="color:var(--text-dark);margin-bottom:16px">No hay pedido para mostrar</h2>
+            <p style="color:var(--text-light);margin-bottom:24px">Parece que no hay un pedido registrado.</p>
+            <a href="B-09ConstruccionPedido.html" style="display:inline-block;background:var(--primary);color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:700">Ir al Catálogo</a>
+          </div>
+        </div>
+      `;
+      return;
+    }
+
+    document.getElementById('orderNum').textContent = `#${order.id}`;
+    document.getElementById('orderDate').textContent = new Date(order.createdAt).toLocaleDateString('es-CL');
+    document.getElementById('customerEmail').textContent = currentUser.email || 'usuario@email.com';
+    
+    const shippingText = order._shipping === 0 ? 'Retiro en Local' : 'Envío a Domicilio';
+    document.getElementById('shippingMethod').textContent = shippingText;
+
+    const keys = Object.keys(order.cart).filter(k => !k.startsWith('_'));
+    let itemsHtml = '';
+    keys.forEach(id => {
+      const item = order.cart[id];
+      itemsHtml += `
+        <div style="display:flex;justify-content:space-between;padding:12px;border-bottom:1px solid var(--border);font-size:13px">
+          <div>
+            <div style="font-weight:600;color:var(--text-dark)">${item.name}</div>
+            <div style="color:var(--text-light);font-size:12px">x${item.qty} @ $${item.price.toLocaleString()}</div>
+          </div>
+          <div style="color:var(--primary);font-weight:700">$${(item.qty*item.price).toLocaleString()}</div>
+        </div>
+      `;
+    });
+
+    const summaryHtml = `
+      <div style="background:#fff;border:1px solid var(--border);border-radius:8px;margin-bottom:20px">
+        <div style="padding:16px;border-bottom:1px solid var(--border);font-weight:700;color:var(--primary);font-size:12px;text-transform:uppercase">Artículos</div>
+        ${itemsHtml}
+      </div>
+
+      <div class="order-summary-section">
+        <div class="summary-row">
+          <span class="summary-label">Subtotal</span>
+          <span class="summary-value">$${order.subtotal.toLocaleString()}</span>
+        </div>
+        ${order.shipping > 0 ? `
+        <div class="summary-row">
+          <span class="summary-label">Envío</span>
+          <span class="summary-value">$${order.shipping.toLocaleString()}</span>
+        </div>
+        ` : ''}
+        ${order.discount > 0 ? `
+        <div class="summary-row">
+          <span class="summary-label">Descuento</span>
+          <span class="summary-value" style="color:var(--success)">-$${order.discount.toLocaleString()}</span>
+        </div>
+        ` : ''}
+        <div class="summary-total">
+          <span>Total Pagado</span>
+          <span>$${order.total.toLocaleString()}</span>
+        </div>
+      </div>
+    `;
+
+    document.getElementById('orderSummary').innerHTML = summaryHtml;
+  }
+
+  document.getElementById('printBtn').addEventListener('click', () => {
+    window.print();
+  });
+
+  renderConfirmation();
+</script>
 
 </body>
 </html>
