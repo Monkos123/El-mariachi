@@ -1,38 +1,167 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Entrega | El Mariachi</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Entrega • El Mariachi</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    body { background-color: #fdfcf8; }
-    .browser-bar { background-color: #e9ecef; border-radius: 6px; padding: 6px; }
-    .card { border-radius: 10px; box-shadow: 0 0 5px rgba(0,0,0,0.1); }
-    .api-box { background-color: #f8f9fa; border: 1px solid #dee2e6; font-family: monospace; font-size: 0.9em; }
+    :root{
+      --primary:#d32f2f;
+      --hover:#b71c1c;
+      --light:#f9f9f9;
+      --text:#212121;
+      --muted:#757575;
+      --border:#e0e0e0;
+      --success:#4caf50;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:Segoe UI,Roboto,Arial,sans-serif;background:var(--light);color:var(--text)}
+    .navbar{background:linear-gradient(135deg,var(--primary),var(--hover))}
+    .navbar-brand{color:#fff;font-weight:800}
+    .container{max-width:1100px}
+    .card{border-radius:12px;border:1px solid var(--border);background:#fff}
+    .map-placeholder{height:220px;border-radius:8px;background:linear-gradient(135deg,#fff,#f1f1f1);display:flex;align-items:center;justify-content:center;color:var(--muted)}
+    .badge-ok{background:rgba(76,175,80,0.12);color:var(--success);padding:8px 12px;border-radius:12px;font-weight:700}
+    .badge-no{background:rgba(220,53,69,0.06);color:#c62828;padding:8px 12px;border-radius:12px;font-weight:700}
+    .small-muted{color:var(--muted);font-size:13px}
+    .btn-disabled{pointer-events:none;opacity:0.6}
+    @media(max-width:768px){
+      .map-placeholder{height:180px}
+    }
   </style>
 </head>
-<body class="container py-4">
-  <div class="browser-bar mb-3">
-    https://www.ElMariachi.cl/checkout/entregar
-  </div>
-
-  <div class="card p-4 mb-4">
-    <h6>Av. México 1234, Santiago</h6>
-    <div class="border p-3 bg-light my-3">
-      [Mapa con radio 3km]
+<body>
+  <nav class="navbar py-3">
+    <div class="container d-flex justify-content-between align-items-center">
+      <a class="navbar-brand" href="B-09ConstruccionPedido.html">🌮 El Mariachi</a>
+      <div class="d-flex gap-2 align-items-center">
+        <a class="btn btn-light btn-sm" href="B-16FormularioDireccion.html">Editar dirección</a>
+        <a class="btn btn-light btn-sm" href="B-10CarritoCalculo.html">Ver carrito</a>
+      </div>
     </div>
+  </nav>
 
-    <p><strong>Resultado:</strong> Fuera de zona de reparto</p>
-    <p><strong>Sugerencia:</strong> Retiro en local</p>
+  <main class="container my-5">
+    <div class="row g-4">
+      <div class="col-12">
+        <div class="card p-4">
+          <h5 class="mb-1">Verificar cobertura de entrega</h5>
+          <p class="small-muted mb-3">Compara la dirección guardada con la zona de reparto.</p>
 
-    <button class="btn btn-outline-primary">Cambiar a retiro</button>
-  </div>
+          <div id="addrBox" class="mb-3 small-muted"></div>
 
-  <div class="api-box p-3">
-    <b>API/Entrega</b><br>
-    GET /delivery/coverage?lat,lng<br>
-    POST /orders/{id}/pickup
-  </div>
+          <div class="map-placeholder mb-3" id="mapBox">[Mapa de ubicación]</div>
+
+          <div id="resultBox" class="mb-3"></div>
+
+          <div class="d-flex gap-2">
+            <button id="toPickup" class="btn btn-outline-secondary">Cambiar a Retiro en Local</button>
+            <a id="applyDelivery" class="btn btn-primary btn-disabled" href="#" role="button">Confirmar Envío</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+<script>
+document.addEventListener('DOMContentLoaded', ()=> {
+  const STORE_COORDS = { lat: -33.444, lng: -70.654 }; // ejemplo
+  const RADIUS_M = 3000; // 3km
+
+  const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+  const userAddress = JSON.parse(localStorage.getItem('userAddress') || 'null');
+  const cart = JSON.parse(sessionStorage.getItem('cart') || '{}');
+
+  function haversine(a,b){
+    const toRad = v => v * Math.PI / 180;
+    const R = 6371e3;
+    const φ1 = toRad(a.lat), φ2 = toRad(b.lat);
+    const Δφ = toRad(b.lat - a.lat);
+    const Δλ = toRad(b.lng - a.lng);
+    const s = Math.sin(Δφ/2)**2 + Math.cos(φ1)*Math.cos(φ2)*Math.sin(Δλ/2)**2;
+    const c = 2 * Math.atan2(Math.sqrt(s), Math.sqrt(1-s));
+    return R * c;
+  }
+
+  function ensureAuthAndCart(){
+    if(!currentUser){
+      alert('Debes iniciar sesión para confirmar la entrega.');
+      location.href = 'B-09ConstruccionPedido.html';
+      return false;
+    }
+    const itemsCount = Object.keys(cart).filter(k => !k.startsWith('_')).length;
+    if(itemsCount === 0){
+      alert('Tu carrito está vacío. Agrega productos antes de confirmar entrega.');
+      location.href = 'B-09ConstruccionPedido.html';
+      return false;
+    }
+    return true;
+  }
+
+  function renderNoAddress(){
+    document.getElementById('addrBox').innerHTML = `<div class="small-muted">No hay dirección guardada. <a href="B-16FormularioDireccion.html">Completa tu dirección</a>.</div>`;
+    document.getElementById('resultBox').innerHTML = `<div class="badge-no">Sin dirección</div>`;
+    const apply = document.getElementById('applyDelivery');
+    apply.classList.add('btn-disabled');
+    apply.href = '#';
+  }
+
+  function renderWithAddress(addr){
+    document.getElementById('addrBox').innerHTML = `<div><strong>Dirección:</strong> ${addr.address}${addr.dept ? ', ' + addr.dept : ''}, ${addr.comuna} • ${addr.phone}</div>`;
+
+    // geocodificación simulada determinística
+    const seed = (addr.address + '|' + addr.comuna).split('').reduce((s,c)=> s + c.charCodeAt(0), 0);
+    const offset = ((seed % 1000) - 500) / 10000;
+    const userCoords = { lat: STORE_COORDS.lat + offset, lng: STORE_COORDS.lng + offset };
+
+    document.getElementById('mapBox').textContent = `Ubicación aproximada: ${userCoords.lat.toFixed(4)}, ${userCoords.lng.toFixed(4)}`;
+
+    const dist = Math.round(haversine(STORE_COORDS, userCoords));
+    const within = dist <= RADIUS_M;
+
+    document.getElementById('resultBox').innerHTML = within
+      ? `<div class="badge-ok">Dentro de zona de reparto • distancia ~ ${Math.round(dist/100)/10} km</div>`
+      : `<div class="badge-no">Fuera de zona de reparto • distancia ~ ${Math.round(dist/100)/10} km</div>`;
+
+    const apply = document.getElementById('applyDelivery');
+    if(within){
+      apply.classList.remove('btn-disabled');
+      apply.href = 'B-13IntegracionPasarela.html';
+    } else {
+      apply.classList.add('btn-disabled');
+      apply.href = '#';
+    }
+  }
+
+  document.getElementById('toPickup').addEventListener('click', ()=>{
+    if(!ensureAuthAndCart()) return;
+    cart._shipping = 0;
+    sessionStorage.setItem('cart', JSON.stringify(cart));
+    alert('Método actualizado a Retiro en Local');
+    location.href = 'B-10CarritoCalculo.html';
+  });
+
+  document.getElementById('applyDelivery').addEventListener('click', (e)=>{
+    if(e.target.classList && e.target.classList.contains('btn-disabled')) {
+      e.preventDefault();
+      return;
+    }
+    if(!ensureAuthAndCart()) return;
+    if(!userAddress){
+      alert('Debes completar tu dirección en el formulario.');
+      location.href = 'B-16FormularioDireccion.html';
+      return;
+    }
+    cart._shipping = 5000;
+    sessionStorage.setItem('cart', JSON.stringify(cart));
+    location.href = 'B-13IntegracionPasarela.html';
+  });
+
+  // init
+  if(!ensureAuthAndCart()) return;
+  if(!userAddress) renderNoAddress(); else renderWithAddress(userAddress);
+});
+</script>
 </body>
 </html>
