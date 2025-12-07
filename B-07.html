@@ -3,90 +3,203 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pull Request #142 - feat: carrito y filtros</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <title>CI/CD • Pull Request #142 | El Mariachi</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    body {
-      background-color: #f6f8fa;
+    :root{
+      --primary:#d32f2f;
+      --hover:#b71c1c;
+      --dark:#1a1a1a;
+      --light:#f5f5f5;
+      --text:#212121;
+      --muted:#757575;
+      --border:#e0e0e0;
+      --success:#4caf50;
+      --warning:#ffc107;
+      --danger:#c62828
     }
-    .card {
-      border-radius: 8px;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-    }
-    .badge {
-      font-size: 0.85rem;
-    }
-    .pipeline-step {
-      display: inline-block;
-      padding: 8px 16px;
-      background-color: #f6f8fa;
-      border-radius: 6px;
-      border: 1px solid #d0d7de;
-      margin-right: 6px;
-      text-align: center;
-      min-width: 90px;
-    }
-    .status-green { color: #22863a; }
-    .status-yellow { color: #b08800; }
-    .status-orange { color: #d29922; }
-    .arrow {
-      font-weight: bold;
-      margin: 0 4px;
-      color: #6e7781;
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:Segoe UI,Roboto,Arial,sans-serif;background:var(--light);color:var(--text);padding-bottom:40px}
+    .navbar{background:linear-gradient(135deg,var(--primary),var(--hover))}
+    .navbar-brand{color:#fff;font-weight:800;font-size:20px}
+    .container{max-width:1000px;padding:40px 24px}
+    h1{color:var(--text);font-weight:700;font-size:28px;margin-bottom:24px}
+    .card{border-radius:12px;border:1px solid var(--border);box-shadow:0 1px 3px rgba(0,0,0,0.08);background:#fff}
+    .card-header{background:rgba(211,47,47,0.04);border-bottom:2px solid var(--border);border-radius:12px 12px 0 0;padding:16px}
+    .card-header h5{font-weight:700;color:var(--text);margin:0}
+    .card-header .badge{font-size:12px;margin-right:8px}
+    .pr-title{color:var(--primary);font-weight:700;font-size:16px}
+    .meta-info{color:var(--muted);font-size:13px;margin-top:8px}
+    .pipeline-container{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:20px 0;overflow-x:auto;padding:12px 0}
+    .pipeline-step{padding:12px 14px;background:#fff;border:2px solid var(--border);border-radius:8px;text-align:center;font-size:12px;font-weight:600;white-space:nowrap;min-width:100px;transition:all 0.3s}
+    .pipeline-step strong{display:block;margin-top:6px;font-size:14px}
+    .step-pending{border-color:var(--border);color:var(--muted)}
+    .step-success{border-color:var(--success);background:rgba(76,175,80,0.05);color:var(--success)}
+    .step-warning{border-color:var(--warning);background:rgba(255,193,7,0.05);color:#b8860b}
+    .step-failure{border-color:var(--danger);background:rgba(198,40,40,0.05);color:var(--danger)}
+    .arrow{font-weight:800;color:var(--border);font-size:18px}
+    .badge-status{font-size:12px;font-weight:700;padding:6px 10px;border-radius:6px}
+    .badge-pending{background:rgba(255,193,7,0.12);color:#b8860b;border:1px solid rgba(255,193,7,0.2)}
+    .badge-success{background:rgba(76,175,80,0.12);color:var(--success);border:1px solid rgba(76,175,80,0.2)}
+    .badge-failure{background:rgba(198,40,40,0.12);color:var(--danger);border:1px solid rgba(198,40,40,0.2)}
+    .alert-warning{background:rgba(255,193,7,0.08);border:1px solid rgba(255,193,7,0.2);border-left:4px solid var(--warning);color:#b8860b;padding:16px;border-radius:8px}
+    .alert-warning strong{color:#b8860b}
+    .code-block{background:#f9f9f9;border:1px solid var(--border);border-radius:8px;padding:16px;font-family:'Courier New',monospace;font-size:12px;overflow-x:auto;color:var(--text)}
+    .btn-primary{background:var(--primary);border:none;color:#fff;font-weight:600}
+    .btn-primary:hover{background:var(--hover);color:#fff}
+    .btn-success{background:var(--success);border:none;color:#fff;font-weight:600}
+    .btn-success:hover{background:#388e3c;color:#fff}
+    .small-muted{color:var(--muted);font-size:13px}
+    .status-icon{font-size:18px;margin-right:6px}
+    @media(max-width:768px){
+      .pipeline-container{gap:6px}
+      .pipeline-step{min-width:80px;padding:10px 10px;font-size:11px}
+      .arrow{font-size:14px}
     }
   </style>
 </head>
-<body class="p-4">
+<body>
+  <nav class="navbar navbar-expand-lg py-3">
+    <div class="container d-flex align-items-center justify-content-between">
+      <a class="navbar-brand" href="B-09ConstruccionPedido.html">🌮 El Mariachi</a>
+      <a class="btn btn-light btn-sm" href="B-09ConstruccionPedido.html">← Volver</a>
+    </div>
+  </nav>
 
   <div class="container">
-    <div class="card p-3 mb-3">
-      <div class="d-flex justify-content-between align-items-center">
-        <h5 class="mb-0">Pull Request #142 — <strong>feat: carrito y filtros</strong></h5>
-      </div>
-      <p class="mb-1 text-muted">Autor: <strong>benjamin</strong> | Rama: <code>feature/cart</code></p>
+    <h1>🔄 CI/CD Pipeline • Pruebas Automatizadas</h1>
 
-      <div class="mb-2">
-        <span class="badge bg-light text-dark border">Checks: Regression Suite</span>
-        <span class="badge bg-success">build</span>
-        <span class="badge bg-success">unit tests</span>
-        <span class="badge bg-warning text-dark">regression</span>
+    <!-- Pull Request Info -->
+    <div class="card mb-4">
+      <div class="card-header">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <h5>Pull Request <span class="text-muted">#142</span></h5>
+            <div class="pr-title">feat: carrito y filtros de productos</div>
+            <div class="meta-info">
+              <strong>Autor:</strong> Benjamin | <strong>Rama:</strong> <code>feature/cart</code>
+            </div>
+          </div>
+          <div class="d-flex gap-2 flex-wrap justify-content-end">
+            <span class="badge badge-status badge-success">
+              <span class="status-icon">✓</span>Build
+            </span>
+            <span class="badge badge-status badge-success">
+              <span class="status-icon">✓</span>Unit Tests
+            </span>
+            <span class="badge badge-status badge-pending">
+              <span class="status-icon">⏳</span>Regression
+            </span>
+          </div>
+        </div>
       </div>
-
-      <div class="mt-3">
-        <button class="btn btn-primary btn-sm">Request review</button>
-        <button class="btn btn-success btn-sm">Merge</button>
-      </div>
-    </div>
-
-    <div class="card p-3 mb-3">
-      <h6>CI Pipeline (on pull_request)</h6>
-      <div class="mt-2 mb-2">
-        <span class="pipeline-step">build<br><span class="status-green">✔</span></span>
-        <span class="arrow">→</span>
-        <span class="pipeline-step">unit<br><span class="status-green">✔</span></span>
-        <span class="arrow">→</span>
-        <span class="pipeline-step">regression<br><span class="status-yellow">•</span></span>
-        <span class="arrow">→</span>
-        <span class="pipeline-step">report<br><span class="status-yellow">•</span></span>
-      </div>
-
-      <div class="alert alert-warning mt-3">
-        <strong>Regression summary:</strong> Failed: 3 | Passed: 47 |
-        <a href="#" class="alert-link">Report: artifacts/regression.html</a>
+      <div class="card-body">
+        <div class="d-flex gap-2 flex-wrap">
+          <button class="btn btn-primary btn-sm">📋 Request Review</button>
+          <button class="btn btn-success btn-sm">✓ Merge</button>
+          <a href="#" class="btn btn-outline-secondary btn-sm">📊 Ver Detalles</a>
+        </div>
       </div>
     </div>
 
-    <div class="card p-3">
-      <h6>CI Config (ejemplo)</h6>
-      <pre class="bg-light p-2 border rounded">
-on: pull_request
+    <!-- CI Pipeline -->
+    <div class="card mb-4">
+      <div class="card-header">
+        <h5>Pipeline de Integración Continua (on: pull_request)</h5>
+      </div>
+      <div class="card-body">
+        <div class="pipeline-container">
+          <div class="pipeline-step step-success">
+            Build<br><strong>✓</strong>
+          </div>
+          <span class="arrow">→</span>
+          <div class="pipeline-step step-success">
+            Unit Tests<br><strong>✓</strong>
+          </div>
+          <span class="arrow">→</span>
+          <div class="pipeline-step step-warning">
+            Regression<br><strong>⏳</strong>
+          </div>
+          <span class="arrow">→</span>
+          <div class="pipeline-step step-warning">
+            Report<br><strong>⏳</strong>
+          </div>
+        </div>
+
+        <div class="alert-warning mt-4">
+          <strong>⚠ Resumen de Regresión:</strong><br>
+          <span class="small-muted">Falladas: <strong>3</strong> | Pasadas: <strong>47</strong> | Total: <strong>50</strong></span><br>
+          <a href="#" style="color:#b8860b;text-decoration:none;font-weight:600">📄 Ver Reporte Completo →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Job Status Details -->
+    <div class="card mb-4">
+      <div class="card-header">
+        <h5>Estado de los Trabajos</h5>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <strong style="color:var(--success)">✓ Build</strong>
+            <div class="small-muted">Compilación exitosa • 2m 14s</div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <strong style="color:var(--success)">✓ Unit Tests</strong>
+            <div class="small-muted">49/50 pasadas • 1m 42s</div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <strong style="color:#b8860b">⏳ Regression Tests</strong>
+            <div class="small-muted">En ejecución • 3m 28s (esperado 5m)</div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <strong style="color:#b8860b">⏳ Report Generation</strong>
+            <div class="small-muted">Pendiente de regresión</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Configuration -->
+    <div class="card">
+      <div class="card-header">
+        <h5>Configuración CI (GitHub Actions - YAML)</h5>
+      </div>
+      <div class="card-body">
+        <div class="code-block">on: pull_request
+  branches: [main, develop]
+
 jobs:
-  build, test, regression
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build
+        run: npm run build
+
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Unit Tests
+        run: npm run test:unit
+
+  regression:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: E2E Tests
+        run: npm run test:e2e
+
 rules:
-  block merge if regression failed
-      </pre>
+  block_merge_if_failed: true
+  require_approvals: 1</div>
+      </div>
     </div>
   </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
