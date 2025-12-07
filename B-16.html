@@ -3,53 +3,437 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Dirección de entrega | El Mariachi</title>
+  <title>Dirección de Entrega • El Mariachi</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    body { background-color: #fdfcf8; }
-    .browser-bar { background-color: #e9ecef; border-radius: 6px; padding: 6px; }
-    .card { border-radius: 10px; box-shadow: 0 0 5px rgba(0,0,0,0.1); }
-    .api-box { background-color: #f8f9fa; border: 1px solid #dee2e6; font-family: monospace; font-size: 0.9em; }
+    :root{
+      --primary:#d32f2f;
+      --secondary:#ffc107;
+      --accent:#ff6f00;
+      --dark:#1a1a1a;
+      --light:#f5f5f5;
+      --text-dark:#212121;
+      --text-light:#757575;
+      --border:#e0e0e0;
+      --success:#4caf50;
+      --hover:#b71c1c
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body{
+      background:var(--light);
+      color:var(--text-dark);
+      font-family:'Segoe UI',Roboto,'Helvetica Neue',sans-serif;
+      line-height:1.6
+    }
+    header{
+      background:linear-gradient(135deg,var(--primary),var(--hover));
+      box-shadow:0 2px 8px rgba(0,0,0,0.1);
+      padding:16px 0;
+      position:sticky;
+      top:0;
+      z-index:100
+    }
+    .navbar-brand{
+      color:#fff!important;
+      font-weight:700;
+      font-size:24px;
+      letter-spacing:-0.5px
+    }
+    .back-btn{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      color:#fff;
+      text-decoration:none;
+      font-weight:600;
+      padding:8px 12px;
+      border-radius:8px;
+      transition:all 0.3s;
+      background:rgba(255,255,255,0.1)
+    }
+    .back-btn:hover{
+      background:rgba(255,255,255,0.2);
+      transform:translateX(-4px);
+      color:#fff
+    }
+    .container{
+      max-width:900px;
+      padding:40px 24px
+    }
+    h1{
+      color:var(--text-dark);
+      font-weight:700;
+      font-size:32px;
+      margin-bottom:32px;
+      letter-spacing:-0.5px
+    }
+    .form-card{
+      background:#fff;
+      border-radius:12px;
+      border:1px solid var(--border);
+      padding:32px;
+      box-shadow:0 1px 3px rgba(0,0,0,0.08)
+    }
+    .form-title{
+      color:var(--primary);
+      font-weight:700;
+      font-size:13px;
+      text-transform:uppercase;
+      letter-spacing:1px;
+      margin-bottom:24px;
+      display:block
+    }
+    .form-group{
+      margin-bottom:20px
+    }
+    .form-label{
+      display:block;
+      color:var(--text-dark);
+      font-weight:600;
+      font-size:13px;
+      margin-bottom:8px;
+      text-transform:uppercase;
+      letter-spacing:0.5px
+    }
+    .form-control{
+      width:100%;
+      padding:12px 14px;
+      border:2px solid var(--border);
+      border-radius:8px;
+      font-size:14px;
+      color:var(--text-dark);
+      transition:all 0.3s;
+      font-family:inherit
+    }
+    .form-control:focus{
+      outline:none;
+      border-color:var(--primary);
+      box-shadow:0 0 0 3px rgba(211,47,47,0.1)
+    }
+    .form-row{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:16px
+    }
+    .form-row.full{
+      grid-template-columns:1fr
+    }
+    .form-hint{
+      color:var(--text-light);
+      font-size:12px;
+      margin-top:4px
+    }
+    .address-list{
+      margin-top:24px;
+      padding-top:24px;
+      border-top:1px solid var(--border)
+    }
+    .address-list-title{
+      color:var(--text-dark);
+      font-weight:700;
+      font-size:13px;
+      margin-bottom:16px;
+      text-transform:uppercase;
+      letter-spacing:0.5px;
+      display:block
+    }
+    .address-item{
+      background:var(--light);
+      border:2px solid var(--border);
+      border-radius:8px;
+      padding:16px;
+      margin-bottom:12px;
+      cursor:pointer;
+      transition:all 0.3s;
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start
+    }
+    .address-item:hover{
+      border-color:var(--primary);
+      background:rgba(211,47,47,0.02)
+    }
+    .address-item.active{
+      border-color:var(--primary);
+      background:rgba(211,47,47,0.05);
+      box-shadow:0 4px 12px rgba(211,47,47,0.1)
+    }
+    .address-content{
+      display:flex;
+      flex-direction:column;
+      gap:4px
+    }
+    .address-name{
+      color:var(--text-dark);
+      font-weight:700;
+      font-size:13px
+    }
+    .address-detail{
+      color:var(--text-light);
+      font-size:12px
+    }
+    .address-actions{
+      display:flex;
+      gap:8px
+    }
+    .address-btn{
+      padding:6px 12px;
+      border:none;
+      background:transparent;
+      color:var(--text-light);
+      font-size:12px;
+      cursor:pointer;
+      transition:all 0.3s;
+      font-weight:600
+    }
+    .address-btn:hover{
+      color:var(--primary)
+    }
+    .form-buttons{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      margin-top:32px
+    }
+    .btn{
+      padding:14px 20px;
+      border:none;
+      border-radius:8px;
+      font-weight:700;
+      font-size:13px;
+      text-transform:uppercase;
+      letter-spacing:0.5px;
+      cursor:pointer;
+      transition:all 0.3s;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px
+    }
+    .btn-primary{
+      background:var(--primary);
+      color:#fff
+    }
+    .btn-primary:hover{
+      background:var(--hover);
+      transform:translateY(-2px);
+      box-shadow:0 8px 20px rgba(211,47,47,0.3)
+    }
+    .btn-secondary{
+      background:#fff;
+      color:var(--text-dark);
+      border:2px solid var(--border)
+    }
+    .btn-secondary:hover{
+      border-color:var(--primary);
+      color:var(--primary)
+    }
+    .success-msg{
+      display:none;
+      background:rgba(76,175,80,0.1);
+      border:2px solid var(--success);
+      border-radius:8px;
+      padding:16px;
+      color:var(--success);
+      margin-bottom:24px;
+      font-weight:600;
+      font-size:13px
+    }
+    @media(max-width:768px){
+      .form-row{ grid-template-columns:1fr }
+      .form-buttons{ grid-template-columns:1fr }
+      .address-item{ flex-direction:column }
+      .address-actions{ margin-top:12px }
+      h1{ font-size:24px }
+    }
   </style>
 </head>
-<body class="container py-4">
-  <div class="browser-bar mb-3">
-    https://www.ElMariachi.cl/checkout/direccion
-  </div>
-
-  <div class="card p-4 mb-4">
-    <h5 class="mb-3">Dirección de entrega</h5>
-
-    <div class="mb-3">
-      <label class="form-label">Dirección*</label>
-      <textarea class="form-control" rows="2">• Av. México 1234
-• Av. México 1239</textarea>
+<body>
+  <header>
+    <div class="container d-flex justify-content-between align-items-center">
+      <a class="navbar-brand" href="B-09ConstruccionPedido.html">🌮 El Mariachi</a>
+      <a href="B-10CarritoCalculo.html" class="back-btn">← Carrito</a>
     </div>
+  </header>
 
-    <div class="row mb-3">
-      <div class="col-md-6">
-        <label class="form-label">Comuna*</label>
-        <input type="text" class="form-control" value="Santiago Centro">
+  <main class="container">
+    <h1>Dirección de Entrega</h1>
+
+    <div class="form-card">
+      <div id="successMsg" class="success-msg">✓ Dirección guardada correctamente</div>
+
+      <span class="form-title">Nueva Dirección</span>
+
+      <form id="addressForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Nombre de la dirección</label>
+            <input id="dirName" class="form-control" placeholder="Ej: Casa" required>
+            <div class="form-hint">Para identificar esta dirección</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tipo</label>
+            <select id="dirType" class="form-control" required>
+              <option value="casa">Casa</option>
+              <option value="departamento">Departamento</option>
+              <option value="oficina">Oficina</option>
+              <option value="otro">Otro</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group form-row full">
+          <div>
+            <label class="form-label">Dirección</label>
+            <input id="dirAddress" class="form-control" placeholder="Calle y número" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Departamento / Oficina (opcional)</label>
+            <input id="dirDept" class="form-control" placeholder="Depto 502">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Referencia</label>
+            <input id="dirRef" class="form-control" placeholder="Ej: al lado de la farmacia" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Comuna</label>
+            <select id="dirComuna" class="form-control" required>
+              <option value="">Selecciona una comuna</option>
+              <option value="Providencia">Providencia</option>
+              <option value="La Florida">La Florida</option>
+              <option value="Macul">Macul</option>
+              <option value="Ñuñoa">Ñuñoa</option>
+              <option value="Peñalolén">Peñalolén</option>
+              <option value="Las Condes">Las Condes</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Teléfono de contacto</label>
+            <input id="dirPhone" class="form-control" type="tel" placeholder="+56 9 XXXX XXXX" required>
+          </div>
+        </div>
+
+        <div class="form-buttons">
+          <button type="submit" class="btn btn-primary">Guardar Dirección</button>
+          <a href="B-10CarritoCalculo.html" class="btn btn-secondary">Cancelar</a>
+        </div>
+      </form>
+
+      <div class="address-list">
+        <span class="address-list-title">Direcciones guardadas</span>
+        <div id="addressesList"></div>
       </div>
-      <div class="col-md-6">
-        <label class="form-label">Teléfono*</label>
-        <input type="text" class="form-control" placeholder="+56 9 1234 5678 (máscara)">
+    </div>
+  </main>
+
+<script>
+  let savedAddresses = JSON.parse(localStorage.getItem('userAddresses') || '[]');
+
+  function renderAddresses(){
+    const container = document.getElementById('addressesList');
+    if(savedAddresses.length === 0){
+      container.innerHTML = '<div style="color:var(--text-light);font-size:13px">No hay direcciones guardadas</div>';
+      return;
+    }
+
+    container.innerHTML = savedAddresses.map((addr, idx) => `
+      <div class="address-item ${idx === 0 ? 'active' : ''}" onclick="selectAddress(${idx})">
+        <div class="address-content">
+          <div class="address-name">${addr.name} • ${addr.type}</div>
+          <div class="address-detail">${addr.address}${addr.dept ? `, ${addr.dept}` : ''}</div>
+          <div class="address-detail">${addr.comuna} • ${addr.phone}</div>
+          <div class="address-detail" style="color:var(--text-light);font-size:11px">${addr.reference}</div>
+        </div>
+        <div class="address-actions">
+          <button class="address-btn" onclick="event.stopPropagation(); editAddress(${idx})">Editar</button>
+          <button class="address-btn" onclick="event.stopPropagation(); deleteAddress(${idx})">Eliminar</button>
+        </div>
       </div>
-    </div>
+    `).join('');
+  }
 
-    <div class="mb-3">
-      <label class="form-label">Referencia</label>
-      <input type="text" class="form-control" placeholder="Casa blanca, timbre rojo">
-    </div>
+  function selectAddress(idx){
+    // Guardar dirección seleccionada
+    const addr = savedAddresses[idx];
+    localStorage.setItem('userAddress', JSON.stringify({
+      address: addr.address,
+      dept: addr.dept,
+      comuna: addr.comuna,
+      phone: addr.phone,
+      reference: addr.reference,
+      type: addr.type
+    }));
+    // Marcar como activa
+    document.querySelectorAll('.address-item').forEach(el => el.classList.remove('active'));
+    event.target.closest('.address-item').classList.add('active');
+    document.getElementById('successMsg').style.display = 'block';
+    setTimeout(() => {
+      document.getElementById('successMsg').style.display = 'none';
+    }, 3000);
+  }
 
-    <button class="btn btn-primary">Guardar</button>
-  </div>
+  function editAddress(idx){
+    const addr = savedAddresses[idx];
+    document.getElementById('dirName').value = addr.name;
+    document.getElementById('dirType').value = addr.type;
+    document.getElementById('dirAddress').value = addr.address;
+    document.getElementById('dirDept').value = addr.dept || '';
+    document.getElementById('dirRef').value = addr.reference;
+    document.getElementById('dirComuna').value = addr.comuna;
+    document.getElementById('dirPhone').value = addr.phone;
+    document.getElementById('addressForm').dataset.editIdx = idx;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 
-  <div class="api-box p-3">
-    <b>API/Dirección</b><br>
-    GET /geo/autocomplete?q=Av.%20Mex<br>
-    POST /addresses<br>
-    Rules: campos obligatorios (Dirección, Comuna, Teléfono)
-  </div>
+  function deleteAddress(idx){
+    if(confirm('¿Eliminar esta dirección?')){
+      savedAddresses.splice(idx, 1);
+      localStorage.setItem('userAddresses', JSON.stringify(savedAddresses));
+      renderAddresses();
+    }
+  }
+
+  document.getElementById('addressForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const editIdx = document.getElementById('addressForm').dataset.editIdx;
+    const newAddr = {
+      name: document.getElementById('dirName').value,
+      type: document.getElementById('dirType').value,
+      address: document.getElementById('dirAddress').value,
+      dept: document.getElementById('dirDept').value,
+      reference: document.getElementById('dirRef').value,
+      comuna: document.getElementById('dirComuna').value,
+      phone: document.getElementById('dirPhone').value
+    };
+
+    if(editIdx !== undefined){
+      savedAddresses[parseInt(editIdx)] = newAddr;
+      delete document.getElementById('addressForm').dataset.editIdx;
+    } else {
+      savedAddresses.unshift(newAddr);
+    }
+
+    localStorage.setItem('userAddresses', JSON.stringify(savedAddresses));
+    localStorage.setItem('userAddress', JSON.stringify(newAddr));
+
+    document.getElementById('addressForm').reset();
+    document.getElementById('successMsg').style.display = 'block';
+    renderAddresses();
+
+    setTimeout(() => {
+      document.getElementById('successMsg').style.display = 'none';
+    }, 3000);
+  });
+
+  renderAddresses();
+</script>
+
 </body>
 </html>
