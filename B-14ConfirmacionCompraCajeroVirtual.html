@@ -196,7 +196,7 @@
     }
     .action-buttons{
       display:grid;
-      grid-template-columns:1fr 1fr;
+      grid-template-columns:1fr 1fr 1fr;
       gap:12px;
       margin-top:24px
     }
@@ -350,8 +350,9 @@
         </div>
 
         <div class="action-buttons">
-          <a href="B-09ConstruccionPedido.html" class="btn btn-primary">Seguir Comprando</a>
-          <button id="printBtn" class="btn btn-secondary">Imprimir</button>
+          <a href="B-12HistorialPedidos.html" class="btn btn-primary">📋 Mis Pedidos</a>
+          <a href="B-09ConstruccionPedido.html" class="btn btn-primary">🏠 Home</a>
+          <button id="printBtn" class="btn btn-secondary">🖨 Imprimir</button>
         </div>
       </section>
     </div>
@@ -435,6 +436,47 @@
   });
 
   renderConfirmation();
+</script>
+<script>
+  // limpia cart (session + local) y actualiza badge si existe
+  function clearCartAndUpdate() {
+    try {
+      sessionStorage.removeItem('cart');
+      localStorage.removeItem('cart');
+    } catch (e) {
+      console.warn('No se pudo limpiar el carrito:', e);
+    }
+
+    const badge = document.getElementById('cartBadge');
+    if (badge) {
+      badge.style.display = 'none';
+      badge.textContent = '0';
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    // Preferir ids explícitos en los botones:
+    const btnOrders = document.getElementById('btnOrders'); // MIS PEDIDOS
+    const btnHome   = document.getElementById('btnHome');   // HOME
+
+    const handler = (e) => {
+      // limpiar carrito antes de navegar
+      clearCartAndUpdate();
+      // dejar que el click continue (no preventDefault)
+    };
+
+    if (btnOrders) btnOrders.addEventListener('click', handler);
+    if (btnHome)   btnHome.addEventListener('click', handler);
+
+    // Fallback: buscar por texto si no existen los ids
+    if (!btnOrders || !btnHome) {
+      document.querySelectorAll('a, button').forEach(el => {
+        const text = (el.textContent || '').trim().toLowerCase();
+        if (text === 'mis pedidos' || text.includes('mis pedidos')) el.addEventListener('click', handler);
+        if (text === 'home' || text === 'inicio' || text.includes('home')) el.addEventListener('click', handler);
+      });
+    }
+  });
 </script>
 
 </body>
