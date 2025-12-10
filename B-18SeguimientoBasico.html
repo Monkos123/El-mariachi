@@ -96,10 +96,13 @@ document.addEventListener('DOMContentLoaded', ()=> {
     const status = (o?.status || 'pending').toLowerCase();
     const steps = ['Recibido','En Preparación','En Ruta','Entregado'];
     let activeIndex = 1;
-    if(status.includes('received')) activeIndex = 0;
-    else if(status.includes('pending') || status.includes('preparación') || status.includes('preparacion')) activeIndex = 1;
-    else if(status.includes('ruta') || status.includes('en ruta') || status.includes('shipped')) activeIndex = 2;
-    else if(status.includes('completed') || status.includes('entregado')) activeIndex = 3;
+    
+    // Mapeo mejorado de estados
+    if(status === 'received' || status.includes('recibido')) activeIndex = 0;
+    else if(status === 'pending' || status.includes('preparación') || status.includes('preparacion')) activeIndex = 1;
+    else if(status === 'in_route' || status.includes('ruta') || status.includes('en ruta') || status.includes('shipped')) activeIndex = 2;
+    else if(status === 'completed' || status.includes('entregado')) activeIndex = 3;
+    else if(status === 'cancelled') activeIndex = 1; // Fallback
 
     const created = new Date(o.createdAt || o.date || Date.now());
     const itemsHtml = o.items && o.items.length > 0 
@@ -170,7 +173,6 @@ document.addEventListener('DOMContentLoaded', ()=> {
           </div>
           <div style="display:flex;gap:12px">
             <a href="B-12HistorialPedidos.html" class="action-btn">← Mis Pedidos</a>
-            <a href="B-09ConstruccionPedido.html" class="action-btn" style="background:rgba(211,47,47,0.1);color:var(--primary)">Seguir Comprando</a>
           </div>
         </div>
       </div>
@@ -186,6 +188,3 @@ document.addEventListener('DOMContentLoaded', ()=> {
 </script>
 </body>
 </html>
-
-
-
