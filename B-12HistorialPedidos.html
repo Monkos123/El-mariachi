@@ -101,6 +101,43 @@
   }
 
   function renderOrders(){
+    // Detectar si hubo cambios desde B-22
+    if(sessionStorage.getItem('ordersUpdated') === 'true'){
+      userOrders = JSON.parse(localStorage.getItem('userOrders') || '[]');
+      sessionStorage.removeItem('ordersUpdated');
+    }
+
+    // Mapear estado correctamente
+    const getEstadoDisplay = (status) => {
+      const estadoMap = {
+        'pending': 'En Preparación',
+        'in_route': 'En Ruta',
+        'completed': 'Completado',
+        'cancelled': 'Cancelado'
+      };
+      return estadoMap[status] || 'En Preparación';
+    };
+
+    const getStatusIcon = (status) => {
+      const iconMap = {
+        'pending': '⏳',
+        'in_route': '🚚',
+        'completed': '✓',
+        'cancelled': '✗'
+      };
+      return iconMap[status] || '⏳';
+    };
+
+    const getStatusClass = (status) => {
+      const classMap = {
+        'pending': 'badge-warning',
+        'in_route': 'badge-warning',
+        'completed': 'badge-success',
+        'cancelled': 'badge-danger'
+      };
+      return classMap[status] || 'badge-warning';
+    };
+
     const container = document.getElementById('ordersContainer');
 
     if(!currentUser){
@@ -152,7 +189,9 @@
               <div class="order-label">Total</div>
               <div class="order-value total-amount">$${(order.total||0).toLocaleString()}</div>
             </div>
-            <div>${getStatusBadge(order.status)}</div>
+            <div>
+              <span class="status-badge ${getStatusClass(order.status)}">${getStatusIcon(order.status)} ${getEstadoDisplay(order.status)}</span>
+            </div>
           </div>
 
           <div class="order-content">
@@ -195,6 +234,7 @@
 </script>
 </body>
 </html>
+
 
 
 
