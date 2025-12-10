@@ -286,14 +286,42 @@
 
   function guardarUsuarioLocal(email, pass){
     try {
-      const key = 'elmariachi_users';
-      const users = JSON.parse(localStorage.getItem(key) || '[]');
-      if(!users.find(u => u.email === email)){
-        users.push({email, pass});
-        localStorage.setItem(key, JSON.stringify(users));
+      const users = JSON.parse(localStorage.getItem('users') || '[]');
+      
+      // Verificar si ya existe
+      if(users.find(u => u.email === email)){
+        document.getElementById('modalEmail').classList.add('active');
+        return false;
       }
+
+      // Crear nuevo usuario
+      const newUser = {
+        id: `USER-${Date.now()}`,
+        fullName: email.split('@')[0],
+        email,
+        password: btoa(pass), // Encriptación básica
+        phone: '',
+        registeredAt: new Date().toISOString(),
+        cart: {},
+        orders: [],
+        addresses: [],
+        cards: []
+      };
+
+      users.push(newUser);
+      localStorage.setItem('users', JSON.stringify(users));
+      
+      // También guardar en formato antiguo por compatibilidad
+      const oldUsers = JSON.parse(localStorage.getItem('elmariachi_users') || '[]');
+      if(!oldUsers.find(u => u.email === email)){
+        oldUsers.push({email, pass});
+        localStorage.setItem('elmariachi_users', JSON.stringify(oldUsers));
+      }
+      
+      return true;
     } catch(err){
       console.warn('No se pudo guardar usuario localmente:', err);
+      return false;
     }
   }
 
@@ -314,16 +342,10 @@
       return;
     }
 
-    // Verificar si email ya existe
-    const users = JSON.parse(localStorage.getItem('elmariachi_users') || '[]');
-    if(users.find(u => u.email === email)){
-      document.getElementById('modalEmail').classList.add('active');
-      return;
-    }
-
     // Guardar usuario
-    guardarUsuarioLocal(email, pass);
-    document.getElementById('modalExito').classList.add('active');
+    if(guardarUsuarioLocal(email, pass)){
+      document.getElementById('modalExito').classList.add('active');
+    }
   }
 
   // Permitir submit con Enter
