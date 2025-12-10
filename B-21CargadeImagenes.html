@@ -95,6 +95,14 @@
   </div>
 
 <script>
+  // Verificar sesión admin
+  (function(){
+    const session = JSON.parse(localStorage.getItem('adminSession') || 'null');
+    if(!session || session.role !== 'admin'){
+      window.location.href = 'B-01LoginAdmin.html';
+    }
+  })();
+
   const uploadArea = document.getElementById('uploadArea');
   const fileInput = document.getElementById('fileInput');
   const previewBox = document.getElementById('previewBox');
