@@ -200,6 +200,38 @@
       background:var(--hover);
       transform:translateY(-2px)
     }
+    .auth-tabs{
+      display:flex;
+      gap:16px;
+      margin-bottom:24px;
+      border-bottom:2px solid var(--border);
+    }
+    .auth-tab{
+      background:none;
+      border:none;
+      padding:12px 16px;
+      font-weight:600;
+      font-size:14px;
+      color:var(--text-light);
+      cursor:pointer;
+      border-bottom:3px solid transparent;
+      transition:all 0.3s;
+      position:relative;
+      bottom:-2px;
+    }
+    .auth-tab.active{
+      color:var(--primary);
+      border-bottom-color:var(--primary);
+    }
+    .auth-tab:hover{
+      color:var(--primary);
+    }
+    .auth-tab-content{
+      display:none;
+    }
+    .auth-tab-content.active{
+      display:block;
+    }
   </style>
 </head>
 <body>
@@ -209,21 +241,55 @@
       <h1 class="title">El Mariachi</h1>
       <p class="subtitle">Inicia sesión en tu cuenta</p>
 
-      <form id="loginForm" onsubmit="login(event)">
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input id="email" type="email" placeholder="tu@email.com" required>
-        </div>
+      <div class="auth-tabs">
+        <button class="auth-tab active" onclick="switchTab('login')">Ingresar</button>
+        <button class="auth-tab" onclick="switchTab('register')">Registrarse</button>
+      </div>
 
-        <div class="form-group">
-          <label for="pass">Contraseña</label>
-          <input id="pass" type="password" placeholder="••••••••" required>
-        </div>
+      <!-- Tab Login -->
+      <div id="loginTab" class="auth-tab-content active">
+        <form id="loginForm" onsubmit="login(event)">
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input id="email" type="email" placeholder="tu@email.com" required>
+          </div>
 
-        <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
-        <button type="button" class="btn btn-secondary" onclick="irRegistro()">Crear Cuenta</button>
-        <button type="button" class="btn btn-secondary" onclick="verCatalogo()">Ver Catálogo</button>
-      </form>
+          <div class="form-group">
+            <label for="pass">Contraseña</label>
+            <input id="pass" type="password" placeholder="••••••••" required>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+          <button type="button" class="btn btn-secondary" onclick="verCatalogo()">Ver Catálogo</button>
+        </form>
+      </div>
+
+      <!-- Tab Register -->
+      <div id="registerTab" class="auth-tab-content">
+        <form id="registerForm" onsubmit="registro(event)">
+          <div class="form-group">
+            <label for="regName">Nombre Completo</label>
+            <input id="regName" type="text" placeholder="Juan Pérez" required>
+          </div>
+
+          <div class="form-group">
+            <label for="regEmail">Email</label>
+            <input id="regEmail" type="email" placeholder="tu@email.com" required>
+          </div>
+
+          <div class="form-group">
+            <label for="regPhone">Teléfono</label>
+            <input id="regPhone" type="tel" placeholder="+56 9 1234 5678" required>
+          </div>
+
+          <div class="form-group">
+            <label for="regPass">Contraseña</label>
+            <input id="regPass" type="password" placeholder="••••••••" required>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Registrarse</button>
+        </form>
+      </div>
 
       <div class="link-help">
         <a href="B-03RecuperacionContraseña.html">¿Olvidaste tu contraseña?</a>
@@ -252,12 +318,16 @@
   </div>
 
 <script>
-  function cerrarModal(id){
-    document.getElementById(id).classList.remove('active');
+  function switchTab(tab){
+    document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.auth-tab-content').forEach(c => c.classList.remove('active'));
+    
+    event.target.classList.add('active');
+    document.getElementById(tab + 'Tab').classList.add('active');
   }
 
-  function irRegistro(){
-    window.location.href = 'B-01RegistroUsusario.html';
+  function cerrarModal(id){
+    document.getElementById(id).classList.remove('active');
   }
 
   function verCatalogo(){
@@ -278,22 +348,97 @@
       return;
     }
 
-    const users = JSON.parse(localStorage.getItem('elmariachi_users') || '[]');
-    const found = users.find(u => u.email === email && u.pass === pass);
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
+    const found = users.find(u => u.email === email && u.password === btoa(pass));
 
     if(!found){
       document.getElementById('modalError').classList.add('active');
       return;
     }
 
-    // Login exitoso
-    localStorage.setItem('currentUser', JSON.stringify({email, loginTime: Date.now()}));
+    localStorage.setItem('currentUser', JSON.stringify({
+      id: found.id,
+      fullName: found.fullName,
+      email: found.email,
+      phone: found.phone
+    }));
+
+    localStorage.setItem('userOrders', JSON.stringify(found.orders || []));
+    localStorage.setItem('userAddresses', JSON.stringify(found.addresses || []));
+    localStorage.setItem('userCards', JSON.stringify(found.cards || []));
+    localStorage.setItem('cart', JSON.stringify(found.cart || {}));
+
     document.getElementById('modalExito').classList.add('active');
   }
 
-  document.getElementById('loginForm')?.addEventListener('keypress', (e)=>{
-    if(e.key === 'Enter') login(e);
-  });
+  function registro(e){
+    e.preventDefault();
+    const fullName = document.getElementById('regName').value.trim();
+    const email = document.getElementById('regEmail').value.trim();
+    const phone = document.getElementById('regPhone').value.trim();
+    const pass = document.getElementById('regPass').value;
+
+    if(!fullName || !email || !phone || !pass){
+      alert('Completa todos los campos');
+      return;
+    }
+
+    if(fullName.length < 3){
+      alert('El nombre debe tener al menos 3 caracteres');
+      return;
+    }
+
+    if(!email.includes('@')){
+      alert('Email inválido');
+      return;
+    }
+
+    if(phone.length < 9){
+      alert('Teléfono inválido');
+      return;
+    }
+
+    if(pass.length < 6){
+      alert('La contraseña debe tener al menos 6 caracteres');
+      return;
+    }
+
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
+    if(users.find(u => u.email === email)){
+      alert('Este email ya está registrado');
+      return;
+    }
+
+    const newUser = {
+      id: `USER-${Date.now()}`,
+      fullName,
+      email,
+      password: btoa(pass),
+      phone,
+      registeredAt: new Date().toISOString(),
+      cart: {},
+      orders: [],
+      addresses: [],
+      cards: []
+    };
+
+    users.push(newUser);
+    localStorage.setItem('users', JSON.stringify(users));
+
+    localStorage.setItem('currentUser', JSON.stringify({
+      id: newUser.id,
+      fullName: newUser.fullName,
+      email: newUser.email,
+      phone: newUser.phone
+    }));
+
+    localStorage.setItem('userOrders', JSON.stringify([]));
+    localStorage.setItem('userAddresses', JSON.stringify([]));
+    localStorage.setItem('userCards', JSON.stringify([]));
+    localStorage.setItem('cart', JSON.stringify({}));
+
+    document.getElementById('modalExito').classList.add('active');
+  }
 </script>
 </body>
 </html>
