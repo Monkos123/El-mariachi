@@ -68,7 +68,9 @@
       padding:4px 8px;
       border-radius:4px;
       font-weight:700;
-      font-size:11px
+      font-size:11px;
+      margin-left:4px;
+      display:inline-block;
     }
     .container{
       max-width:1400px;
@@ -213,62 +215,151 @@
       font-size:64px;
       margin-bottom:16px
     }
-    .modal-backdrop{
-      background:rgba(0,0,0,0.5)
+    .modal{
+      position:fixed;
+      top:0;
+      left:0;
+      right:0;
+      bottom:0;
+      background:rgba(0,0,0,0.5);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:9999;
+      padding:16px;
     }
-    .modal-content{
-      border-radius:12px;
-      border:none
+    .modal.active{
+      display:flex;
     }
-    .modal-header{
+    .modal-content-auth{
+      background:#fff;
+      border-radius:16px;
+      box-shadow:0 20px 60px rgba(0,0,0,0.3);
+      width:100%;
+      max-width:420px;
+      overflow:hidden;
+    }
+    .auth-header{
       background:linear-gradient(135deg,var(--primary),var(--hover));
       color:#fff;
-      border:none
+      padding:24px;
+      text-align:center;
+      position:relative;
+      display:flex;
+      align-items:center;
+      justify-content:center;
     }
-    .modal-title{
+    .auth-header h2{
+      margin:0;
+      font-size:24px;
+      font-weight:800;
+      letter-spacing:-0.5px;
+    }
+    .auth-close{
+      position:absolute;
+      right:16px;
+      top:16px;
+      background:rgba(255,255,255,0.2);
+      border:none;
+      color:#fff;
+      font-size:28px;
+      cursor:pointer;
+      width:40px;
+      height:40px;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      transition:all 0.3s;
+    }
+    .auth-close:hover{
+      background:rgba(255,255,255,0.3);
+      transform:rotate(90deg);
+    }
+    .auth-tabs{
+      display:flex;
+      gap:0;
+      border-bottom:2px solid var(--border);
+      background:#f9f9f9;
+      padding:0;
+    }
+    .auth-tab{
+      flex:1;
+      background:none;
+      border:none;
+      padding:16px;
       font-weight:700;
-      font-size:16px
+      font-size:13px;
+      color:var(--text-light);
+      cursor:pointer;
+      border-bottom:3px solid transparent;
+      transition:all 0.3s;
+      text-transform:uppercase;
+      letter-spacing:0.5px;
+      position:relative;
+      bottom:-2px;
+      text-align:center;
     }
-    .btn-close{
-      filter:brightness(0) invert(1)
+    .auth-tab.active{
+      color:var(--primary);
+      border-bottom-color:var(--primary);
+      background:#fff;
+    }
+    .auth-tab:hover{
+      color:var(--primary);
+    }
+    .auth-tab-content{
+      display:none;
+    }
+    .auth-tab-content.active{
+      display:block;
     }
     .auth-form{
-      padding:24px
+      padding:24px;
+    }
+    .form-group{
+      margin-bottom:16px;
     }
     .form-label{
-      font-weight:600;
+      display:block;
+      color:var(--text-dark);
+      font-weight:700;
       font-size:12px;
       text-transform:uppercase;
       letter-spacing:0.5px;
-      margin-bottom:8px
+      margin-bottom:8px;
     }
     .form-control{
+      width:100%;
+      padding:12px 16px;
       border:2px solid var(--border);
       border-radius:8px;
-      padding:12px;
-      font-size:13px;
+      font-size:14px;
+      font-family:inherit;
+      transition:all 0.3s;
     }
     .form-control:focus{
       outline:none;
       border-color:var(--primary);
-      box-shadow:0 0 0 3px rgba(211,47,47,0.1)
+      box-shadow:0 0 0 3px rgba(211,47,47,0.1);
     }
-    .btn-primary{
+    .btn-auth-primary{
+      padding:14px;
       background:var(--primary);
+      color:#fff;
       border:none;
       border-radius:8px;
-      padding:12px 20px;
-      color:#fff;
       font-weight:700;
+      font-size:13px;
       text-transform:uppercase;
-      letter-spacing:0.5px
+      letter-spacing:0.5px;
+      cursor:pointer;
+      transition:all 0.3s;
     }
-    .btn-primary:hover{
-      background:var(--hover)
-    }
-    .alert{
-      border-radius:8px;
-      border:none
+    .btn-auth-primary:hover{
+      background:var(--hover);
+      transform:translateY(-2px);
+      box-shadow:0 8px 16px rgba(211,47,47,0.3);
     }
     @media(max-width:768px){
       .products-grid{
@@ -292,18 +383,18 @@
       <a class="navbar-brand" href="B-09ConstruccionPedido.html">🌮 El Mariachi</a>
       <div class="nav-actions">
         <a id="navCart" class="nav-btn" href="B-10CarritoCalculo.html">
-          🛒 Carrito
+          🛒 CARRITO
           <span class="nav-badge" id="cartBadge" style="display:none">0</span>
         </a>
-        <a id="navOrders" class="nav-btn" href="B-12HistorialPedidos.html" style="display:none">
-          📋 Mis Pedidos
-        </a>
-        <div id="userNav" style="display:none" class="d-flex gap-2 align-items-center">
-          <span class="nav-btn" style="background:transparent;cursor:default" id="userDisplay"></span>
-          <button class="nav-btn" onclick="logoutUser()">Salir</button>
+        <div id="loggedInNav" style="display:none;gap:16px">
+          <a id="navOrders" class="nav-btn" href="B-12HistorialPedidos.html">
+            📋 MIS PEDIDOS
+          </a>
+          <span class="nav-btn" style="background:transparent;cursor:default;color:#fff" id="userDisplay"></span>
+          <button class="nav-btn" onclick="logoutUser()">🚪 SALIR</button>
         </div>
-        <button id="authBtn" class="nav-btn" data-bs-toggle="modal" data-bs-target="#authModal">
-          Iniciar Sesión
+        <button id="authBtn" class="nav-btn" onclick="openAuthModal()">
+          INICIAR SESIÓN
         </button>
       </div>
     </div>
@@ -323,64 +414,93 @@
     <div class="products-grid" id="productsGrid"></div>
   </main>
 
-  <!-- Modal de Autenticación -->
-  <div class="modal fade" id="authModal" tabindex="-1">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Iniciar Sesión</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          <ul class="nav nav-tabs mb-4" role="tablist">
-            <li class="nav-item" role="presentation">
-              <button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#login" type="button" role="tab">Ingresar</button>
-            </li>
-            <li class="nav-item" role="presentation">
-              <button class="nav-link" id="register-tab" data-bs-toggle="tab" data-bs-target="#register" type="button" role="tab">Registrarse</button>
-            </li>
-          </ul>
+  <!-- Modal: Login/Registro -->
+  <div id="authModal" class="modal">
+    <div class="modal-content-auth">
+      <div class="auth-header">
+        <h2>El Mariachi</h2>
+        <button onclick="closeAuthModal()" class="auth-close">✕</button>
+      </div>
+      
+      <div class="auth-tabs">
+        <button class="auth-tab active" onclick="switchTab('login')">Ingresar</button>
+        <button class="auth-tab" onclick="switchTab('register')">Registrarse</button>
+      </div>
 
-          <div class="tab-content">
-            <!-- Login -->
-            <div class="tab-pane fade show active" id="login" role="tabpanel">
-              <form id="loginForm">
-                <div class="mb-3">
-                  <label class="form-label">Email</label>
-                  <input id="loginEmail" class="form-control" type="email" required>
-                </div>
-                <div class="mb-3">
-                  <label class="form-label">Contraseña</label>
-                  <input id="loginPassword" class="form-control" type="password" required>
-                </div>
-                <button type="submit" class="btn btn-primary w-100">Ingresar</button>
-              </form>
-            </div>
-
-            <!-- Register -->
-            <div class="tab-pane fade" id="register" role="tabpanel">
-              <form id="registerForm">
-                <div class="mb-3">
-                  <label class="form-label">Nombre Completo</label>
-                  <input id="regName" class="form-control" required>
-                </div>
-                <div class="mb-3">
-                  <label class="form-label">RUT</label>
-                  <input id="regRut" class="form-control" placeholder="12.345.678-9" required>
-                </div>
-                <div class="mb-3">
-                  <label class="form-label">Email</label>
-                  <input id="regEmail" class="form-control" type="email" required>
-                </div>
-                <div class="mb-3">
-                  <label class="form-label">Contraseña</label>
-                  <input id="regPassword" class="form-control" type="password" required>
-                </div>
-                <button type="submit" class="btn btn-primary w-100">Registrarse</button>
-              </form>
-            </div>
+      <!-- Tab Login -->
+      <div id="loginTab" class="auth-tab-content active">
+        <form id="loginForm" onsubmit="login(event)" class="auth-form">
+          <div class="form-group">
+            <label for="email" class="form-label">EMAIL</label>
+            <input id="email" type="email" class="form-control" placeholder="tu@email.com" required>
           </div>
-        </div>
+
+          <div class="form-group">
+            <label for="pass" class="form-label">CONTRASEÑA</label>
+            <input id="pass" type="password" class="form-control" placeholder="••••••••" required>
+          </div>
+
+          <button type="submit" class="btn-auth-primary w-100">INICIAR SESIÓN</button>
+        </form>
+      </div>
+
+      <!-- Tab Register -->
+      <div id="registerTab" class="auth-tab-content">
+        <form id="registerForm" onsubmit="registro(event)" class="auth-form">
+          <div class="form-group">
+            <label for="regName" class="form-label">NOMBRE COMPLETO</label>
+            <input id="regName" type="text" class="form-control" placeholder="Juan Pérez" required>
+          </div>
+
+          <div class="form-group">
+            <label for="regEmail" class="form-label">EMAIL</label>
+            <input id="regEmail" type="email" class="form-control" placeholder="tu@email.com" required>
+          </div>
+
+          <div class="form-group">
+            <label for="regPhone" class="form-label">TELÉFONO</label>
+            <input id="regPhone" type="tel" class="form-control" placeholder="+56 9 1234 5678" required>
+          </div>
+
+          <div class="form-group">
+            <label for="regPass" class="form-label">CONTRASEÑA</label>
+            <input id="regPass" type="password" class="form-control" placeholder="••••••••" required>
+          </div>
+
+          <button type="submit" class="btn-auth-primary w-100">REGISTRARSE</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Error -->
+  <div id="modalError" class="modal">
+    <div class="modal-content-auth">
+      <div class="auth-header">
+        <h2>Error de Login</h2>
+        <button onclick="cerrarModal('modalError')" class="auth-close">✕</button>
+      </div>
+      <div class="auth-form" style="text-align:center;padding:40px 24px">
+        <div style="font-size:48px;margin-bottom:16px">❌</div>
+        <h3 style="color:var(--text-dark);margin-bottom:8px;font-weight:700">Credenciales Inválidas</h3>
+        <p style="color:var(--text-light);margin-bottom:24px">Email o contraseña incorrectos. Intenta de nuevo.</p>
+        <button class="btn-auth-primary w-100" onclick="cerrarModal('modalError')">Intentar de Nuevo</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Éxito Login -->
+  <div id="modalExito" class="modal">
+    <div class="modal-content-auth">
+      <div class="auth-header">
+        <h2>¡Bienvenido!</h2>
+        <button onclick="cerrarModal('modalExito')" class="auth-close">✕</button>
+      </div>
+      <div class="auth-form" style="text-align:center;padding:40px 24px">
+        <div style="font-size:48px;margin-bottom:16px">✅</div>
+        <h3 style="color:var(--text-dark);margin-bottom:8px;font-weight:700">Sesión iniciada correctamente</h3>
+        <p style="color:var(--text-light);margin-bottom:24px">Tu cuenta ha sido verificada.</p>
+        <button class="btn-auth-primary w-100" onclick="continuarDespuesLogin()">Continuar Comprando</button>
       </div>
     </div>
   </div>
@@ -391,17 +511,18 @@
   let productsList = [];
   let currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
 
-  // Verificar sesión al cargar
   function checkAuth(){
-    if(currentUser){
+    currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+    
+    if(currentUser && currentUser.id){
+      // Usuario logueado
       document.getElementById('authBtn').style.display = 'none';
-      document.getElementById('userNav').style.display = 'flex';
-      document.getElementById('navOrders').style.display = 'inline-block';
-      document.getElementById('userDisplay').textContent = `👤 ${currentUser.name || currentUser.email}`;
+      document.getElementById('loggedInNav').style.display = 'flex';
+      document.getElementById('userDisplay').textContent = `👤 ${currentUser.fullName || currentUser.email}`;
     } else {
+      // Sin sesión
       document.getElementById('authBtn').style.display = 'block';
-      document.getElementById('userNav').style.display = 'none';
-      document.getElementById('navOrders').style.display = 'none';
+      document.getElementById('loggedInNav').style.display = 'none';
     }
     updateCartBadge();
   }
@@ -419,10 +540,16 @@
   }
 
   function logoutUser(){
-    localStorage.removeItem('currentUser');
-    currentUser = null;
-    checkAuth();
-    alert('Sesión cerrada');
+    if(confirm('¿Estás seguro de que deseas cerrar sesión?')){
+      localStorage.removeItem('currentUser');
+      localStorage.removeItem('userOrders');
+      localStorage.removeItem('userAddresses');
+      localStorage.removeItem('userCards');
+      currentUser = null;
+      checkAuth();
+      alert('Sesión cerrada correctamente');
+      location.reload();
+    }
   }
 
   // Login
@@ -525,7 +652,7 @@
   function addToCart(id, name, price){
     if(!currentUser){
       alert('Debes iniciar sesión para comprar');
-      bootstrap.Modal.getOrCreateInstance(document.getElementById('authModal')).show();
+      openAuthModal();
       return;
     }
 
@@ -543,7 +670,214 @@
   document.getElementById('searchInput').addEventListener('input', renderProducts);
   cargarProductos();
   checkAuth();
-</script>
 
+  function continuarDespuesLogin(){
+    cerrarModal('modalExito');
+    closeAuthModal();
+    location.reload();
+  }
+
+  function cerrarModal(id){
+    document.getElementById(id).classList.remove('active');
+  }
+
+  function closeAuthModal(){
+    document.getElementById('authModal').classList.remove('active');
+  }
+
+  function openAuthModal(){
+    document.getElementById('authModal').classList.add('active');
+  }
+
+  function switchTab(tab){
+    document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.auth-tab-content').forEach(c => c.classList.remove('active'));
+    
+    event.target.classList.add('active');
+    document.getElementById(tab + 'Tab').classList.add('active');
+  }
+
+  function login(e){
+    e.preventDefault();
+    const email = document.getElementById('email').value.trim();
+    const pass = document.getElementById('pass').value;
+
+    if(!email || !pass){
+      alert('Completa todos los campos');
+      return;
+    }
+
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
+    const found = users.find(u => u.email === email && u.password === btoa(pass));
+
+    if(!found){
+      document.getElementById('modalError').classList.add('active');
+      document.getElementById('email').value = '';
+      document.getElementById('pass').value = '';
+      return;
+    }
+
+    localStorage.setItem('currentUser', JSON.stringify({
+      id: found.id,
+      fullName: found.fullName,
+      email: found.email,
+      phone: found.phone
+    }));
+
+    localStorage.setItem('userOrders', JSON.stringify(found.orders || []));
+    localStorage.setItem('userAddresses', JSON.stringify(found.addresses || []));
+    localStorage.setItem('userCards', JSON.stringify(found.cards || []));
+    localStorage.setItem('cart', JSON.stringify(found.cart || {}));
+
+    document.getElementById('loginForm').reset();
+    document.getElementById('modalExito').classList.add('active');
+  }
+
+  function registro(e){
+    e.preventDefault();
+    const fullName = document.getElementById('regName').value.trim();
+    const email = document.getElementById('regEmail').value.trim();
+    const phone = document.getElementById('regPhone').value.trim();
+    const pass = document.getElementById('regPass').value;
+
+    if(!fullName || !email || !phone || !pass){
+      alert('Completa todos los campos');
+      return;
+    }
+
+    if(fullName.length < 3){
+      alert('El nombre debe tener al menos 3 caracteres');
+      return;
+    }
+
+    if(!email.includes('@')){
+      alert('Email inválido');
+      return;
+    }
+
+    if(phone.length < 9){
+      alert('Teléfono inválido');
+      return;
+    }
+
+    if(pass.length < 6){
+      alert('La contraseña debe tener al menos 6 caracteres');
+      return;
+    }
+
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
+    if(users.find(u => u.email === email)){
+      alert('Este email ya está registrado');
+      return;
+    }
+
+    const newUser = {
+      id: `USER-${Date.now()}`,
+      fullName,
+      email,
+      password: btoa(pass),
+      phone,
+      registeredAt: new Date().toISOString(),
+      cart: {},
+      orders: [],
+      addresses: [],
+      cards: []
+    };
+
+    users.push(newUser);
+    localStorage.setItem('users', JSON.stringify(users));
+
+    localStorage.setItem('currentUser', JSON.stringify({
+      id: newUser.id,
+      fullName: newUser.fullName,
+      email: newUser.email,
+      phone: newUser.phone
+    }));
+
+    localStorage.setItem('userOrders', JSON.stringify([]));
+    localStorage.setItem('userAddresses', JSON.stringify([]));
+    localStorage.setItem('userCards', JSON.stringify([]));
+    localStorage.setItem('cart', JSON.stringify({}));
+
+    document.getElementById('registerForm').reset();
+    document.getElementById('modalExito').classList.add('active');
+  }
+
+  /**
+   * Llamar cuando el pago quede aprobado por la pasarela.
+   * orderData: { id, total, items:[{id,name,price,qty}], fecha: ISOString, ... }
+   * Opcional: si la pasarela devuelve datos de la orden pásalos aquí.
+   */
+  function paymentApproved(orderData = {}) {
+    // obtener carrito en sesión
+    const cart = JSON.parse(sessionStorage.getItem('cart') || '{}');
+    const itemIds = Object.keys(cart);
+    if (itemIds.length === 0) {
+      // ya está vacío
+      updateCartBadge();
+      return;
+    }
+
+    // crear objeto de orden si no se pasó
+    const order = {
+      id: orderData.id || `ORD-${Date.now()}`,
+      fecha: orderData.fecha || new Date().toISOString(),
+      total: orderData.total || Object.values(cart).reduce((s, it) => s + (it.price * it.qty), 0),
+      items: orderData.items || itemIds.map(id => ({ id, name: cart[id].name, price: cart[id].price, qty: cart[id].qty })),
+      meta: orderData.meta || {}
+    };
+
+    // Si hay usuario logueado: guardar orden en su historial y limpiar su cart guardado
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+    if (currentUser && currentUser.id) {
+      const users = JSON.parse(localStorage.getItem('users') || '[]');
+      const idx = users.findIndex(u => u.id === currentUser.id);
+      if (idx !== -1) {
+        users[idx].orders = users[idx].orders || [];
+        users[idx].orders.push(order);
+        users[idx].cart = {}; // limpiar carrito persistente del usuario
+        localStorage.setItem('users', JSON.stringify(users));
+      }
+      // actualizar currentUser en localStorage por si hace falta
+      localStorage.setItem('currentUser', JSON.stringify({
+        id: currentUser.id,
+        fullName: currentUser.fullName,
+        email: currentUser.email,
+        phone: currentUser.phone
+      }));
+    }
+
+    // Limpiar carrito de sesión (y badge)
+    sessionStorage.removeItem('cart');
+    // Si usas también cart en localStorage, limpiarlo:
+    try { localStorage.removeItem('cart'); } catch(e){}
+
+    updateCartBadge();
+
+    // Mostrar confirmación y redirigir a página de resumen/orden si quieres
+    alert('Pago aprobado. Tu orden ha sido registrada.');
+    // opcional: ir a página de confirmación
+    // window.location.href = 'B-11ConfirmacionPedido.html?id=' + order.id;
+  }
+
+  // Inicializar
+  document.addEventListener('DOMContentLoaded', function(){
+    checkAuth();
+    cargarProductos();
+    updateCartBadge();
+  });
+
+  // Escuchar cambios de productos desde admin (B-19)
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'productsUpdated') {
+      console.log('Admin actualizó productos -> refrescando tienda');
+      if (typeof cargarProductos === 'function') {
+        cargarProductos();
+      } else {
+        location.reload();
+      }
+    }
+  });
+</script>
 </body>
 </html>
