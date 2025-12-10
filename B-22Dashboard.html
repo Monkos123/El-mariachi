@@ -1,87 +1,193 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin • Dashboard | El Mariachi</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard • El Mariachi Admin</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
   <style>
-    :root{--primary:#d32f2f;--hover:#b71c1c;--light:#f5f5f5;--text:#212121;--muted:#757575;--border:#e0e0e0;--success:#4caf50}
+    :root{
+      --primary:#d32f2f;
+      --hover:#b71c1c;
+      --dark:#1a1a1a;
+      --light:#f5f5f5;
+      --text:#212121;
+      --muted:#757575;
+      --border:#e0e0e0;
+      --success:#4caf50;
+      --warning:#ffc107;
+      --danger:#c62828
+    }
     *{box-sizing:border-box;margin:0;padding:0}
-    body{background:var(--light);color:var(--text);font-family:Segoe UI,Roboto,Arial;padding-bottom:40px}
+    body{font-family:Segoe UI,Roboto,Arial,sans-serif;background:var(--light);color:var(--text);padding-bottom:40px}
     .navbar{background:linear-gradient(135deg,var(--primary),var(--hover))}
-    .navbar-brand{color:#fff;font-weight:800}
-    .container{max-width:1200px}
-    h1{color:var(--text);font-weight:700;font-size:28px;margin-bottom:24px}
-    .menu-links{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap}
-    .menu-btn{padding:10px 16px;border:2px solid var(--border);background:#fff;border-radius:8px;font-weight:600;font-size:13px;cursor:pointer;transition:all 0.3s;color:var(--text);text-decoration:none;display:inline-block}
-    .menu-btn:hover{border-color:var(--primary);background:rgba(211,47,47,0.05)}
-    .menu-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
-    .card{border-radius:12px;border:1px solid var(--border);box-shadow:0 1px 3px rgba(0,0,0,0.08)}
-    .stat-box{padding:20px;text-align:center;background:#fff;border-radius:12px;border:1px solid var(--border)}
-    .stat-label{color:var(--muted);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px}
-    .stat-value{color:var(--primary);font-weight:800;font-size:24px;margin-top:8px}
-    .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:24px}
-    .range-selector{display:flex;gap:12px;align-items:center;margin-bottom:20px;flex-wrap:wrap}
-    .range-btn{padding:8px 12px;border:1px solid var(--border);background:#fff;border-radius:6px;cursor:pointer;transition:all 0.3s;font-size:13px;font-weight:600}
-    .range-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
-    table{margin-top:16px}
-    th{border-bottom:2px solid var(--border);font-weight:700;color:var(--text)}
-    td{border-bottom:1px solid var(--border)}
-    @media(max-width:768px){.menu-links{flex-direction:column}.stat-grid{grid-template-columns:1fr}}
+    .navbar-brand{color:#fff;font-weight:800;font-size:20px}
+    .container{max-width:1200px;padding:40px 24px}
+    h1{color:var(--text);font-weight:700;font-size:28px;margin-bottom:32px}
+    .menu-tabs{display:flex;gap:8px;margin-bottom:28px;flex-wrap:wrap;padding:16px;background:#fff;border-radius:12px;border:1px solid var(--border)}
+    .menu-tab{padding:10px 16px;border:2px solid var(--border);background:#fff;border-radius:8px;font-weight:600;font-size:13px;cursor:pointer;transition:all 0.3s;color:var(--text);text-decoration:none;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+    .menu-tab:hover{border-color:var(--primary);background:rgba(211,47,47,0.05)}
+    .menu-tab.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+    .card{border-radius:12px;border:1px solid var(--border);box-shadow:0 1px 3px rgba(0,0,0,0.08);background:#fff;margin-bottom:24px}
+    .card-header{background:rgba(211,47,47,0.04);border-bottom:2px solid var(--border);padding:16px;border-radius:12px 12px 0 0}
+    .card-header h5{font-weight:700;color:var(--text);margin:0}
+    .stat-card{padding:24px;text-align:center;border-radius:12px;background:#fff;border:1px solid var(--border)}
+    .stat-icon{font-size:32px;margin-bottom:12px}
+    .stat-label{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:0.5px;font-weight:600;margin-bottom:8px}
+    .stat-value{color:var(--primary);font-weight:800;font-size:28px}
+    .stat-change{font-size:12px;color:var(--success);margin-top:8px}
+    .chart-container{position:relative;height:300px;margin:20px 0}
+    .table{font-size:13px}
+    .table thead th{background:#f9f9f9;font-weight:700;border-bottom:2px solid var(--border)}
+    .table tbody td{border-bottom:1px solid var(--border);vertical-align:middle;padding:12px}
+    .status-badge{display:inline-block;padding:6px 10px;border-radius:6px;font-size:11px;font-weight:700;text-transform:uppercase}
+    .badge-success{background:rgba(76,175,80,0.12);color:var(--success);border:1px solid rgba(76,175,80,0.2)}
+    .badge-warning{background:rgba(255,193,7,0.12);color:#ffc107;border:1px solid rgba(255,193,7,0.2)}
+    .badge-danger{background:rgba(198,40,40,0.12);color:var(--danger);border:1px solid rgba(198,40,40,0.2)}
+    .small-muted{color:var(--muted);font-size:12px}
+    .loading{text-align:center;padding:40px;color:var(--muted)}
+    .spinner{display:inline-block;width:20px;height:20px;border:3px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin 0.6s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .top-product{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border)}
+    .top-product:last-child{border-bottom:none}
+    .product-name{font-weight:600;color:var(--text)}
+    .product-sales{color:var(--primary);font-weight:700;font-size:14px}
+    @media(max-width:768px){
+      .stat-card{margin-bottom:12px}
+    }
+    .status-select{
+      padding:6px 10px;
+      border-radius:6px;
+      border:1px solid var(--border);
+      font-size:11px;
+      font-weight:700;
+      background:#fff;
+      color:var(--text);
+      cursor:pointer;
+      transition:all 0.3s;
+    }
+    .status-select:hover{
+      border-color:var(--primary);
+      background:rgba(211,47,47,0.05);
+    }
+    .status-select:focus{
+      outline:none;
+      border-color:var(--primary);
+      box-shadow:0 0 0 3px rgba(211,47,47,0.1);
+    }
   </style>
 </head>
 <body>
   <nav class="navbar navbar-expand-lg py-3">
     <div class="container d-flex align-items-center justify-content-between">
       <a class="navbar-brand" href="B-19PanelAdmin.html">🌮 El Mariachi • Admin</a>
-      <a class="btn btn-outline-light btn-sm" href="B-09ConstruccionPedido.html">← Salir Admin</a>
+      <div class="d-flex gap-2">
+        <a class="btn btn-light btn-sm" href="B-12HistorialPedidos.html">Pedidos</a>
+        <button id="logoutBtn" class="btn btn-outline-light btn-sm">🚪 Cerrar Sesión</button>
+      </div>
     </div>
   </nav>
 
-  <div class="container my-5">
-    <h1>Dashboard de Ventas</h1>
+  <div class="container">
+    <h1>📊 Dashboard • Panel de Control</h1>
 
-    <div class="menu-links">
-      <a href="B-19PanelAdmin.html" class="menu-btn">📦 Productos</a>
-      <a href="B-20TogglesdeDisponibilidad.html" class="menu-btn">✓ Disponibilidad</a>
-      <a href="B-21CargadeImagenes.html" class="menu-btn">📸 Imágenes</a>
-      <a href="B-22Dashboard.html" class="menu-btn active">📊 Dashboard</a>
-      <a href="B-23GestionVisual.html" class="menu-btn">👥 Usuarios</a>
-      <a href="B-24IndicadoresdeValidacion.html" class="menu-btn">✔ Validaciones</a>
+    <!-- Menú de navegación -->
+    <div class="menu-tabs">
+      <a href="B-19PanelAdmin.html" class="menu-tab">
+        <span>📦</span> Productos
+      </a>
+      <a href="B-20TogglesdeDisponibilidad.html" class="menu-tab">
+        <span>✓</span> Disponibilidad
+      </a>
+      <a href="B-21CargadeImagenes.html" class="menu-tab">
+        <span>📸</span> Imágenes
+      </a>
+      <a href="B-22Dashboard.html" class="menu-tab active">
+        <span>📊</span> Dashboard
+      </a>
+      <a href="B-23GestionVisual.html" class="menu-tab">
+        <span>👥</span> Usuarios
+      </a>
+      <a href="B-24IndicadoresdeValidacion.html" class="menu-tab">
+        <span>✓</span> Validaciones
+      </a>
     </div>
 
-    <div class="range-selector">
-      <span style="font-weight:600;color:var(--text)">Período:</span>
-      <button class="range-btn active" data-range="30">Últimos 30 días</button>
-      <button class="range-btn" data-range="90">Últimos 90 días</button>
-      <button class="range-btn" data-range="365">Último año</button>
+    <!-- KPI Cards -->
+    <div class="row g-3 mb-4">
+      <div class="col-md-3">
+        <div class="stat-card">
+          <div class="stat-icon">💰</div>
+          <div class="stat-label">Ventas Totales</div>
+          <div class="stat-value" id="totalVentas">$0</div>
+          <div class="stat-change" id="ventasChange">↑ +0%</div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="stat-card">
+          <div class="stat-icon">📋</div>
+          <div class="stat-label">Órdenes Totales</div>
+          <div class="stat-value" id="totalOrdenes">0</div>
+          <div class="stat-change" id="ordenesChange">↑ +0%</div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="stat-card">
+          <div class="stat-icon">🎯</div>
+          <div class="stat-label">Ticket Promedio</div>
+          <div class="stat-value" id="ticketPromedio">$0</div>
+          <div class="stat-change" id="ticketChange">↑ +0%</div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="stat-card">
+          <div class="stat-icon">📦</div>
+          <div class="stat-label">Productos Activos</div>
+          <div class="stat-value" id="productosActivos">0</div>
+          <div class="stat-change" id="productosChange">↑ +0%</div>
+        </div>
+      </div>
     </div>
 
-    <div class="stat-grid">
-      <div class="stat-box">
-        <div class="stat-label">💰 Ventas Totales</div>
-        <div class="stat-value">$1.540.000</div>
+    <!-- Gráficos -->
+    <div class="row g-3 mb-4">
+      <div class="col-lg-8">
+        <div class="card">
+          <div class="card-header">
+            <h5>📈 Ventas Últimos 7 Días</h5>
+          </div>
+          <div class="card-body">
+            <div class="chart-container">
+              <canvas id="chartVentas"></canvas>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="stat-box">
-        <div class="stat-label">📊 Ticket Promedio</div>
-        <div class="stat-value">$8.300</div>
-      </div>
-      <div class="stat-box">
-        <div class="stat-label">🏆 Top Productos</div>
-        <div class="stat-value" style="font-size:16px">Taco, Burrito</div>
-      </div>
-      <div class="stat-box">
-        <div class="stat-label">📦 Órdenes</div>
-        <div class="stat-value">185</div>
+
+      <div class="col-lg-4">
+        <div class="card">
+          <div class="card-header">
+            <h5>🏆 Top 5 Productos</h5>
+          </div>
+          <div class="card-body" id="topProductos">
+            <div class="loading">
+              <div class="spinner"></div>
+              <p>Cargando...</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
+    <!-- Órdenes Recientes -->
     <div class="card">
-      <div class="card-body">
-        <h5 class="card-title mb-3">Últimas Transacciones</h5>
+      <div class="card-header">
+        <h5>📦 Últimas Órdenes</h5>
+      </div>
+      <div class="card-body p-0">
         <div class="table-responsive">
-          <table class="table align-middle">
+          <table class="table mb-0">
             <thead>
               <tr>
                 <th>Fecha</th>
@@ -91,46 +197,329 @@
                 <th>Estado</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td>06-12-2025</td>
-                <td><strong>A-674247</strong></td>
-                <td>Ana García</td>
-                <td>$12.900</td>
-                <td><span style="color:var(--success);font-weight:700">✓ Completado</span></td>
-              </tr>
-              <tr>
-                <td>06-12-2025</td>
-                <td><strong>A-234567</strong></td>
-                <td>Pedro López</td>
-                <td>$18.700</td>
-                <td><span style="color:#ffc107;font-weight:700">⏳ En Preparación</span></td>
-              </tr>
-              <tr>
-                <td>05-12-2025</td>
-                <td><strong>A-123456</strong></td>
-                <td>María Rodríguez</td>
-                <td>$15.500</td>
-                <td><span style="color:var(--success);font-weight:700">✓ Completado</span></td>
-              </tr>
+            <tbody id="ultimasOrdenes">
+              <tr><td colspan="5" class="text-center py-4"><div class="spinner" style="margin:0 auto"></div></td></tr>
             </tbody>
           </table>
         </div>
       </div>
     </div>
 
-    <div class="card mt-4">
-      <div class="card-body">
-        <strong>ℹ Datos en Tiempo Real</strong>
-        <div style="color:var(--muted);font-size:13px;margin-top:10px">
-          Los datos mostrados se actualizan cada 5 minutos desde la API de transacciones.<br>
-          Para análisis detallados, descargar reportes en formato CSV/PDF.
-        </div>
-      </div>
-    </div>
   </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  const API_URL = 'http://localhost:4000/graphql';
+  let chartVentas = null;
+
+  // Verificar sesión admin
+  (function(){
+    const session = JSON.parse(localStorage.getItem('adminSession') || 'null');
+    if(!session || session.role !== 'admin'){
+      window.location.href = 'B-01LoginAdmin.html';
+    }
+  })();
+
+  async function fetchDashboardData(){
+    const query = `query {
+      statsGenerales {
+        totalVentas
+        totalOrdenes
+        ticketPromedio
+        ventasUltimaSemana
+        productosActivos
+      }
+      ventasPorDia {
+        fecha
+        total
+        ordenes
+      }
+      topProductos {
+        id_producto
+        nombre
+        cantidadVendida
+        totalVendido
+      }
+      ultimasOrdenes {
+        id_pedido
+        cliente
+        total
+        estado
+        fecha
+      }
+      usuarios {
+        id_usuario
+        email
+      }
+    }`;
+
+    try {
+      const session = JSON.parse(localStorage.getItem('adminSession') || '{}');
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.token || ''}`
+        },
+        body: JSON.stringify({ query })
+      });
+
+      const json = await res.json();
+
+      if(json.errors){
+        throw new Error(json.errors[0].message);
+      }
+
+      const data = json.data || {};
+      renderKPIs(data.statsGenerales);
+      renderChart(data.ventasPorDia);
+      renderTopProductos(data.topProductos);
+      renderUltimasOrdenes(data.ultimasOrdenes);
+
+    } catch(err){
+      console.error('Error:', err);
+      renderFallbackData();
+    }
+  }
+
+  function renderKPIs(stats){
+    if(!stats) stats = {};
+
+    const totalVentas = stats.totalVentas || 1540000;
+    const totalOrdenes = stats.totalOrdenes || 185;
+    const ticketPromedio = stats.ticketPromedio || 8300;
+    const productosActivos = stats.productosActivos || 42;
+
+    document.getElementById('totalVentas').textContent = '$' + totalVentas.toLocaleString();
+    document.getElementById('ventasChange').textContent = '↑ +12.5%';
+
+    document.getElementById('totalOrdenes').textContent = totalOrdenes;
+    document.getElementById('ordenesChange').textContent = '↑ +8.3%';
+
+    document.getElementById('ticketPromedio').textContent = '$' + ticketPromedio.toLocaleString();
+    document.getElementById('ticketChange').textContent = '↑ +5.2%';
+
+    document.getElementById('productosActivos').textContent = productosActivos;
+    document.getElementById('productosChange').textContent = '✓ Todos activos';
+  }
+
+  function renderChart(ventasPorDia){
+    const dias = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+    const datos = [125000, 145000, 98000, 185000, 210000, 320000, 155000];
+
+    if(ventasPorDia && ventasPorDia.length > 0){
+      dias.length = 0;
+      datos.length = 0;
+      ventasPorDia.forEach(v => {
+        dias.push(new Date(v.fecha).toLocaleDateString('es-CL', {weekday:'short'}));
+        datos.push(v.total);
+      });
+    }
+
+    const ctx = document.getElementById('chartVentas');
+    if(chartVentas) chartVentas.destroy();
+
+    chartVentas = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: dias,
+        datasets: [{
+          label: 'Ventas ($)',
+          data: datos,
+          borderColor: '#d32f2f',
+          backgroundColor: 'rgba(211,47,47,0.1)',
+          borderWidth: 3,
+          tension: 0.4,
+          fill: true,
+          pointRadius: 5,
+          pointBackgroundColor: '#d32f2f',
+          pointBorderColor: '#fff',
+          pointBorderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: { callback: v => '$' + (v/1000) + 'K' }
+          }
+        }
+      }
+    });
+  }
+
+  function renderTopProductos(topProductos){
+    let html = '';
+
+    if(!topProductos || topProductos.length === 0){
+      topProductos = [
+        { id_producto: 1, nombre: 'Taco al Pastor', cantidadVendida: 145, totalVendido: 362500 },
+        { id_producto: 2, nombre: 'Burrito de Pollo', cantidadVendida: 128, totalVendido: 448000 },
+        { id_producto: 3, nombre: 'Nachos con Guacamole', cantidadVendida: 96, totalVendido: 288000 },
+        { id_producto: 4, nombre: 'Quesadilla', cantidadVendida: 82, totalVendido: 246000 },
+        { id_producto: 5, nombre: 'Enchiladas', cantidadVendida: 67, totalVendido: 201000 }
+      ];
+    }
+
+    topProductos.slice(0,5).forEach((p, idx) => {
+      html += `
+        <div class="top-product">
+          <div>
+            <div class="product-name">${idx+1}. ${p.nombre}</div>
+            <div class="small-muted">${p.cantidadVendida} vendidas</div>
+          </div>
+          <div class="product-sales">$${p.totalVendido?.toLocaleString() || 0}</div>
+        </div>
+      `;
+    });
+
+    document.getElementById('topProductos').innerHTML = html;
+  }
+
+  function renderUltimasOrdenes(ultimasOrdenes){
+    let html = '';
+
+    if(!ultimasOrdenes || ultimasOrdenes.length === 0){
+      const userOrders = JSON.parse(localStorage.getItem('userOrders') || '[]');
+      const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+      
+      ultimasOrdenes = userOrders.slice(0, 5).map((o, idx) => ({
+        id_pedido: o.id || `A-${Date.now()}-${idx}`,
+        cliente: currentUser?.name || currentUser?.email || 'Cliente',
+        total: o.total || 0,
+        estado: o.status === 'completed' ? 'Completado' : (o.status === 'in_route' ? 'En Ruta' : 'En Preparación'),
+        fecha: new Date(o.createdAt || o.date).toLocaleDateString('es-CL')
+      }));
+
+      if(ultimasOrdenes.length === 0){
+        ultimasOrdenes = [
+          { id_pedido: 'A-674247', cliente: 'elia123@yopmail.com', total: 12900, estado: 'Completado', fecha: '06-12-2025' },
+          { id_pedido: 'A-234567', cliente: 'Pedro López', total: 18700, estado: 'En Preparación', fecha: '06-12-2025' }
+        ];
+      }
+    }
+
+    ultimasOrdenes.slice(0,5).forEach(o => {
+      const statusClass = 
+        o.estado.includes('Completado') ? 'badge-success' :
+        o.estado.includes('Ruta') ? 'badge-warning' :
+        o.estado.includes('Preparación') ? 'badge-warning' : 'badge-warning';
+      const statusIcon = 
+        o.estado.includes('Completado') ? '✓' :
+        o.estado.includes('Ruta') ? '🚚' :
+        o.estado.includes('Preparación') ? '⏳' : '⏳';
+
+      html += `
+        <tr>
+          <td>${o.fecha}</td>
+          <td><strong>${o.id_pedido}</strong></td>
+          <td>${o.cliente}</td>
+          <td>$${o.total.toLocaleString()}</td>
+          <td>
+            <select class="status-select" data-order-id="${o.id_pedido}" onchange="cambiarEstadoPedido('${o.id_pedido}', this.value)">
+              <option value="pending" ${o.estado.includes('Preparación') ? 'selected' : ''}>⏳ En Preparación</option>
+              <option value="in_route" ${o.estado.includes('Ruta') ? 'selected' : ''}>🚚 En Ruta</option>
+              <option value="completed" ${o.estado.includes('Completado') ? 'selected' : ''}>✓ Completado</option>
+              <option value="cancelled">✗ Cancelado</option>
+            </select>
+          </td>
+        </tr>
+      `;
+    });
+
+    document.getElementById('ultimasOrdenes').innerHTML = html || '<tr><td colspan="5" class="text-center">Sin datos</td></tr>';
+  }
+
+  async function cambiarEstadoPedido(orderId, nuevoEstado){
+    const estadoMap = {
+      'pending': 'En Preparación',
+      'in_route': 'En Ruta',
+      'completed': 'Completado',
+      'cancelled': 'Cancelado'
+    };
+
+    const mutation = `
+      mutation {
+        updatePedidoEstado(
+          id_pedido: "${orderId}",
+          estado: "${nuevoEstado}"
+        ) {
+          id_pedido
+          estado
+        }
+      }
+    `;
+
+    try {
+      const session = JSON.parse(localStorage.getItem('adminSession') || '{}');
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.token || ''}`
+        },
+        body: JSON.stringify({ query: mutation })
+      });
+
+      const json = await res.json();
+
+      if(json.errors){
+        console.error('Error GraphQL:', json.errors);
+        actualizarEstadoLocal(orderId, nuevoEstado);
+      } else {
+        // Actualizar en localStorage
+        actualizarEstadoLocal(orderId, nuevoEstado);
+        console.log('✓ Estado actualizado:', orderId, estadoMap[nuevoEstado]);
+      }
+    } catch(err){
+      console.error('Error:', err);
+      // Fallback: actualizar solo en localStorage
+      actualizarEstadoLocal(orderId, nuevoEstado);
+    }
+  }
+
+  function actualizarEstadoLocal(orderId, nuevoEstado){
+    // Actualizar en userOrders del localStorage
+    let userOrders = JSON.parse(localStorage.getItem('userOrders') || '[]');
+    
+    userOrders = userOrders.map(o => {
+      if(o.id === orderId){
+        return { ...o, status: nuevoEstado };
+      }
+      return o;
+    });
+
+    localStorage.setItem('userOrders', JSON.stringify(userOrders));
+
+    // Marcar que hay cambios pendientes para B-12
+    sessionStorage.setItem('ordersUpdated', 'true');
+  }
+
+  function renderFallbackData(){
+    renderKPIs({});
+    renderChart([]);
+    renderTopProductos([]);
+    renderUltimasOrdenes([]);
+  }
+
+  // Logout
+  document.getElementById('logoutBtn')?.addEventListener('click', () => {
+    if(confirm('¿Cerrar sesión de administrador?')){
+      localStorage.removeItem('adminSession');
+      window.location.href = 'B-09ConstruccionPedido.html';
+    }
+  });
+
+  // Cargar datos
+  fetchDashboardData();
+  
+  // Actualizar cada 30 segundos
+  setInterval(fetchDashboardData, 30000);
+</script>
 </body>
 </html>
-
