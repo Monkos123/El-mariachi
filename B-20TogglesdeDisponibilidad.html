@@ -68,28 +68,36 @@
         </div>
       </div>
     </div>
-
-    <div class="card mt-4">
-      <div class="card-body">
-        <strong>ℹ API • Disponibilidad</strong>
-        <div style="color:var(--muted);font-size:13px;margin-top:10px">
-          PATCH /admin/products/{id}/availability { "available": true | false }<br>
-          Los cambios se sincronizán en localStorage como 'availabilityOverrides'
-        </div>
-      </div>
-    </div>
   </div>
 
 <script>
+  // Verificar sesión admin
+  (function(){
+    const session = JSON.parse(localStorage.getItem('adminSession') || 'null');
+    if(!session || session.role !== 'admin'){
+      window.location.href = 'B-01LoginAdmin.html';
+    }
+  })();
+
   const API_URL = "http://localhost:4000/graphql";
   let products = [];
 
   async function fetchProducts(){
     const q = `query { productos { id_producto nombre precio disponible categoria } }`;
+    const session = JSON.parse(localStorage.getItem('adminSession') || '{}');
+    const headers = { 'Content-Type': 'application/json' };
+    if (session.token) headers['Authorization'] = `Bearer ${session.token}`;
+
     try {
-      const res = await fetch(API_URL, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({query:q}) });
+      const res = await fetch(API_URL, { method:'POST', headers, body: JSON.stringify({query:q}) });
       const json = await res.json();
-      products = (json.data?.productos || []).map(p => ({id:String(p.id_producto),nombre:p.nombre,precio:Number(p.precio)||0,disponible:!!p.disponible,categoria:p.categoria||'Sin cat'}));
+      products = (json.data?.productos || []).map(p => ({
+        id: String(p.id_producto),
+        nombre: p.nombre,
+        precio: Number(p.precio)||0,
+        disponible: !!p.disponible,
+        categoria: p.categoria||'Sin cat'
+      }));
       renderBoth();
     } catch(err){
       console.error(err);
@@ -97,36 +105,96 @@
     }
   }
 
+  async function toggleProduct(id) {
+    const p = products.find(x => x.id === id);
+    if (!p) return;
+
+    const session = JSON.parse(localStorage.getItem('adminSession') || '{}');
+    const headers = { 'Content-Type': 'application/json' };
+    if (session.token) headers['Authorization'] = `Bearer ${session.token}`;
+
+    // Usar la mutation exacta del servidor
+    const mutation = `mutation {
+      actualizar_disponibilidad_producto(
+        id_producto: ${id}
+        disponible: ${!p.disponible}
+      ) {
+        ok
+        mensaje
+        producto {
+          id_producto
+          disponible
+        }
+      }
+    }`;
+
+    try {
+      const res = await fetch(API_URL, { method:'POST', headers, body: JSON.stringify({query:mutation}) });
+      const json = await res.json();
+
+      if(json.errors) {
+        console.error('Toggle error:', json.errors);
+        alert('Error al actualizar: ' + json.errors[0]?.message);
+        return;
+      }
+
+      const result = json.data?.actualizar_disponibilidad_producto;
+      if (result?.ok) {
+        p.disponible = !p.disponible;
+        renderBoth();
+        localStorage.setItem('productsUpdated', String(Date.now())); // notificar B-09
+        console.log('✓ Disponibilidad actualizada');
+      } else {
+        alert('Error: ' + (result?.mensaje || 'respuesta inesperada'));
+      }
+    } catch(err) {
+      console.error(err);
+      alert('Error de red');
+    }
+  }
+
   function renderBoth(){
-    const overrides = JSON.parse(localStorage.getItem('availabilityOverrides')||'{}');
     const catalog = document.getElementById('catalogList');
     const admin = document.getElementById('adminList');
     
-    catalog.innerHTML = products.map(p => {
-      const avail = overrides[p.id] ?? p.disponible;
-      return `<div class="item-row"><div class="item-info"><div class="item-name">${p.nombre}</div><div class="item-status">${avail ? '✓ Disponible' : '✗ No disponible'}</div></div><button class="btn btn-sm ${avail ? 'btn-primary' : 'btn-secondary'}" ${!avail ? 'disabled' : ''}>Agregar</button></div>`;
-    }).join('');
+    catalog.innerHTML = products.map(p => `
+      <div class="item-row">
+        <div class="item-info">
+          <div class="item-name">${p.nombre}</div>
+          <div class="item-status">${p.disponible ? '✓ Disponible' : '✗ No disponible'}</div>
+        </div>
+        <button class="btn btn-sm ${p.disponible ? 'btn-primary' : 'btn-secondary'}" ${!p.disponible ? 'disabled' : ''}>Agregar</button>
+      </div>
+    `).join('');
 
-    admin.innerHTML = products.map(p => {
-      const avail = overrides[p.id] ?? p.disponible;
-      return `<div class="item-row"><div class="item-info"><div class="item-name">${p.nombre}</div><div class="item-status">$${p.precio.toLocaleString()}</div></div><label class="toggle-switch"><input type="checkbox" data-id="${p.id}" ${avail ? 'checked' : ''} /><span class="toggle-slider"></span></label></div>`;
-    }).join('');
-
-    admin.querySelectorAll('input[type="checkbox"]').forEach(inp => {
-      inp.addEventListener('change', (e) => {
-        const id = e.target.dataset.id;
-        const ov = JSON.parse(localStorage.getItem('availabilityOverrides')||'{}');
-        ov[id] = e.target.checked;
-        localStorage.setItem('availabilityOverrides', JSON.stringify(ov));
-        renderBoth();
-      });
-    });
+    admin.innerHTML = products.map(p => `
+      <div class="item-row">
+        <div class="item-info">
+          <div class="item-name">${p.nombre}</div>
+          <div class="item-status">$${p.precio.toLocaleString()}</div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" ${p.disponible ? 'checked' : ''} onchange="toggleProduct('${p.id}')" />
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    `).join('');
   }
 
+  // Escuchar cambios desde B-19
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'productsUpdated') {
+      console.log('Admin actualizó productos en B-20');
+      fetchProducts();
+    }
+  });
+
+  // Inicializar
   fetchProducts();
 </script>
 </body>
 </html>
+
 
 
 
